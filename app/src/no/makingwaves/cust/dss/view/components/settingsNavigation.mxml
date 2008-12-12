@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: TOP NAVIGATION BAR FOR LANGUAGES AND ZOOM PROPERTIES -->
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ItemClickEvent;
+			import mx.controls.Text;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.core.Container;
+			
+			[Bindable]
+			public var applicationRef:Reiseregningen;
+					
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			private function buttonToggleHandler(e:ItemClickEvent):void {
+				model.resources.setActiveLocale(e.item.id);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas enabled="{!model.screenreader}" visible="{!model.screenreader}" right="21" width="100%">
+	
+		<mx:LinkButton id="btn_zoom1" tabIndex="15"
+    						label="a" fontSize="10" right="45"
+    						click="{applicationRef.doZoom(applicationRef,'100')}" paddingBottom="0" y="5"/>
+    						
+    	<mx:LinkButton id="btn_zoom2" tabIndex="16" 
+    						label="a" fontSize="14" right="24"
+    						click="{applicationRef.doZoom(applicationRef,'120')}" paddingBottom="0" y="1"/>
+    						
+    	<mx:LinkButton id="btn_zoom3" tabIndex="17" 
+    						label="a" fontSize="18" right="0"
+    						click="{applicationRef.doZoom(applicationRef,'150')}" paddingBottom="0" y="-3"/>
+    						
+    	<!--mx:LinkButton id="btn_lang_bokmaal" tabIndex="18" styleName="secondary"
+    						label="bokmål"
+    						click="{model.resources.setActiveLocale('no_BO')}"  height="20" verticalCenter="0" x="120" width="80"/>
+    						
+    	<mx:LinkButton id="btn_lang_nynorsk" tabIndex="19" styleName="secondary"
+    						label="nynorsk"
+    						click="{model.resources.setActiveLocale('no_NY')}"  height="20" x="30" verticalCenter="0" width="80"/-->
+    						
+    	<mx:ToggleButtonBar right="77" verticalCenter="0" tabIndex="18" height="19" buttonMode="true"
+    						dataProvider="{model.languages}" labelField="name"
+    					    itemClick="{buttonToggleHandler(event)}"
+    					    visible="{!model.screenreader}" includeInLayout="{!model.screenreader}" />
+<!--   						
+    	<mx:Button id="framerate_up" icon="@Embed(source='assets/media/images/icons/citrix.png')" click="{applicationRef.runAtCitrix();}" right="10" enabled="{!model.screenreader}" visible="{!model.screenreader}" tabIndex="19" />
+-->    	
+	</mx:Canvas>
+	
+	
+</mx:Canvas>

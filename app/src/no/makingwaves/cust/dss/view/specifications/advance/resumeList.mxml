@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="initPage()" width="100%"
+	updateComplete="initPage()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import no.makingwaves.cust.dss.vo.TravelAdvanceVO;
+			import mx.collections.ArrayCollection;
+            import mx.core.IFlexDisplayObject;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import no.makingwaves.util.Util;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.cust.dss.view.specifications.travel_advances;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			public var active_btn_edit : Boolean = true;
+			
+			[Bindable]
+			public var active_btn_delete : Boolean = true;
+
+			private var addWindow:IFlexDisplayObject;
+				
+			private function initPage():void {
+				if (grid_advances.selectedIndex == -1) {
+					this.active_btn_delete = false;
+					this.active_btn_edit = false;
+				}
+				this.initColumnSizes();
+			}		
+			
+			private function getFormattedDateAndTime(date:Date, time:String):String {
+				var formattedDate:String = "";
+				if (date != null) {
+					var dateFormat:String = resourceManager.getString(model.resources.getResourceBundleName(), 'DATE_FORMAT');
+					formattedDate = Util.formatDate(date, dateFormat);
+					
+					if (time != "") 	
+						formattedDate += ", kl." + time.substr(0,2) + ":" + time.substr(2,2);
+						
+				}
+				return formattedDate;
+			}
+			
+			public function editSpecification(e:MouseEvent=null):void {
+				var popupSpec:travel_advances = travel_advances(PopUpManager.createPopUp(this, travel_advances, true));
+				popupSpec.travel_advance = TravelAdvanceVO(grid_advances.selectedItem);
+				popupSpec.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+				
+				function closeWindowHandler(e:CloseEvent):void {
+					popupSpec.removeEventListener(CloseEvent.CLOSE, closeWindowHandler);
+					PopUpManager.removePopUp(popupSpec);
+				}
+			}
+			
+			public function deleteSpecification(e:MouseEvent=null):void {
+				var traveladvances:TravelAdvanceVO = TravelAdvanceVO(grid_advances.selectedItem); 
+				for (var i:Number = 0; i < model.travelAdvanceList.length; i++) {
+					if (model.travelAdvanceList.getItemAt(i) == traveladvances) {
+						model.travelAdvanceList.removeItemAt(i);
+						break;
+					}
+				}
+			}
+			
+			public function getSelectedStatus():Boolean {
+				return Boolean(this.grid_advances.selectedIndex != -1);				
+			}
+			
+			private function gridFormatterCost(item:TravelAdvanceVO, ref:DataGridColumn):String {
+				return item.cost.toFixed(2);
+			}
+			
+			private function gridFormatterDate(item:TravelAdvanceVO, ref:DataGridColumn):String {
+				var label:String = "";
+				label = this.getFormattedDateAndTime(item.date, "");
+				return label;
+			}
+			
+			private function dateSortCompareFunction(obj1:Object, obj2:Object):int {
+				if (obj1.date > obj2.date) {
+					return -1;
+				} else if (obj1.date < obj2.date) {
+					return 1;
+				}
+				return 0;
+			}
+			
+			private function initColumnSizes():void {
+				var timer:Timer = new Timer(500,1);
+				timer.addEventListener(TimerEvent.TIMER_COMPLETE, setColumnSizes);
+				timer.start();				
+			}
+			private function setColumnSizes(e:TimerEvent):void {
+				try {
+					this.column1.width = getColumnSize(15);
+					this.column2.width = getColumnSize(70);		
+					this.column3.width = getColumnSize(15);
+				} catch (e:Error) { trace("advance.resumeList.setColumnSizes: " + e.message); }								
+			}
+			
+			private function getColumnSize(percent:Number):Number {
+				return (grid_advances.width * percent) / 100;
+			}
+			
+			private function gridSelectionChanged(e:ListEvent):void {
+				if (grid_advances.selectedIndex != -1) {
+					this.active_btn_delete = true;
+					this.active_btn_edit = true;
+				} else {
+					this.active_btn_delete = false;
+					this.active_btn_edit = false;
+				}
+			}
+			
+		]]>
+	</mx:Script>
+		
+	<mx:DataGrid id="grid_advances" tabIndex="282" rowCount="{((model.travelAdvanceList.length > 0) ? model.travelAdvanceList.length : 1)}" width="100%" height="100%" 
+				scaleX="{((model.travelAdvanceList.length > 0) ? 1 : 0)}" 
+				scaleY="{((model.travelAdvanceList.length > 0) ? 1 : 0)}" 
+				dataProvider="{model.travelAdvanceList}" addedToStage="{initColumnSizes()}"
+			    change="this.gridSelectionChanged(event)"
+				doubleClick="{this.editSpecification(event)}">
+				
+        <mx:columns>
+	            <mx:DataGridColumn id="column1" headerText="{resourceManager.getString(model.resources.bundleName, 'date_listlabel')}"
+	            					sortable="true" sortCompareFunction="dateSortCompareFunction" activate="{column1.width=getColumnSize(15)}"
+	            					labelFunction="gridFormatterDate" />
+	            <mx:DataGridColumn id="column2" headerText="{resourceManager.getString(model.resources.bundleName, 'advance_location_label')}"
+	            					sortable="false" activate="{column2.width=getColumnSize(70)}"	
+	        						dataField="location" />
+	            <mx:DataGridColumn id="column3" headerText="{resourceManager.getString(model.resources.bundleName, 'advance_listlabel')}"
+	            					sortable="false" activate="{column3.width=getColumnSize(15)}"
+	            					labelFunction="gridFormatterCost"
+	            					textAlign="right"  />
+
+        </mx:columns>
+    </mx:DataGrid>
+</mx:HBox>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="initPage()" width="100%"
+	updateComplete="initPage()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import no.makingwaves.cust.dss.vo.TravelCommentVO;
+			import mx.collections.ArrayCollection;
+            import mx.core.IFlexDisplayObject;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import no.makingwaves.util.Util;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.cust.dss.view.specifications.travel_comments;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			public var active_btn_edit : Boolean = true;
+			
+			[Bindable]
+			public var active_btn_delete : Boolean = true;
+
+			private var addWindow:IFlexDisplayObject;
+				
+			private function initPage():void {
+				if (this.grid_comments.selectedIndex == -1) {
+					this.active_btn_delete = false;
+					this.active_btn_edit = false;
+				}
+			}		
+			
+			private function getFormattedDateAndTime(date:Date, time:String):String {
+				var formattedDate:String = "";
+				if (date != null) {
+					var dateFormat:String = resourceManager.getString(model.resources.getResourceBundleName(), 'DATE_FORMAT');
+					formattedDate = Util.formatDate(date, dateFormat);
+					
+					if (time != "") 	
+						formattedDate += ", kl." + time.substr(0,2) + ":" + time.substr(2,2);
+						
+				}
+				return formattedDate;
+			}
+			
+			public function editSpecification(e:MouseEvent=null):void {
+				var popupSpec:travel_comments = travel_comments(PopUpManager.createPopUp(this, travel_comments, true));
+				popupSpec.travel_comment = TravelCommentVO(grid_comments.selectedItem);
+				popupSpec.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+				
+				function closeWindowHandler(e:CloseEvent):void {
+					popupSpec.removeEventListener(CloseEvent.CLOSE, closeWindowHandler);
+					PopUpManager.removePopUp(popupSpec);
+				}
+			}
+			
+			public function deleteSpecification(e:MouseEvent=null):void {
+				var travelcomments:TravelCommentVO = TravelCommentVO(grid_comments.selectedItem); 
+				for (var i:Number = 0; i < model.travelCommentList.length; i++) {
+					if (model.travelCommentList.getItemAt(i) == travelcomments) {
+						model.travelCommentList.removeItemAt(i);
+						break;
+					}
+				}
+			}
+			
+			public function getSelectedStatus():Boolean {
+				return Boolean(this.grid_comments.selectedIndex != -1);				
+			}
+			
+			private function setColumnSizes():void {
+				/*
+				this.column1.width = getColumnSize(100);
+				*/					
+			}
+			
+			private function getColumnSize(percent:Number):Number {
+				return (grid_comments.width * percent) / 100;
+			}
+			
+			private function gridSelectionChanged(e:ListEvent):void {
+				if (grid_comments.selectedIndex != -1) {
+					this.active_btn_delete = true;
+					this.active_btn_edit = true;
+				} else {
+					this.active_btn_delete = false;
+					this.active_btn_edit = false;
+				}
+			}
+			
+		]]>
+	</mx:Script>
+		
+	<mx:DataGrid id="grid_comments" tabIndex="287" rowCount="{((model.travelCommentList.length > 0) ? model.travelCommentList.length : 1)}" width="100%" height="100%" 
+				scaleX="{((model.travelCommentList.length > 0) ? 1 : 0)}" 
+				scaleY="{((model.travelCommentList.length > 0) ? 1 : 0)}" 
+				dataProvider="{model.travelCommentList}" addedToStage="{setColumnSizes()}"
+			    change="this.gridSelectionChanged(event)"
+				doubleClick="{this.editSpecification(event)}">
+				
+        <mx:columns>
+	        	<mx:DataGridColumn id="column1" headerText="{resourceManager.getString(model.resources.bundleName, 'comment_listlabel')}"
+	            					sortable="false"	
+	        						dataField="comment" />
+        </mx:columns>
+    </mx:DataGrid>
+</mx:HBox>

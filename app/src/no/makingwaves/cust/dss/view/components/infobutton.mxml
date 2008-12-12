@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: INFO BUTTON COMPONENT FOR DISPLAYING EXTRA HELP INFORMATION -->
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+			creationComplete="initPage()">
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.resources.ResourceManager;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.cust.dss.view.components.infoDisplayer;
+			
+			[Bindable]
+			public var textReference:String;
+			[Bindable]
+			public var buttonTabIndex:Number;
+			[Bindable]
+			public var accessibilityLabel:String;
+			[Bindable]
+			public var model:ModelLocator = ModelLocator.getInstance();
+			
+			private var infoWindow:infoDisplayer;
+			
+			private var btnToggled:Boolean = false;
+			
+			public var windowReady:Boolean = false;
+			
+			private function initPage():void {
+				if (accessibilityLabel == null || accessibilityLabel == "") {
+					model.accessibility.addAccessibility(savelocal_infobtn, resourceManager.getString(model.resources.bundleName, 'info_heading'));
+				} else {
+					model.accessibility.addAccessibility(savelocal_infobtn, resourceManager.getString(model.resources.bundleName, 'info_heading') + " " + accessibilityLabel);
+				}
+			}
+			
+			private function clickHandler(e:MouseEvent):void {
+				if (!btnToggled) {
+					// open info window
+					windowReady = false;
+					var infoObj : Object = new Object();				
+			        infoWindow = infoDisplayer(PopUpManager.createPopUp(this, infoDisplayer, false));
+		        	infoWindow.infoText = ResourceManager.getInstance().getString(model.resources.bundleName, textReference);
+		        	if (infoWindow.infoText == null)
+		        		infoWindow.infoText = textReference;
+		        	
+			       	infoWindow.nextFocusComponent = this.savelocal_infobtn;
+			        infoWindow.callFromContainer = this;
+			        
+			        // set window position
+			        var pt:Point = new Point(this.x, this.y);
+	            	pt = this.parent.localToGlobal(pt);
+	            	
+			        infoWindow.x = pt.x + this.width;
+			        infoWindow.y = pt.y// + (this.height/2) - (infoWindow.height/2);
+			        
+			        btnToggled = true;
+			        
+			 	} else {
+			 		// close info window
+			 		closeInfoWindow();
+			 	}
+			}
+			
+			public function closeInfoWindow():void {
+				if (btnToggled) {
+					infoWindow.hide();
+					btnToggled = false;
+					windowReady = false;
+				}
+			}
+					
+		]]>
+	</mx:Script>
+	
+	<mx:Image id="savelocal_infoicon" source="assets/media/images/icons/Info.png" />
+	
+	<mx:Button id="savelocal_infobtn" width="{savelocal_infoicon.width}" height="{savelocal_infoicon.height}" alpha="0"
+			   tabIndex="{buttonTabIndex}" focusOut="{(windowReady)?this.closeInfoWindow():null}"
+			   click="{clickHandler(event)}" />
+	
+</mx:Canvas>

@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Reiseregningen på web</title>
+<script src="swfobject.js" language="javascript"></script>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+-->
+</style></head>
+<body bgcolor="#ffffff">
+	<div id="flashcontent">
+	  <a href="http://www.adobe.com/go/getflashplayer">Du må installere Flash Player 9 for å bruke Reiseregningen på web.</a>
+	</div>
+	<script type="text/javascript">
+	   var random = Math.round(Math.random() * 999999);
+	   var url = "Reiseregningen.swf?random="+random;
+	   var so = new SWFObject(url, "reiseregning", "100%", "100%", "9", "#ffffff");
+	   so.useExpressInstall('expressinstall.swf');
+	   so.write("flashcontent");
+
+		function openDialog(title, msg) {
+			alert(msg, title);
+		}
+	</script>
+</body>
+</html>

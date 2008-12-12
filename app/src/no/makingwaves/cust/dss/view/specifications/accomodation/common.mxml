@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BasicFormBase xmlns="no.makingwaves.cust.dss.code.*" 
+			 xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+			 xmlns:mx="http://www.adobe.com/2006/mxml"
+			 creationComplete="init()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.util.Util;
+			import mx.events.CalendarLayoutChangeEvent;
+			import no.makingwaves.cust.dss.vo.TravelRateInternationalVO;
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import mx.collections.ArrayCollection;
+			import mx.events.ListEvent;
+			import no.makingwaves.cust.dss.vo.TravelAccomodationVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.util.date.DateRanger;
+			import no.makingwaves.cust.dss.view.components.custom_alert;
+			
+			[Bindable]
+			public var travelaccomodations : TravelAccomodationVO;
+			
+			[Bindable]
+			private var _countryList : ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var _cityList : ArrayCollection = new ArrayCollection();
+			
+			private function init():void {
+				// add validators
+				//this.addValidationField(accomodation_startdate, this.DATE, true);
+				//this.addValidationField(accomodation_stopdate, this.DATE, true);					
+				this.addCustomStringValidation(accomodation_startdate_text, false, false, this.DATE);
+				this.addCustomStringValidation(accomodation_stopdate_text, false, false, this.DATE);
+				this.addValidationField(accomodation_startdate_text, this.STRING, true, 8, 8);
+				this.addValidationField(accomodation_stopdate_text, this.STRING, true, 8, 8);
+				this.addCustomDateValidation(accomodation_startdate, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in, null, null, accomodation_startdate_text);
+				this.addCustomDateValidation(accomodation_stopdate, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in, accomodation_startdate, null, accomodation_stopdate_text);
+				
+				//this.showNumberOfBreakfasts((travelaccomodations.breakfast_inluded != 0));
+				// if international travel, build country list
+				if (model.activeTravel.travel_type == model.activeTravel.ABROAD)
+					this.buildInternationalTravelSources();
+				
+				// check accomodation date and find automatic date if possible
+				if (travelaccomodations.fromdate == null) {
+					// find automatic insertion of accomodation date
+					if (model.travelAccomodationList.length == 0) {
+						// first accomodation to register - insert journey start date as from date
+						travelaccomodations.fromdate = model.activeTravel.travel_date_out;
+					} else {
+						// not first accomodations registration - get date from last registration
+						travelaccomodations.fromdate = TravelAccomodationVO(model.travelAccomodationList.getItemAt(model.travelAccomodationList.length-1)).todate;
+					}
+				}	
+				// add accessibility
+				//model.accessibility.addAccessibility(accomodation_breakfast_chk, resourceManager.getString(model.resources.bundleName, accomodation_breakfast_chk.id+'_label'));
+				//model.accessibility.addAccessibility(accomodation_breakfast_num, resourceManager.getString(model.resources.bundleName, accomodation_breakfast_num.id+'_label'));
+				model.accessibility.addAccessibility(hotel_all_journey_chk, resourceManager.getString(model.resources.bundleName, hotel_all_journey_chk.id+'_label'));
+				model.accessibility.addAccessibility(accomodation_startdate_text, resourceManager.getString(model.resources.bundleName, accomodation_startdate.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+				model.accessibility.addAccessibility(accomodation_stopdate_text, resourceManager.getString(model.resources.bundleName, accomodation_stopdate.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+				if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
+					model.accessibility.addAccessibility(cmb_country, resourceManager.getString(model.resources.bundleName, 'accomodation_country_label'));
+					model.accessibility.addAccessibility(cmb_city, resourceManager.getString(model.resources.bundleName, 'accomodation_city_label'));
+				}
+				
+				// check if this is accomodation for entire trip
+				if (this.accomodation_startdate.selectedDate != null && this.accomodation_stopdate.selectedDate != null) {
+					if (Util.formatDate(this.accomodation_startdate.selectedDate) == Util.formatDate(model.activeTravel.travel_date_out) &&
+						Util.formatDate(this.accomodation_stopdate.selectedDate) == Util.formatDate(model.activeTravel.travel_date_in)) {
+					
+						hotel_all_journey_chk.selected = true;
+						accomodation_startdate.enabled = !(hotel_all_journey_chk.selected);
+		            	accomodation_startdate_text.enabled = !(hotel_all_journey_chk.selected);
+		            	accomodation_stopdate.enabled = !(hotel_all_journey_chk.selected);
+		            	accomodation_stopdate_text.enabled = !(hotel_all_journey_chk.selected);
+					}
+				}
+			}
+			
+			override public function submitData(specifications:*):* {
+				TravelAccomodationVO(specifications).fromdate = accomodation_startdate.selectedDate;
+				TravelAccomodationVO(specifications).todate = accomodation_stopdate.selectedDate;
+				TravelAccomodationVO(specifications).country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_country.selectedItem.data : "";
+				TravelAccomodationVO(specifications).city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_city.selectedItem.data : "";
+				//TravelAccomodationVO(specifications).breakfast_inluded = (this.accomodation_breakfast_chk.selected) ? Number(this.accomodation_breakfast_num.text) : 0;
+				return TravelAccomodationVO(specifications);
+			} 
+			
+			/* validate wether current dates not are registered earlier */
+            override public function validateCustomFields():Boolean {
+            	var valid:Boolean = super.validateCustomFields();
+            	if (!valid) return false;
+            	
+            	// validate dates against earlier registered accomodations
+            	var dateFrom:Date = accomodation_startdate.selectedDate;
+            	var dateTo:Date = accomodation_stopdate.selectedDate;
+            	for (var i:Number = 0; i < model.travelAccomodationList.length; i++) {
+            		var checkIt:Boolean = true;
+            		var acc:TravelAccomodationVO = TravelAccomodationVO(model.travelAccomodationList.getItemAt(i));
+            		if (acc == this.travelaccomodations)
+            			checkIt = false;
+            		
+            		if (checkIt) {
+            			dateFrom.setHours(12,00,00,00);
+            			dateTo.setHours(12,00,00,00);
+            			acc.fromdate.setHours(12,00,00,00);
+            			acc.todate.setHours(12,00,00,00);
+            			if ((dateFrom > acc.fromdate && dateFrom < acc.todate) || 
+            				(dateTo > acc.fromdate && dateTo < acc.todate) ||
+            				(Util.formatDate(dateFrom) == Util.formatDate(acc.fromdate) || 
+            				 Util.formatDate(dateTo) == Util.formatDate(acc.todate))) {
+	            				valid = false;
+	            				break;
+            			}
+            		}
+            	}
+            		
+        		if (!valid) {
+        			// user needs to get a message about the date errors
+        			var alertWindow:mx.core.IFlexDisplayObject;
+					alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
+					custom_alert(alertWindow).alertText = resourceManager.getString(model.resources.bundleName, 'accomodation_busydates');
+					custom_alert(alertWindow).title = resourceManager.getString(model.resources.bundleName, 'accomodation_label');
+        		}
+            	return valid;
+            }
+            
+            private function checkboxEvent_handle(e:Event):void {
+            	if (e.currentTarget == hotel_all_journey_chk) {
+            		if (hotel_all_journey_chk.selected) {
+	            		accomodation_startdate.selectedDate = model.activeTravel.travel_date_out;
+	            		accomodation_startdate_text.text = this.getFormattedDate(model.activeTravel.travel_date_out);
+	            		accomodation_stopdate.selectedDate = model.activeTravel.travel_date_in;
+	            		accomodation_stopdate_text.text = this.getFormattedDate(model.activeTravel.travel_date_in);	            		
+	            	}
+	            	accomodation_startdate.enabled = !(hotel_all_journey_chk.selected);
+	            	accomodation_startdate_text.enabled = !(hotel_all_journey_chk.selected);
+	            	accomodation_stopdate.enabled = !(hotel_all_journey_chk.selected);
+	            	accomodation_stopdate_text.enabled = !(hotel_all_journey_chk.selected);
+            	}
+   			}
+   			
+   			private function getMaxNights():Number {
+   				var ranger:DateRanger = new DateRanger();
+   				ranger.getDateRange(this.accomodation_startdate.selectedDate, this.accomodation_stopdate.selectedDate);
+   				return ranger.days;
+   			}
+   			
+   			private function buildInternationalTravelSources():void {
+				_countryList = new ArrayCollection();
+				for (var i:Number = 0; i < model.travelRatesInternationalList.length; i++) {
+					var countryName:String = model.travelRatesInternationalList.getItemAt(i).country;
+					var countryCode:String = model.travelRatesInternationalList.getItemAt(i).code;
+					if (!countryExists(countryName)) {
+						_countryList.addItem({label: countryName, data: countryCode});
+					}
+				}
+				
+				 // add default country
+			    var defaultCountry:String = resourceManager.getString(model.resources.bundleName, "country_default");
+			    _countryList.addItem({label: defaultCountry, data: defaultCountry});
+			    
+				// sort list
+				var sort:Sort = new Sort();
+			    sort.fields = [new SortField("label", true)];
+			    _countryList.sort = sort;
+			    _countryList.refresh();
+			    
+			    // add combo info
+			    var defaultMsg:String = resourceManager.getString(model.resources.bundleName, "country_choose");
+			    _countryList.addItemAt({label: defaultMsg, data: ""}, 0);
+			    
+			    // set initial country as seleceted
+				if (this.travelaccomodations.country != "") {
+					setInitialCountryCombo(this.travelaccomodations.country, this.cmb_country);
+				} else {
+					// no country specified -> try to figure out country based on registered specifications
+					var visitedCountries:ArrayCollection = model.calculator.getVisitedCountries(); 
+					var accomodationNum:Number = model.travelAccomodationList.length;
+					if (visitedCountries.length > 0) {
+						if (accomodationNum >= visitedCountries.length) {
+							accomodationNum = visitedCountries.length - 1;
+						}
+						setInitialCountryCombo(visitedCountries.getItemAt(accomodationNum).toString(), this.cmb_country);
+					} else {
+						// no country found -> set default country as chosen
+						setInitialCountryCombo(defaultMsg, this.cmb_country);
+					}
+				}
+			    
+			    buildInternationalCitySources(this.cmb_country.selectedItem.data, this.cmb_city);
+			}
+			
+			private function countryExists(countryName:String):Boolean {
+				for (var i:Number = 0; i < _countryList.length; i++) {
+					if (_countryList.getItemAt(i).label == countryName) {
+						return true;
+					}
+				}
+				return false;
+			} 
+			
+			private function countryChanged(event:ListEvent):void {
+				buildInternationalCitySources(event.currentTarget.selectedItem.data, this.cmb_city);
+			}
+			
+			private function buildInternationalCitySources(countryName:String, combobox:ComboBox):void {
+				var buildList:ArrayCollection = ArrayCollection(combobox.dataProvider);
+				buildList.removeAll();
+				//buildList = new ArrayCollection();
+				for (var i:Number = 0; i < model.travelRatesInternationalList.length; i++) {
+					var country:TravelRateInternationalVO = TravelRateInternationalVO(model.travelRatesInternationalList.getItemAt(i));
+					if (country.code == countryName) {
+						if (country.city != "") {
+							buildList.addItem({label: country.city, data: country.city});
+						}
+					}
+				}
+				// add combo info value
+			    var defaultValue:String = resourceManager.getString(model.resources.bundleName, "city_other");
+				buildList.addItemAt({label: defaultValue, data: ""}, 0);
+				
+				// add default value
+			    var defaultMsg:String = resourceManager.getString(model.resources.bundleName, "city_choose");
+				buildList.addItem({label: defaultMsg, data: ""});
+				
+				var sort:Sort = new Sort();
+			    sort.fields = [new SortField("label", true)];
+			    buildList.sort = sort;
+			    buildList.refresh();
+			    
+			    // set initial selected value
+				if (combobox == this.cmb_city && this.travelaccomodations.city != "") {
+					setInitialCityCombo(this.travelaccomodations.city, combobox);
+				} else {
+					for (var c:Number = 0; c < buildList.length; c++) {
+						if (buildList.getItemAt(c).label == defaultMsg) {
+							combobox.selectedIndex = c;
+							break;
+						}
+					}
+				}
+
+				// enable citylist?
+				enableCityList(Boolean(buildList.length > 2), combobox);
+			}
+			
+			private function enableCityList(enable:Boolean, combobox:ComboBox):void {
+				combobox.enabled = enable;
+			}
+			
+			private function setInitialCountryCombo(countryName:String, comboBox:ComboBox):void {
+				var found:Boolean = false;
+				for (var i:Number = 0; i < _countryList.length; i++) {
+            		if (_countryList.getItemAt(i).data == countryName) {
+            			comboBox.selectedIndex = i;
+            			found = true;
+            			break;           			
+            		}
+            	} 
+            	if (!found)
+            		comboBox.selectedIndex = 0;
+			}
+			
+			private function setInitialCityCombo(cityName:String, comboBox:ComboBox):void {
+				var cityList:ArrayCollection = ArrayCollection(comboBox.dataProvider);
+				for (var i:Number = 0; i < cityList.length; i++) {
+            		if (cityList.getItemAt(i).label == cityName) {
+            			comboBox.selectedIndex = i;
+            			break;           			
+            		}
+            	}
+			}
+			
+			private function datefieldChanged(e:CalendarLayoutChangeEvent):void {
+				var dateField:DateField = DateField(e.currentTarget);
+				var textField:TextInput;
+				if (dateField == this.accomodation_startdate) {
+					textField = this.accomodation_startdate_text;					
+				} else if (dateField == this.accomodation_stopdate) {
+					textField = this.accomodation_stopdate_text;
+				}
+				try {
+					textField.text = this.getFormattedDate(dateField.selectedDate);
+					this.validateCustomField(textField)
+				} catch(e:Error) { trace("accomodation.common.datefieldChanged: " + e.message);}
+			}
+			
+			private function textDatefieldChanged(e:FocusEvent):void {
+				var textField:TextInput = TextInput(e.currentTarget);
+				if (this.validateCustomField(textField) && textField.text != "") {
+					var dateValues:Array = textField.text.split(".");
+					if (textField == this.accomodation_startdate_text) {
+						this.accomodation_startdate.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+						//this.travelDepartureTimeChanged(this.departuredate.selectedDate, this.departuretime.text, false);
+						
+					} else if (textField == this.accomodation_stopdate_text) {
+						this.accomodation_stopdate.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+						//this.travelArrivalTimeChanged(this.arrivaldate.selectedDate, this.arrivaltime.text, false);
+					}
+				}
+			}
+			
+			/*
+			private function accomodation_breakfast_changed(e:Event):void {
+				showNumberOfBreakfasts(e.currentTarget.selected);									
+			}
+			
+			
+			private function showNumberOfBreakfasts(show:Boolean):void {
+				if (show) {
+					this.addValidationField(accomodation_breakfast_num);
+					this.addCustomStringValidation(accomodation_breakfast_num, false, true);
+				} else {
+					this.removeValidation(accomodation_breakfast_num);
+				}
+			}*/
+			
+		]]>
+	</mx:Script>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox id="common_specification" width="100%" paddingTop="10" paddingBottom="10">
+
+		<mx:HBox width="100%" paddingTop="10" paddingBottom="10">
+<!--
+			<mx:VBox width="100%">
+				<mx:CheckBox id="accomodation_breakfast_chk" labelPlacement="right" styleName="form"
+						label="{resourceManager.getString(model.resources.bundleName, accomodation_breakfast_chk.id+'_label')}"
+					    selected="{(this.travelaccomodations.breakfast_inluded > 0)}"	
+						change="checkboxEvent_handle(event)" />
+ 				
+				<mx:HBox width="100%" enabled="{accomodation_breakfast_chk.selected}">
+					<mx:Label id="accomodation_breakfast_num_label" styleName="form"
+								click="{accomodation_breakfast_changed(event)}"
+								text="{resourceManager.getString(model.resources.bundleName, accomodation_breakfast_num_label.id)}"/>
+				
+					<mx:TextInput id="accomodation_breakfast_num" width="40" maxChars="2"
+								  text="{this.travelaccomodations.breakfast_inluded}"
+								  enabled="{accomodation_breakfast_chk.selected}" />
+ 
+					<mx:NumericStepper id="accomodation_breakfast_num" width="40"
+								 value="{this.travelaccomodations.breakfast_inluded}"
+								 enabled="{accomodation_breakfast_chk.selected}"
+								 minimum="1" maximum="{getMaxNights()}" />
+								 	
+				</mx:HBox>				
+			</mx:VBox>
+-->			
+			<mx:VBox id="country_city_to"
+						visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}" 
+						enabled="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
+						added="{if(model.activeTravel.travel_type != model.activeTravel.ABROAD){country_city_to.width=0;country_city_to.height=0}}">
+						
+				<mx:HBox id="country" enabled="{this.travelaccomodations.type != this.travelaccomodations.TYPE_HOTEL || this.travelaccomodations.breakfast_inluded > 0}">
+					<mx:Label id="accomodation_country_label" styleName="form" width="80"
+								text="{resourceManager.getString(model.resources.bundleName, accomodation_country_label.id)}"/>
+					<mx:ComboBox id="cmb_country" tabIndex="1510"
+								 change="{countryChanged(event)}"
+								 dataProvider="{_countryList}" />
+						
+				</mx:HBox>
+				<mx:HBox id="city" enabled="{cmb_city.enabled}">
+					<mx:Label id="city_label" styleName="form" width="80"
+								text="{resourceManager.getString(model.resources.bundleName, city_label.id)}"/>
+					<mx:ComboBox id="cmb_city" tabIndex="1511" 
+								 dataProvider="{_cityList}" />
+					
+				</mx:HBox>
+			</mx:VBox>
+			
+		</mx:HBox>
+		
+		<mx:HRule width="100%" />
+		
+		<mx:CheckBox id="hotel_all_journey_chk" labelPlacement="right" paddingTop="10" tabIndex="1512"
+					label="{resourceManager.getString(model.resources.bundleName, hotel_all_journey_chk.id+'_label')}"
+					change="{checkboxEvent_handle(event)}" />
+					
+		<mx:HBox width="100%">
+		
+			<mx:Label id="accomodation_startdate_label" styleName="form" enabled="{accomodation_startdate_text.enabled}"
+						text="{resourceManager.getString(model.resources.bundleName, accomodation_startdate_label.id)}"/>
+						
+			<mx:TextInput id="accomodation_startdate_text" width="70" maxChars="8" text="{this.getFormattedDate(travelaccomodations.fromdate)}" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1513" />
+			<mx:DateField id="accomodation_startdate" creationComplete="{dateField_init(accomodation_startdate)}" editable="true" width="17" visible="{!model.screenreader}" tabEnabled="{!model.screenreader}" tabIndex="1514"
+						selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}"
+					    selectedDate="{travelaccomodations.fromdate}"
+						change="{datefieldChanged(event)}" />
+			<mx:Text id="accomodationstart_date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
+			
+			<mx:Label id="accomodation_stopdate_label" styleName="form" enabled="{accomodation_stopdate_text.enabled}"
+						text="{resourceManager.getString(model.resources.bundleName, accomodation_stopdate_label.id)}"/>
+			<mx:TextInput id="accomodation_stopdate_text" width="70" maxChars="8" text="{this.getFormattedDate(travelaccomodations.todate)}" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1515" />			
+			<mx:DateField id="accomodation_stopdate" creationComplete="{dateField_init(accomodation_stopdate)}" editable="true" width="17" visible="{!model.screenreader}" tabEnabled="{!model.screenreader}" tabIndex="1516"
+						selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}"
+						selectedDate="{travelaccomodations.todate}"
+						change="{datefieldChanged(event)}" />
+			<mx:Text id="accomodationstop_date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
+			
+		</mx:HBox>
+		
+	</mx:VBox>
+	
+</BasicFormBase>

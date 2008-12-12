@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BasicFormBase xmlns="no.makingwaves.cust.dss.code.*" 
+			 xmlns:mx="http://www.adobe.com/2006/mxml"
+			 creationComplete="init()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.TravelAccomodationVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var travelaccomodations : TravelAccomodationVO;
+			
+			private function init():void {
+				// add accessibility
+				model.accessibility.addAccessibility(hotelname, resourceManager.getString(model.resources.bundleName, hotelname.id+'_label'));
+				model.accessibility.addAccessibility(hoteladress, resourceManager.getString(model.resources.bundleName, hoteladress.id+'_label'));
+				// add validators
+				this.addValidationField(hotelname);
+				//this.addValidationField(hoteladress);
+			}
+			
+			override public function submitData(specifications:*):* {
+				TravelAccomodationVO(specifications).name = hotelname.text;
+				TravelAccomodationVO(specifications).adress = hoteladress.text;
+				
+				return TravelAccomodationVO(specifications);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox>
+				
+		<mx:VBox id="hotel_specification" width="100%">
+			<mx:HBox width="100%">
+				<mx:Label id="hotelname_label" styleName="form"
+							text="{resourceManager.getString(model.resources.bundleName, hotelname_label.id)}" width="80"/>
+				<mx:TextInput id="hotelname" width="{model.fieldSizeMain}" tabIndex="1502"
+								text="{travelaccomodations.name}" />
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label id="hoteladress_label" styleName="form"
+							text="{resourceManager.getString(model.resources.bundleName, hoteladress_label.id)}" width="80"/>
+				<mx:TextInput id="hoteladress" width="{model.fieldSizeMain}" tabIndex="1503"
+								text="{travelaccomodations.adress}" />
+			</mx:HBox>
+		</mx:VBox>
+				
+	</mx:VBox>
+</BasicFormBase>

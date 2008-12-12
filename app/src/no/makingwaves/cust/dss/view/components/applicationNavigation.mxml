@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: NAVIGATION BAR FOR NEW/OPEN/SAVE EXPENSE FORMS -->
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Text;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.core.Container;
+			
+			[Bindable]
+			public var applicationRef:Reiseregningen;
+					
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			private var ready:Boolean = false;
+			
+			private var screenTextField : Text;
+			
+			public function init():void {
+				if (ready)
+					initPage();
+					
+				ready = true;
+			}
+			
+			private function initPage():void {
+/*
+				initAccessibility();
+			}
+			
+			private function initAccessibility():void {
+				if (!model.screenreader) {
+					try {
+						accessibilitytext.removeChild(this.accessibility_introtext);
+					} catch (e:Error) { trace(e.message);}
+					
+				} else {
+					model.accessibility.addAccessibility(this.accessibility_introtext, resourceManager.getString(model.resources.bundleName, "app_intro"));
+				}
+*/				
+			}
+		]]>
+	</mx:Script>
+	<mx:VBox paddingLeft="16" paddingTop="10">
+<!--		
+		<mx:Box id="accessibilitytext" width="100%">
+			<mx:TextInput id="accessibility_introtext" width="80%" tabIndex="9" editable="false"
+					  text="{resourceManager.getString(model.resources.bundleName, 'app_intro')}" />
+		</mx:Box>
+-->		
+		<mx:HBox id="buttonbar" height="100%" width="100%">
+			<mx:Button id="button_new" tabIndex="10" styleName="bigIcon" 
+								addedToStage="{model.accessibility.addAccessibility(this.button_new, '')}"
+	    					    click="{applicationRef.newForm()}"
+	    					    icon="@Embed(source='assets/media/images/icons/btn_new.png')"
+	    						label="{resourceManager.getString(model.resources.bundleName, 'button_new')}" />
+	    	
+	    	<mx:Canvas height="100%">
+	    		<mx:VRule height="30" verticalCenter="0" horizontalCenter="0"/>
+	    	</mx:Canvas>
+	    	<!--
+	    	<mx:Button id="button_open" tabIndex="11" styleName="bigIcon" 
+	    						addedToStage="{model.accessibility.addAccessibility(this.button_open, '')}"
+	    						click="{applicationRef.openSavedForm()}"
+	    						toolTip="{resourceManager.getString(model.resources.bundleName, 'button_open')}"
+	    						icon="@Embed(source='assets/media/images/icons/btn_open.png')" />
+	    						label="{resourceManager.getString(model.resources.bundleName, 'button_open')}"
+	    	-->
+	    	<mx:Button id="button_import" tabIndex="11" styleName="bigIcon"  
+	    						addedToStage="{model.accessibility.addAccessibility(this.button_import, '')}"
+	    						click="{applicationRef.importForms()}"
+	    						icon="@Embed(source='assets/media/images/icons/btn_open.png')"
+	    						label="{resourceManager.getString(model.resources.bundleName, 'button_open')}" />
+	    	
+	    	<mx:Canvas height="100%">
+	    		<mx:VRule height="30" verticalCenter="0" horizontalCenter="0"/>
+	    	</mx:Canvas>
+	    	
+	    	<mx:Button id="button_save" tabIndex="12" styleName="bigIcon" 
+	    						enabled="{model.travelExpenseOpen}" visible="{model.travelExpenseOpen}"
+	    						addedToStage="{model.accessibility.addAccessibility(this.button_save, '')}"
+	    						click="{applicationRef.saveForm()}"
+	    						toolTip="{resourceManager.getString(model.resources.bundleName, 'popupblockerhelp')}"
+	    						icon="@Embed(source='assets/media/images/icons/btn_save.png')"
+	    						label="{resourceManager.getString(model.resources.bundleName, 'button_save')}" />
+	    	
+		</mx:HBox>
+	</mx:VBox>
+	
+</mx:Canvas>

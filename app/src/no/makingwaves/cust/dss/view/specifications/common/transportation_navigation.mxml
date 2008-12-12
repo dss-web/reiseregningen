@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		creationComplete="init()" width="100%">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.StateChangeEvent;
+			import no.makingwaves.cust.dss.view.specifications.travel_specification;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			
+			public const FIRST : String = "state_first";
+			public const NEW : String = "state_new";
+			public const LAST : String = "state_destination";
+			public const EDIT : String = "state_edit";
+			
+			[Bindable]
+			private var label_continue : String;
+			
+			[Bindable]
+			private var label_register : String;
+			
+			[Bindable]
+			private var label_previous : String;
+			
+			[Bindable]
+			private var label_next : String;
+			
+			[Bindable]
+			private var label_cancel : String;
+			
+			[Bindable]
+			protected var model : ModelLocator = ModelLocator.getInstance();
+			
+			public var reference : travel_specification;
+			
+			public var initState : String;
+			
+			public var prevState : String;
+			
+			private function init():void {
+				label_continue = resourceManager.getString(model.resources.bundleName, "button_continuetravel")
+				label_register = resourceManager.getString(model.resources.bundleName, "button_registertravel")
+				label_previous = resourceManager.getString(model.resources.bundleName, "button_previous")
+				label_next = resourceManager.getString(model.resources.bundleName, "button_next")
+				label_cancel = resourceManager.getString(model.resources.bundleName, "button_cancel")
+				
+				if (initState != "" && initState != null) {
+					this.currentState = initState;
+					this.prevState = this.currentState; 
+				}
+				
+				updateAccessibilitySettings();
+				
+				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, stateChanged);
+			}
+			
+			private function stateChanged(event:StateChangeEvent):void {
+				prevState = event.oldState.toString();
+				updateAccessibilitySettings();
+			}
+			
+			private function updateAccessibilitySettings():void {
+				// add accessibility
+				model.accessibility.addAccessibility(button_registertravel, resourceManager.getString(model.resources.bundleName, button_registertravel.id));
+				model.accessibility.addAccessibility(button_continuetravel, resourceManager.getString(model.resources.bundleName, button_continuetravel.id));
+				model.accessibility.addAccessibility(button_cancel, resourceManager.getString(model.resources.bundleName, button_cancel.id));
+			}
+			
+			public function setButtonStates(stateName:String):void {
+				if (stateName == "" && this.initState != null) {
+					stateName = this.initState;
+				}
+				this.setCurrentState(stateName);
+			}
+			
+			private function buttonClicked(event:MouseEvent):void {
+				var regAndCloseDialog:Boolean = false;
+				switch(event.currentTarget) {
+					case button_registertravel:
+						regAndCloseDialog = true;
+					case button_continuetravel:
+						reference.continueClicked(regAndCloseDialog);
+						break;
+					case button_cancel:
+						reference.close();
+						break;
+					/*
+					case button_next:
+						break;
+					case button_previous:
+						break;
+					*/
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+	
+		<mx:State id="state_first" name="state_first">
+			<mx:SetProperty target="{button_continuetravel}" name="enabled" value="true" />
+			<mx:SetProperty target="{button_continuetravel}" name="visible" value="true" />
+			<mx:SetProperty target="{button_continuetravel}" name="includeInLayout" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="enabled" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="visible" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="includeInLayout" value="true" />
+
+		</mx:State>
+		
+		<mx:State id="state_new" name="state_new">
+			<mx:SetProperty target="{button_continuetravel}" name="enabled" value="true" />
+			<mx:SetProperty target="{button_continuetravel}" name="visible" value="true" />
+			<mx:SetProperty target="{button_continuetravel}" name="includeInLayout" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="enabled" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="visible" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="includeInLayout" value="true" />
+
+		</mx:State>
+		
+		<mx:State id="state_destination" name="state_destination">
+			<mx:SetProperty target="{button_continuetravel}" name="enabled" value="true" />
+			<mx:SetProperty target="{button_continuetravel}" name="visible" value="true" />
+			<mx:SetProperty target="{button_continuetravel}" name="includeInLayout" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="enabled" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="visible" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="includeInLayout" value="true" />
+
+		</mx:State>
+		
+		<mx:State id="state_edit" name="state_edit">
+			<mx:SetProperty target="{button_continuetravel}" name="enabled" value="true" />
+			<mx:SetProperty target="{button_continuetravel}" name="visible" value="true" />
+			<mx:SetProperty target="{button_continuetravel}" name="includeInLayout" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="enabled" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="visible" value="true" />
+			<mx:SetProperty target="{button_registertravel}" name="includeInLayout" value="true" />
+
+		</mx:State>
+		
+	</mx:states>
+	
+	<mx:HBox right="0">
+				
+		<mx:Button id="button_cancel" styleName="secondary" tabIndex="1802"
+				enabled="true"
+				click="{buttonClicked(event)}"
+				label="{label_cancel}" height="22"/>
+				
+		<mx:Button id="button_continuetravel" styleName="secondary" tabIndex="1800" 
+				enabled="false"
+				click="{buttonClicked(event)}"
+				label="{label_continue}" height="22"/>
+	
+		<mx:Button id="button_registertravel" styleName="secondary" tabIndex="1801"
+				enabled="false"
+				click="{buttonClicked(event)}"
+				label="{label_register}"  height="22"/>
+		
+	</mx:HBox>
+	
+</mx:Canvas>

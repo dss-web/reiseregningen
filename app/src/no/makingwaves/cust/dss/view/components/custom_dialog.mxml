@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: CUSTOM DIALOG BOX -->
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+				creationComplete="init()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			public var alertText : String;
+			
+			[Bindable]
+			public var okFunctionRef : Function;
+			[Bindable]
+			public var cancelFunctionRef : Function;
+			
+			
+			private var _introIntervaller : Number;
+			
+			private function init():void {
+				//PopUpManager.centerPopUp(this);
+				this.x = (this.stage.width / 2) - (this.width / 2);
+				this.y += (model.positionParameter) - (this.height / 2);
+                
+				// add accessibility props
+				model.accessibility.addAccessibility(alerttext, alertText);
+				model.accessibility.addAccessibility(button_yes, resourceManager.getString(model.resources.bundleName, button_yes.id));
+				model.accessibility.addAccessibility(button_no, resourceManager.getString(model.resources.bundleName, button_no.id));
+				
+				activate();
+				
+				if (model.screenreader)
+                	this.parentApplication.visible = false;
+			}
+			
+			private function ok_clicked():void {
+				if (model.screenreader)
+                	this.parentApplication.visible = true;
+                	
+				if (okFunctionRef != null)
+					okFunctionRef.call(this);
+					
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function cancel_clicked():void {
+				if (model.screenreader)
+                	this.parentApplication.visible = true;
+                	
+				if (cancelFunctionRef != null)
+					cancelFunctionRef.call(this);
+					
+				PopUpManager.removePopUp(this);
+			}
+			
+			// FOCUS INITIALIZERS ===============================================
+			public function activate():void {
+				intro.enabled = true;
+				intro.visible = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus();
+				} catch (e:Error) { trace("custom_dialog.activate: " + e.message); }
+			}
+			
+			private function introIn(e:FocusEvent):void {
+				if (e.target) {
+					_introIntervaller = setInterval(introInit, 1000);
+				} else {
+					try { focusManager.getNextFocusManagerComponent(true).setFocus();
+					} catch (e:Error) { trace("custom_dialog.introIn: " + e.message); }
+				}
+			}
+			
+			private function introOut(e:FocusEvent):void {
+				clearInterval(_introIntervaller);
+				intro.enabled = false;
+				intro.visible = false;
+			}
+			
+			private function introInit():void {
+				clearInterval(_introIntervaller);
+				try {alerttext.setFocus();
+				} catch (e:Error) { trace("custom_dialog.introOut: " + e.message); }
+			}
+			// end of focusinitializers==========================================
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas width="100%" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" backgroundColor="#FFFFFF">
+		<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="introIn(event)" focusOut="introOut(event)" />
+		<mx:Text id="alerttext" text="{alertText}" width="300" horizontalCenter="0"
+					 paddingTop="20" paddingBottom="20" paddingLeft="20" paddingRight="20"/>
+	</mx:Canvas>
+	
+	<mx:Canvas width="100%" styleName="WindowedNavigation">
+		<mx:Button id="button_yes" styleName="secondary" width="110" height="22" paddingTop="20" paddingBottom="20" paddingLeft="20" paddingRight="20"
+					click="{ok_clicked()}" 
+					label="{resourceManager.getString(model.resources.bundleName, button_yes.id)}" horizontalCenter="-60"/>
+					
+		<mx:Button id="button_no" styleName="secondary" width="110" height="22" paddingTop="20" paddingBottom="20" paddingLeft="20" paddingRight="20"
+					click="{cancel_clicked()}" 
+					label="{resourceManager.getString(model.resources.bundleName, button_no.id)}" horizontalCenter="60"/>
+					
+	</mx:Canvas>
+	
+</mx:TitleWindow>

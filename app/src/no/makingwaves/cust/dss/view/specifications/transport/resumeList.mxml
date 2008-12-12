@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="initPage()" width="100%"
+	updateComplete="initPage()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
+			import mx.collections.ArrayCollection;
+            import mx.core.IFlexDisplayObject;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import no.makingwaves.util.Util;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.cust.dss.view.specifications.travel_specification;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			public var active_btn_edit : Boolean = true;
+			
+			[Bindable]
+			public var active_btn_delete : Boolean = true;
+
+			private var addWindow:IFlexDisplayObject;
+			
+			private var gridCounter:Number;
+				
+			private function initPage():void {
+				if (this.grid_specifications.selectedIndex == -1) {
+					this.active_btn_delete = false;
+					this.active_btn_edit = false;
+				}
+				this.initColumnSizes();
+			}		
+			
+			private function getFormattedDateAndTime(date:Date, time:String):String {
+				var formattedDate:String = "";
+				if (date != null) {
+					var dateFormat:String = resourceManager.getString(model.resources.getResourceBundleName(), 'DATE_FORMAT');
+					formattedDate = Util.formatDate(date, dateFormat);
+					
+					if (time != "") 	
+						formattedDate += ", kl." + time.substr(0,2) + ":" + time.substr(2,2);
+						
+				}
+				return formattedDate;
+			}
+			
+			public function editSpecification(e:MouseEvent=null):void {
+				//model.activeSpecification = travelspecifications;
+				var popupSpec:travel_specification = travel_specification(PopUpManager.createPopUp(this, travel_specification, true));
+				popupSpec.travelspecifications = TravelSpecificationVO(grid_specifications.selectedItem);
+				popupSpec.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+				
+				function closeWindowHandler(e:CloseEvent):void {
+					popupSpec.removeEventListener(CloseEvent.CLOSE, closeWindowHandler);
+					PopUpManager.removePopUp(popupSpec);
+				}
+			}
+			
+			public function deleteSpecification(e:MouseEvent=null):void {
+				var travelspecifications:TravelSpecificationVO = TravelSpecificationVO(grid_specifications.selectedItem); 
+				for (var i:Number = 0; i < model.travelSpecsList.length; i++) {
+					if (model.travelSpecsList.getItemAt(i) == travelspecifications) {
+						model.travelSpecsList.removeItemAt(i);
+						break;
+					}
+				}
+				if (model.travelSpecsList.length == 0) {
+					this.active_btn_delete = false;
+					this.active_btn_edit = false;
+				}
+			}
+			
+			public function getSelectedStatus():Boolean {
+				return Boolean(this.grid_specifications.selectedIndex != -1);				
+			}
+			
+			private function gridFormatterCost(item:TravelSpecificationVO, ref:DataGridColumn):String {
+				return item.cost.getCost();
+			}
+			
+			private function gridFormatterDate(item:TravelSpecificationVO, ref:DataGridColumn):String {
+				var label:String = "";
+				var departureHeader:String = resourceManager.getString(model.resources.bundleName, 'departuredate_listlabel');
+				if (ref.headerText == departureHeader) {
+					label = this.getFormattedDateAndTime(item.from_date, item.from_time);
+				} else {
+					label = this.getFormattedDateAndTime(item.to_date, item.to_time);
+				}
+				return label;
+			}
+			
+			private function gridFormatterDestinations(item:TravelSpecificationVO, ref:DataGridColumn):String {
+				return item.from_destination + " - " + item.to_destination;
+			}
+			
+			private function gridLostFocus(e:FocusEvent):void {
+				if (grid_specifications.selectedIndex == -1) {
+					model.activeSpecification = null;
+				}
+			}
+			
+			private function gridSelectionChanged(e:ListEvent):void {
+				if (grid_specifications.selectedIndex != -1) {
+					model.activeSpecification = TravelSpecificationVO(grid_specifications.selectedItem);
+					
+					// check and set button states
+					var travelspecifications:TravelSpecificationVO = model.activeSpecification;
+					this.active_btn_delete = true;
+					this.active_btn_edit = true;
+				} else {
+					this.active_btn_delete = false;
+					this.active_btn_edit = false;
+				}
+			}
+			
+			private function initColumnSizes():void {
+				var timer:Timer = new Timer(500,1);
+				timer.addEventListener(TimerEvent.TIMER_COMPLETE, setColumnSizes);
+				timer.start();				
+			}
+			private function setColumnSizes(e:TimerEvent):void {
+				try {
+					this.column1.width = getColumnSize(10);
+					this.column2.width = getColumnSize(20);		
+					this.column3.width = getColumnSize(35);		
+					this.column4.width = getColumnSize(20);		
+					this.column5.width = getColumnSize(15);
+				} catch (e:Error) { trace("transport.resumeList.setColumnSizes: " + e.message); }			
+			}
+			
+			private function getColumnSize(percent:Number):Number {
+				return (grid_specifications.width * percent) / 100;
+			}
+			
+			private function dateSortCompareFunction(obj1:Object, obj2:Object):int {
+				if (obj1.from_date > obj2.from_date) {
+					return -1;
+				} else if (obj1.from_date < obj2.from_date) {
+					return 1;
+				}
+				return 0;
+			}
+			
+		]]>
+	</mx:Script>
+		
+	<mx:DataGrid id="grid_specifications" tabIndex="262" rowCount="{model.travelSpecsList.length}" 
+				width="100%" height="100%" 
+				scaleX="{((model.travelSpecsList.length > 0) ? 1 : 0)}" 
+				scaleY="{((model.travelSpecsList.length > 0) ? 1 : 0)}"
+				dataProvider="{model.travelSpecsList}" addedToStage="{initColumnSizes()}"
+			    focusOut="{this.gridLostFocus(event)}"
+			    change="this.gridSelectionChanged(event)"
+			    dataChange="{grid_specifications.rowCount = model.travelSpecsList.length}" 
+			    doubleClick="{this.editSpecification(event)}">
+				
+        <mx:columns>
+	        	<mx:DataGridColumn id="column1" headerText="{resourceManager.getString(model.resources.bundleName, 'transporttype_listlabel')}"
+	        					    sortable="false" activate="{column1.width=getColumnSize(10)}"	
+	        						dataField="transportation_type" />
+	            <mx:DataGridColumn id="column2" headerText="{resourceManager.getString(model.resources.bundleName, 'departuredate_listlabel')}"
+	            					sortable="true" sortCompareFunction="dateSortCompareFunction" activate="{column2.width=getColumnSize(20)}"
+	            					labelFunction="gridFormatterDate" />
+	            <mx:DataGridColumn id="column3" headerText="{resourceManager.getString(model.resources.bundleName, 'departurelocation_listlabel')}"
+	            					sortable="false" activate="{column3.width=getColumnSize(35)}"
+	            					labelFunction="gridFormatterDestinations" />
+	            <mx:DataGridColumn id="column4" headerText="{resourceManager.getString(model.resources.bundleName, 'arrivaldate_listlabel')}"
+	            					sortable="false" activate="{column4.width=getColumnSize(20)}"
+	            					labelFunction="gridFormatterDate" />
+	            <mx:DataGridColumn id="column5" headerText="{resourceManager.getString(model.resources.bundleName, 'cost_listlabel')}"
+	            					sortable="false" activate="{column5.width=getColumnSize(15)}"
+	            					labelFunction="gridFormatterCost"
+	            					textAlign="right"  />
+
+        </mx:columns>
+    </mx:DataGrid>
+</mx:HBox>

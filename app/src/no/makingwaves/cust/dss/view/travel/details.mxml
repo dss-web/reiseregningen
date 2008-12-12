@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: FORM INPUT VIEW FOR BASIC TRAVEL INFO -->
+
+<code:ValidationBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:personalia="no.makingwaves.cust.dss.view.travel.*"
+			xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+	 		paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
+			creationComplete="initPage()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.util.keycontroller.KeyCombo;
+			import no.makingwaves.util.keycontroller.KeyController;
+			import no.makingwaves.util.keycontroller.KeyControllerEvent;
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			import mx.managers.IFocusManagerContainer;
+			import no.makingwaves.cust.dss.vo.TravelAccomodationVO;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.charts.chartClasses.DateRangeUtilities;
+			import no.makingwaves.util.date.DateRanger;
+			import no.makingwaves.util.Util;
+			import mx.core.UIComponent;
+			import mx.events.ValidationResultEvent;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.validators.ValidationResult;
+			import mx.binding.utils.BindingUtils;
+			import no.makingwaves.cust.dss.vo.PersonalInfoVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import no.makingwaves.cust.dss.view.components.custom_alert;
+			import no.makingwaves.cust.dss.view.components.custom_dialog;
+			
+			private var _lastFocus:*
+			private var _introIntervaller : Number;
+			
+			private function initPage():void {}
+			
+			public function activate():void {
+				// add accessibility properties
+				initAccessibility();
+				model.accessibility.addAccessibility(location, resourceManager.getString(model.resources.bundleName, location.id+'_label'));
+				model.accessibility.addAccessibility(domestic, resourceManager.getString(model.resources.bundleName, 'domestic_accessible'));
+				model.accessibility.addAccessibility(abroad, resourceManager.getString(model.resources.bundleName, 'abroad_accessible'));
+				model.accessibility.addAccessibility(officialjourney, resourceManager.getString(model.resources.bundleName, 'travelpurpose_accessible'));
+				model.accessibility.addAccessibility(course, resourceManager.getString(model.resources.bundleName, 'travelpurpose_accessible'));
+				model.accessibility.addAccessibility(other, resourceManager.getString(model.resources.bundleName, 'travelpurpose_accessible'));
+				model.accessibility.addAccessibility(departuredate_text, resourceManager.getString(model.resources.bundleName, departuredate.id+'_help') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+				model.accessibility.addAccessibility(departuretime, resourceManager.getString(model.resources.bundleName, departuretime.id+'_help') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_time'));
+				model.accessibility.addAccessibility(arrivaldate_text, resourceManager.getString(model.resources.bundleName, arrivaldate.id+'_help') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+				model.accessibility.addAccessibility(arrivaltime, resourceManager.getString(model.resources.bundleName, arrivaltime.id+'_help') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_time'));
+				// add validators for date
+				this.addValidationField(location);
+				this.addCustomStringValidation(arrivaldate_text, false, false, this.DATE);
+				this.addCustomStringValidation(departuredate_text, false, false, this.DATE);
+				this.addValidationField(departuredate_text, this.STRING, true, 8, 8);
+				this.addValidationField(arrivaldate_text, this.STRING, true, 8, 8);
+				// add validators for time
+				this.addValidationField(departuretime, this.STRING, true, 4, 4);
+				this.addValidationField(arrivaltime, this.STRING, true, 4, 4);
+				this.addCustomStringValidation(departuretime, false, true, this.VALIDATOR_FORMAT_TIME, 2359);
+				this.addCustomStringValidation(arrivaltime, false, true, this.VALIDATOR_FORMAT_TIME, 2359);
+				// set assistance
+				setAssistance("travel_intro_help", model.TRAVEL);
+				// set init focus
+				intro.enabled = true;
+				intro.visible = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus();
+				} catch (e:Error) { trace("travel.activate: " + e.message); }
+				// short-cuts
+				registerKeyCombos();
+			}
+			
+			private function initAccessibility():void {
+				if (!model.screenreader) {
+					try {
+						accessibilitytext.removeChild(this.accessibility_introtext);
+					} catch (e:Error) { trace("travel.initAccessiblity: " + e.message);}
+					
+				} else {
+					//model.accessibility.addAccessibility(this.accessibility_introtext, resourceManager.getString(model.resources.bundleName, "travel_intro_help"));
+				}
+			}
+			
+			private function introIn():void {
+				_introIntervaller = setInterval(introInit, 1000);
+			}
+			
+			private function introOut():void {
+				clearInterval(_introIntervaller);
+				intro.enabled = false;
+				intro.visible = false;
+			}
+			
+			private function introInit():void {
+				introOut();
+				if (!model.screenreader) {
+					try { location.setFocus();
+					} catch (e:Error) { trace("travel.introInit (1): " + e.message); }
+				} else {
+					try { accessibility_introtext.savelocal_infobtn.setFocus();
+					} catch (e:Error) { trace("travel.introInit (2): " + e.message); }
+				}
+			}
+			
+			private function registerKeyCombos():void {
+				var keyController:KeyController = new KeyController(this);
+				// set keyboard shortcuts
+				keyController.setKeyWatch(13); 					// ENTER
+				keyController.addEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
+			}
+		
+			private function keyComboPressed(event:KeyControllerEvent):void {
+				var pressedCombo:KeyCombo = event.keyCombo;
+				if (!pressedCombo.ctrl && !pressedCombo.shift && !pressedCombo.alt) {
+					if (pressedCombo.keyCode == 13) {
+						this.continueClicked();
+					}
+				}
+			}
+			
+			public function saveData():void {
+				// clear assistance
+				setAssistance("", model.TRAVEL);
+				// save data
+				model.activeTravel.location = location.text;
+				model.activeTravel.travel_type = Number(traveltype.selectedValue);
+				model.activeTravel.travel_cause = Number(travelpurpose.selectedValue);
+				if (model.activeTravel.travel_cause == model.activeTravel.OTHER) {
+					model.activeTravel.travel_cause_other = this.travel_cause_other.text;
+				}
+				model.activeTravel.travel_date_out = departuredate.selectedDate;
+				model.activeTravel.travel_time_out = departuretime.text;
+				model.activeTravel.travel_date_in = arrivaldate.selectedDate;
+				model.activeTravel.travel_time_in = arrivaltime.text;
+				
+				setSummary();
+			} 
+			
+			public function setSummary():void {
+				model.summaryTextTravel = "";
+				// location
+				var loc:String = model.activeTravel.location;
+				if (loc.length > 20) {
+					loc = loc.substr(0,18) + "..";
+				}
+				model.summaryTextTravel += loc;
+				// travel type
+				if (model.activeTravel.travel_cause == model.activeTravel.BUSINESS) {
+					model.summaryTextTravel += ". " + "Tjenestereise";
+				} else if (model.activeTravel.travel_cause == model.activeTravel.COURSE) {
+					model.summaryTextTravel += ". " + "Kurs";
+				} else if (model.activeTravel.travel_cause == model.activeTravel.OTHER) {
+					model.summaryTextTravel += ". " + model.activeTravel.travel_cause_other;
+				}
+				// travel cause
+				if (model.activeTravel.travel_type == model.activeTravel.DOMESTIC) {
+					model.summaryTextTravel += ", " + "innland";
+				} else if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
+					model.summaryTextTravel += ", " + "utland";
+				}
+				// travel dates
+				var dateFormat:String = resourceManager.getString(model.resources.bundleName, 'DATE_FORMAT');
+				var dateOut:String = Util.formatDate(model.activeTravel.travel_date_out, dateFormat);
+				var dateIn:String = Util.formatDate(model.activeTravel.travel_date_in, dateFormat);
+							
+				if (dateOut != "") {
+					model.summaryTextTravel += ", " + dateOut;
+					model.summaryTextTravel += " kl. " + model.activeTravel.travel_time_out;
+				}
+				if (dateIn != "") {
+					model.summaryTextTravel += ", " + dateIn;
+					model.summaryTextTravel += " kl. " + model.activeTravel.travel_time_in;
+				}
+				
+				if (model.activeTravel.travel_date_out != null && model.activeTravel.travel_date_in != null && model.activeTravel.travel_time_out != "" && model.activeTravel.travel_time_in != "") {
+					// calculation of dates
+					var tempDateOut:Date = model.activeTravel.travel_date_out;
+					var tempDateIn :Date = model.activeTravel.travel_date_in;
+					//var diffUtcTime:Number = new Date().timezoneOffset / 60; // the users timezone
+					tempDateOut.setHours(Number(model.activeTravel.travel_time_out.substr(0,2)), Number(model.activeTravel.travel_time_out.substr(2,2)));
+					tempDateIn.setHours(Number(model.activeTravel.travel_time_in.substr(0,2)), Number(model.activeTravel.travel_time_in.substr(2,2)));
+					var dateRange:DateRanger = new DateRanger();
+					dateRange.getDateRange(tempDateOut, tempDateIn);
+					// update model
+					model.travelLength = dateRange;
+					
+					//model.summaryTextTravel += " (" + dateRange.days + " døgn " + dateRange.hours + " timer " + dateRange.minutes + " min) ";
+				}
+			}	
+			
+			override public function continueClicked():void {
+				var xValidation:Boolean = true;
+				if (this.traveltype.selectedValue != model.activeTravel.DOMESTIC && this.traveltype.selectedValue != model.activeTravel.ABROAD) {
+					xValidation = false;
+					var validationText:String = resourceManager.getString(model.resources.bundleName, "traveltype_validator");;
+					this.showValidationError(this.abroad, validationText);
+				} else if (this.travelpurpose.selectedValue != model.activeTravel.BUSINESS && this.travelpurpose.selectedValue != model.activeTravel.COURSE && this.travelpurpose.selectedValue != model.activeTravel.OTHER) {
+					xValidation = false;
+					var validationText:String = resourceManager.getString(model.resources.bundleName, "travelcause_validator");;
+					this.showValidationError(this.course, validationText);
+				}
+				if (xValidation) {
+					if (arrivaldate != null && departuredate != null) {
+						// add extra validation
+						var today:Date = new Date();
+						this.addCustomDateValidation(arrivaldate, null, today, departuredate, null, arrivaldate_text);
+						this.addCustomDateValidation(departuredate, null, null, null, arrivaldate, departuredate_text);
+						
+						if (Util.formatDate(departuredate.selectedDate) == Util.formatDate(arrivaldate.selectedDate)) {
+							// extra check on travel time
+							this.addCustomTimeValidation(arrivaltime, departuredate, departuretime, arrivaldate, arrivaltime);
+						} else {
+							this.removeCustomTimeValidation(arrivaltime);
+						}
+					}
+					// call super to validate
+					super.continueClicked();
+				}
+			}
+			
+			override public function validateDetailsForm():Boolean {
+				model.activeTravel.valid = super.validateDetailsForm();
+				return model.validationStatusTravel = model.activeTravel.valid;
+			}
+			
+			private function travelDepartureTimeChanged(newDate:Date=null, newTime:String="", updateText:Boolean=true):void {
+				if (Util.formatDate(newDate) != Util.formatDate(model.activeTravel.travel_date_out) || newTime != model.activeTravel.travel_time_out) {
+					
+					var valid:Boolean = true;
+					if (newDate != null)
+						valid = this.validateCustomField(this.departuredate);
+						
+					if (newTime != "")
+						valid = this.validateCustomField(this.departuretime);
+					
+					if (valid) {
+						// base date changed -> check wether sublevel data need to be updated
+						var changeAllowed:Boolean = true;
+						var currentTravelLength:Number = model.travelLength.total_24hours;
+						var newTravelLength:DateRanger = new DateRanger();
+						newTravelLength.getDateRange(newDate, this.arrivaldate.selectedDate);
+						if (newTravelLength.total_24hours < 1 && newTravelLength.total_24hours != currentTravelLength) {
+							// user is trying to change to day travel - not allowed if accomodation or deductions are registered
+							if (model.travelAccomodationList.length > 0 && model.travelDeductionList.length > 0) {
+								changeAllowed = false;
+							}
+						}
+						if (changeAllowed) {
+							// first - check travelspecifications
+							var specsChanged:Boolean = false;
+							if (model.travelSpecsList.length > 0) {
+								specsChanged = true;
+								var distanceStart:TravelSpecificationVO = TravelSpecificationVO(model.travelSpecsList.getItemAt(0));
+								var distanceEnd:TravelSpecificationVO;
+								for (var i:Number = 0; i < model.travelSpecsList.length; i++) {
+									// search for first distance registered as travel end
+									if (TravelSpecificationVO(model.travelSpecsList.getItemAt(i)).is_travel_end) {
+										distanceEnd = TravelSpecificationVO(model.travelSpecsList.getItemAt(i));
+										break;
+									}
+								}
+								// set new date to found specifications
+								if (newDate != null) {
+									distanceStart.from_date = newDate;
+									if (distanceEnd != null)
+										distanceEnd.to_date = newDate;
+										
+								}
+								if (newTime != "") {
+									distanceStart.from_time = newTime;
+										
+								}
+							}
+							// second - check accomodations
+							var accChanged:Boolean = false;
+							var accFromDate:String;
+							if (model.travelAccomodationList.length > 0) {
+								for (var a:Number = 0; a < model.travelAccomodationList.length; a++) {
+									accFromDate = Util.formatDate(TravelAccomodationVO(model.travelAccomodationList.getItemAt(a)).fromdate);
+									if (accFromDate == Util.formatDate(model.activeTravel.travel_date_out)) {
+										// set new date to found accomodation
+										var accomodation:TravelAccomodationVO = TravelAccomodationVO(model.travelAccomodationList.getItemAt(a));
+										if (newDate != null) {
+											accChanged = true;
+											accomodation.fromdate = newDate;									
+										}
+									}
+								}				
+							}
+							// save travel info changes
+							if (newDate != null)
+								model.activeTravel.travel_date_out = newDate;
+									
+							if (newTime != "")
+								model.activeTravel.travel_time_out = newTime;
+									
+							// update date text field?
+							if (updateText)
+								this.departuredate_text.text = this.getFormattedDate(model.activeTravel.travel_date_out);
+								 
+						}
+					
+						// check wether changed has been done and if to inform user about them
+						if (specsChanged || accChanged) {
+							// create alert text
+							var alertText:String = resourceManager.getString(model.resources.bundleName, "travel_timechange_departure_intro");
+							var titleText:String = resourceManager.getString(model.resources.bundleName, "travel_timechange_departure_title");
+							if (specsChanged)
+								alertText += "\n\n" + resourceManager.getString(model.resources.bundleName, "travel_timechange_departure_specifications");
+								
+							if (accChanged)
+								alertText += "\n\n" + resourceManager.getString(model.resources.bundleName, "travel_timechange_departure_accomodations");
+									
+							alertText += "\n\n" + resourceManager.getString(model.resources.bundleName, "travel_timechange_outro");
+							// show alert box
+							var alertWindow:mx.core.IFlexDisplayObject;
+							alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
+							custom_alert(alertWindow).alertText = alertText;
+							custom_alert(alertWindow).title = titleText;
+						}
+						
+					} else {
+						var titleText:String = resourceManager.getString(model.resources.bundleName, "travel_timechange_notallowed_title");
+						var alertText:String = resourceManager.getString(model.resources.bundleName, "travel_timechange_notallowed_content");
+						// show alert box
+						var alertWindow:mx.core.IFlexDisplayObject;
+						alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
+						custom_alert(alertWindow).alertText = alertText;
+						custom_alert(alertWindow).title = titleText;
+						// reset values
+						this.departuredate.selectedDate = model.activeTravel.travel_date_out;
+						this.departuretime.text = model.activeTravel.travel_time_out;
+						//this.travelDepartureTimeChanged(model.activeTravel.travel_date_out, model.activeTravel.travel_time_out);
+					}
+				}
+			}
+			
+			private function travelArrivalTimeChanged(newDate:Date=null, newTime:String="", updateText:Boolean=true):void {
+				if (Util.formatDate(newDate) != Util.formatDate(model.activeTravel.travel_date_in) || newTime != model.activeTravel.travel_time_in) {
+					
+					var valid:Boolean = true;
+					if (newDate != null)
+						valid = this.validateCustomField(this.arrivaldate);
+						
+					if (newTime != "")
+						valid = this.validateCustomField(this.arrivaltime);
+					
+					if (valid) {
+						// base date changed -> check wether sublevel data need to be updated
+						var changeAllowed:Boolean = true;
+						var currentTravelLength:Number = model.travelLength.total_24hours;
+						var newTravelLength:DateRanger = new DateRanger();
+						newTravelLength.getDateRange(this.departuredate.selectedDate, newDate);
+						if (newTravelLength.total_24hours < 1 && newTravelLength.total_24hours != currentTravelLength) {
+							// user is trying to change to day travel - not allowed if accomodation or deductions are registered
+							if (model.travelAccomodationList.length > 0 && model.travelDeductionList.length > 0) {
+								changeAllowed = false;
+							}
+						}
+						if (changeAllowed) {
+							// first - check travelspecifications
+							var specsChanged:Boolean = false;
+							if (model.travelSpecsList.length > 0) {
+								var distanceStart:TravelSpecificationVO;
+								var distanceEnd:TravelSpecificationVO = TravelSpecificationVO(model.travelSpecsList.getItemAt(model.travelSpecsList.length-1));
+								for (var i:Number = model.travelSpecsList.length-1; i >= 0 ; i--) {
+									// search for first distance registered as travel start
+									if (TravelSpecificationVO(model.travelSpecsList.getItemAt(i)).is_travel_start) {
+										distanceStart = TravelSpecificationVO(model.travelSpecsList.getItemAt(i));
+										break;
+									}
+								}
+								// set new date to found specifications
+								if (newDate != null) {
+									if (distanceStart != null) {
+										if (Util.formatDate(distanceStart.from_date) == Util.formatDate(model.activeTravel.travel_date_in)) {
+											specsChanged = true;
+											distanceStart.from_date = newDate;
+										}
+									}
+										
+									if (distanceEnd != null) {
+										if (Util.formatDate(distanceEnd.to_date) == Util.formatDate(model.activeTravel.travel_date_in)) {
+											specsChanged = true;
+											distanceEnd.to_date = newDate;
+										}
+									}
+										
+								}
+								if (newTime != "") {
+									if (distanceStart != null) {
+										if (distanceStart.from_time == model.activeTravel.travel_time_in) {
+											specsChanged = true;
+											distanceStart.from_time = newTime;
+										}
+									}
+										
+									if (distanceEnd != null) {
+										if (distanceEnd.to_time == model.activeTravel.travel_time_in) {
+											specsChanged = true;
+											distanceEnd.to_time = newTime;
+										}
+									}
+										
+								}
+							}
+							// second - check accomodations
+							var accChanged:Boolean = false;
+							var accToDate:String;
+							if (model.travelAccomodationList.length > 0) {
+								for (var a:Number = 0; a < model.travelAccomodationList.length; a++) {
+									accToDate = Util.formatDate(TravelAccomodationVO(model.travelAccomodationList.getItemAt(a)).todate);
+									if (accToDate == Util.formatDate(model.activeTravel.travel_date_in)) {
+										// set new date to found accomodation
+										var accomodation:TravelAccomodationVO = TravelAccomodationVO(model.travelAccomodationList.getItemAt(a));
+										if (newDate != null) {
+											accChanged = true;
+											accomodation.todate = newDate;									
+										}
+									}
+								}				
+							}
+							// save travel info changes
+							if (newDate != null)
+								model.activeTravel.travel_date_in = newDate;
+									
+							if (newTime != "")
+								model.activeTravel.travel_time_in = newTime;
+								
+							// update date text field?
+							if (updateText) {
+								this.arrivaldate_text.text = this.getFormattedDate(model.activeTravel.travel_date_in);
+							}
+						
+							// check wether changed has been done and if to inform user about them
+							if (specsChanged || accChanged) {
+								// create alert text
+								var alertText:String = resourceManager.getString(model.resources.bundleName, "travel_timechange_arrival_intro");
+								var titleText:String = resourceManager.getString(model.resources.bundleName, "travel_timechange_arrival_title");
+								if (specsChanged)
+									alertText += "\n\n" + resourceManager.getString(model.resources.bundleName, "travel_timechange_arrival_specifications");
+									
+								if (accChanged)
+									alertText += "\n\n" + resourceManager.getString(model.resources.bundleName, "travel_timechange_arrival_accomodations");
+										
+								alertText += "\n\n" + resourceManager.getString(model.resources.bundleName, "travel_timechange_outro");
+								// show alert box
+								var alertWindow:mx.core.IFlexDisplayObject;
+								alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
+								custom_alert(alertWindow).alertText = alertText;
+								custom_alert(alertWindow).title = titleText;
+							}
+						
+						} else {
+							var alertText:String = resourceManager.getString(model.resources.bundleName, "travel_timechange_notallowed_content");
+							var titleText:String = resourceManager.getString(model.resources.bundleName, "travel_timechange_notallowed_title");
+							// show alert box
+							var alertWindow:mx.core.IFlexDisplayObject;
+							alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
+							custom_alert(alertWindow).alertText = alertText;
+							custom_alert(alertWindow).title = titleText;
+							// reset values
+							this.arrivaldate.selectedDate = model.activeTravel.travel_date_in;
+							this.arrivaltime.text = model.activeTravel.travel_time_in;
+						}
+					}
+				}
+			}
+			
+			private function textDatefieldChanged(e:FocusEvent):void {
+				var textField:TextInput = TextInput(e.currentTarget);
+				//if (this.validateCustomField(textField) && textField.text != "") {
+				if (this.validateCustomField(textField)) {
+					var dateValues:Array = textField.text.split(".");
+					if (textField == this.departuredate_text) {
+						if (textField.text != "") {
+							this.departuredate.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+						} else {
+							this.departuredate.selectedDate = null;
+						}
+						this.travelDepartureTimeChanged(this.departuredate.selectedDate, this.departuretime.text, false);
+						
+					} else if (textField == this.arrivaldate_text) {
+						if (textField.text != "") {
+							this.arrivaldate.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+						} else {
+							this.arrivaldate.selectedDate = null;
+						}
+						this.travelArrivalTimeChanged(this.arrivaldate.selectedDate, this.arrivaltime.text, false);
+					}
+				}
+			}
+			
+
+			private function travelTypeChanged():void {
+				this.undisplayAllValidators();
+				// check wether changing travel type will have any effect on registered specifications
+				var isChangeAllowed:Boolean = true;
+				var doAlert:Boolean = false;
+				if (this.traveltype.selectedValue == model.activeTravel.DOMESTIC && model.activeTravel.travel_type != this.traveltype.selectedValue && model.activeTravel.travel_type != 0) {
+					// travel type changed to DOMESTIC travels - check wether to allow it
+					var specList:ArrayCollection = model.travelSpecsList;
+					for (var i:Number = 0; i < specList.length; i++) {
+						var spec:TravelSpecificationVO = TravelSpecificationVO(specList.getItemAt(i));
+						if (spec.from_country != "" || spec.to_country != "") {
+							isChangeAllowed = false;
+							break;
+						} 
+					}
+					if (isChangeAllowed) {
+						var accList:ArrayCollection = model.travelAccomodationList;
+						for (var a:Number = 0; a < accList.length; a++) {
+							var acc:TravelAccomodationVO = TravelAccomodationVO(accList.getItemAt(a));
+							if (acc.country != "") {
+								isChangeAllowed = false;
+								break;
+							} 
+						}
+					}
+					
+				} else if (this.traveltype.selectedValue == model.activeTravel.ABROAD && model.activeTravel.travel_type != this.traveltype.selectedValue && model.activeTravel.travel_type != 0) {
+					// travel type changed to INTERNATIONAL travels - allowed, but give warning
+					doAlert = true;	
+				} 
+				
+				var alertText:String;
+				var titleText:String;
+				if (isChangeAllowed && doAlert) {
+					alertText = resourceManager.getString(model.resources.bundleName, "travel_typechange_change_alert");
+					titleText = resourceManager.getString(model.resources.bundleName, "travel_typechange_title");
+					// show alert box
+					var alertWindow:mx.core.IFlexDisplayObject;
+					alertWindow = PopUpManager.createPopUp(this, custom_dialog, true);
+					custom_dialog(alertWindow).alertText = alertText;
+					custom_dialog(alertWindow).title = titleText;
+					custom_dialog(alertWindow).okFunctionRef = useractionDoTypeChange;
+					custom_dialog(alertWindow).cancelFunctionRef = useractionAbortTypeChange;
+				} else if (!isChangeAllowed) {
+					// alert the user
+					alertText = resourceManager.getString(model.resources.bundleName, "travel_typechange_change_notallowed");
+					titleText = resourceManager.getString(model.resources.bundleName, "travel_typechange_title");
+					// show alert box
+					var alertWindow:mx.core.IFlexDisplayObject;
+					alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
+					custom_alert(alertWindow).alertText = alertText;
+					custom_alert(alertWindow).title = titleText;
+					// set value back to saved value
+					this.traveltype.selectedValue = model.activeTravel.travel_type;
+				}
+			}
+			
+			private function useractionDoTypeChange():void {}
+			
+			private function useractionAbortTypeChange():void {
+				// set value back to saved value
+				this.traveltype.selectedValue = model.activeTravel.travel_type;
+			}
+
+		]]>
+	</mx:Script>
+
+	<mx:VBox width="100%" visible="{this.enabled}">
+		<mx:Box id="accessibilitytext" width="100%">
+			<comp:infobutton id="accessibility_introtext" buttonTabIndex="150" textReference="travel_intro_help" accessibilityLabel="{resourceManager.getString(model.resources.bundleName, 'header_travel')}"
+							 enabled="{model.screenreader}" visible="{model.screenreader}" />
+<!--			
+			<mx:TextInput id="accessibility_introtext" tabIndex="150" width="0" height="0" editable="false" focusEnabled="true" styleName="accessibilityInfo"
+					  text="{resourceManager.getString(model.resources.bundleName, 'travel_intro_help')}" />
+-->					  
+		</mx:Box>
+		<mx:HBox paddingTop="10" paddingLeft="10" paddingRight="10" paddingBottom="10">
+			<mx:VBox>
+				<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="{introIn()}" focusOut="{introOut()}" enabled="{this.enabled}" tabIndex="151" />
+				<mx:Label id="location_label" text="{resourceManager.getString(model.resources.bundleName, location_label.id) + ' *'}" styleName="form" />
+				<mx:TextArea id="location" width="{model.fieldSizeMain}" enabled="{this.enabled}"
+								text="{model.activeTravel.location}" tabIndex="152" />
+			</mx:VBox>	
+										
+			<mx:VBox width="100%" paddingTop="30" paddingLeft="10">
+					<mx:RadioButtonGroup id="traveltype" selectedValue="{model.activeTravel.travel_type}" change="{travelTypeChanged()}" enabled="{this.enabled}" />
+					<mx:RadioButton id="domestic" label="{(resourceManager.getString(model.resources.bundleName, domestic.id+'_label'))}" groupName="traveltype" value="{model.activeTravel.DOMESTIC}" tabIndex="153" />
+					<mx:RadioButton id="abroad" label="{resourceManager.getString(model.resources.bundleName, abroad.id+'_label')}" groupName="traveltype" value="{model.activeTravel.ABROAD}" tabIndex="154"/>
+			</mx:VBox>
+			
+			<mx:VBox paddingLeft="60" paddingTop="4">
+				<mx:HBox>
+					<mx:Label id="travelpurpose_label" text="{resourceManager.getString(model.resources.bundleName, travelpurpose_label.id) + ' *'}" styleName="form" />
+					<comp:infobutton id="travelpurpose_help" buttonTabIndex="155" textReference="travelpurpose_help" />
+				</mx:HBox>
+				<mx:VBox>
+					<mx:RadioButtonGroup id="travelpurpose" selectedValue="{model.activeTravel.travel_cause}" change="{this.undisplayAllValidators()}" enabled="{this.enabled}" />
+					<mx:RadioButton id="officialjourney" label="{resourceManager.getString(model.resources.bundleName, officialjourney.id+'_label')}" groupName="travelpurpose" value="{model.activeTravel.BUSINESS}" tabIndex="156"/>
+					<mx:RadioButton id="course" label="{resourceManager.getString(model.resources.bundleName, course.id+'_label')}" groupName="travelpurpose" value="{model.activeTravel.COURSE}" tabIndex="157" />
+					<mx:HBox width="100%">
+						<mx:RadioButton id="other" label="{resourceManager.getString(model.resources.bundleName, other.id+'_label')}" groupName="travelpurpose" value="{model.activeTravel.OTHER}" tabIndex="158" />
+						<mx:TextInput id="travel_cause_other" visible="{(travelpurpose.selectedValue == model.activeTravel.OTHER)}" width="{model.fieldSizeMain*.5}"
+										text="{model.activeTravel.travel_cause_other}" tabIndex="159" />
+					</mx:HBox>					
+				</mx:VBox>
+			</mx:VBox>
+		</mx:HBox>
+				
+		<mx:VBox paddingTop="10" paddingBottom="10" paddingRight="10" paddingLeft="10">
+			<mx:Label id="departurepoint_label" text="{resourceManager.getString(model.resources.bundleName, departurepoint_label.id) + ' *'}" styleName="form" />
+			<mx:HBox>
+				<mx:Label id="departuredate_label" enabled="{departuredate_text.enabled}"
+							text="{resourceManager.getString(model.resources.bundleName, departuredate_label.id)}" />
+				<mx:TextInput id="departuredate_text" width="70" maxChars="8" text="{this.getFormattedDate(model.activeTravel.travel_date_out)}" focusOut="{this.textDatefieldChanged(event)}" enabled="{this.enabled}" tabIndex="160" />
+				<mx:DateField id="departuredate" creationComplete="{dateField_init(departuredate)}" editable="true" width="17" visible="{!model.screenreader}" enabled="{this.enabled}" tabEnabled="{!model.screenreader}" tabIndex="161"
+							    selectedDate="{model.activeTravel.travel_date_out}"
+							    change="{travelDepartureTimeChanged(departuredate.selectedDate)}" />
+				<mx:Text id="date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
+							    
+				<mx:Label id="departuretime_label" text="{resourceManager.getString(model.resources.bundleName, departuretime_label.id)}" />
+				<mx:TextInput id="departuretime" maxChars="4" width="50" enabled="{this.enabled}"
+								text="{model.activeTravel.travel_time_out}" tabIndex="162"
+							    focusOut="{travelDepartureTimeChanged(departuredate.selectedDate,departuretime.text)}" />
+				<mx:Text id="time_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_time')}" />
+											  
+			</mx:HBox>
+			<mx:Label id="arrivalpoint_label" text="{resourceManager.getString(model.resources.bundleName, arrivalpoint_label.id) + ' *'}" styleName="form" paddingTop="10" />
+			<mx:HBox>
+				<mx:Label id="arrivaldate_label" enabled="{arrivaldate_text.enabled}" 
+							text="{resourceManager.getString(model.resources.bundleName, arrivaldate_label.id)}" />
+				<mx:TextInput id="arrivaldate_text" width="70" maxChars="8" text="{this.getFormattedDate(model.activeTravel.travel_date_in)}" focusOut="{this.textDatefieldChanged(event)}" enabled="{this.enabled}" tabIndex="163" />
+				<mx:DateField id="arrivaldate" creationComplete="{dateField_init(arrivaldate)}" editable="true"  width="17" visible="{!model.screenreader}" enabled="{this.enabled}" tabEnabled="{!model.screenreader}" tabIndex="164"
+						     	selectedDate="{model.activeTravel.travel_date_in}"
+							    change="{travelArrivalTimeChanged(arrivaldate.selectedDate)}" />
+				<mx:Text id="date_help2" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
+				
+				<mx:Label id="arrivaltime_label" text="{resourceManager.getString(model.resources.bundleName, arrivaltime_label.id)}" />
+				<mx:TextInput id="arrivaltime" maxChars="4" width="50" enabled="{this.enabled}"
+								text="{model.activeTravel.travel_time_in}" tabIndex="165"
+							    focusOut="{travelArrivalTimeChanged(arrivaldate.selectedDate,arrivaltime.text)}" />
+				<mx:Text id="time_help2" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_time')}" />
+			</mx:HBox>
+		</mx:VBox>
+	</mx:VBox>
+	
+	<mx:Canvas width="100%" visible="{this.enabled}">
+		<mx:Button id="button_continue" right="0" styleName="default" width="110" height="30" visible="true" 
+					enabled="{model.validationStatusPersonal}" tabIndex="166"
+					label="{resourceManager.getString(model.resources.bundleName, button_continue.id)}" 
+					click="{continueClicked()}" />
+	</mx:Canvas>
+</code:ValidationBase>

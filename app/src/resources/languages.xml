@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<languages>
+	<language id="no_BO" filename="resources/schema_no_BO.xml" name="Bokmål" desc="Norsk bokmål" />
+	<language id="no_NY" filename="resources/schema_no_NY.xml" name="Nynorsk" desc="Nynorsk" />
+</languages>

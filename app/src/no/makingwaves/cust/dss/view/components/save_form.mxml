@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: SAVE FORM DIALOG -->
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+				creationComplete="init()" borderAlpha="0.9"
+				title="{resourceManager.getString(model.resources.getResourceBundleName(), 'localsave_header')}">
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.events.LocalSaveEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.collections.ArrayCollection;
+			import no.makingwaves.util.Util;
+			import no.makingwaves.cust.dss.view.components.custom_dialog;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			private function init():void {
+				//PopUpManager.centerPopUp(this);
+				this.x = (this.stage.width / 2) - (this.width / 2);
+				this.y += (model.positionParameter) - (this.height / 2);
+				if (model.localSaveName == "") {
+					saveName.text = resourceManager.getString(model.resources.bundleName, 'localsave_defaultSavename');
+					saveName.text += Util.formatDate(new Date());
+				} else {
+					var travelForm:SharedObject = SharedObject.getLocal("travelexpense_savedforms");
+					var savedFormsList:ArrayCollection = travelForm.data.savedFormsList;
+					if (savedFormsList == null) {
+						savedFormsList = new ArrayCollection();
+					}
+					// check wether saveName is already used
+					for (var i:Number = 0; i < savedFormsList.length; i++) {
+						if (savedFormsList.getItemAt(i).data == model.localSaveName) {
+							saveName.text = savedFormsList.getItemAt(i).label;
+							break;
+						}
+					}
+				}
+				
+				// add accessibility
+				model.accessibility.addAccessibility(saveName, resourceManager.getString(model.resources.bundleName, 'localsave_savename_label'));
+				model.accessibility.addAccessibility(button_ok, resourceManager.getString(model.resources.bundleName, button_ok.id));
+				model.accessibility.addAccessibility(button_cancel, resourceManager.getString(model.resources.bundleName, button_cancel.id));
+				
+				if (model.screenreader)
+                	this.parentApplication.visible = false;
+			}
+			
+			private function cancel_clicked():void {
+				if (model.screenreader)
+                	this.parentApplication.visible = true;
+                	
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function ok_clicked():void {
+				if (saveName.text != "") {
+					// create legal savename
+					var realSaveName:String = savenameControl(saveName.text);
+					// collect save name 
+					model.localSaveName = realSaveName;
+					// collect list of saved names
+					var exists:Boolean = false;
+					var travelForm:SharedObject = SharedObject.getLocal("travelexpense_savedforms");
+					trace("SharedObject is " + travelForm.size + " bytes");
+					var savedFormsList:ArrayCollection = travelForm.data.savedFormsList;
+					if (savedFormsList == null) {
+						savedFormsList = new ArrayCollection();
+					}
+					// check wether saveName is already used
+					for (var i:Number = 0; i < savedFormsList.length; i++) {
+						if (savedFormsList.getItemAt(i).data == realSaveName) {
+							exists = true;
+							break;
+						}
+					}
+					if (exists) {
+						// filename already exists - ask to overwrite
+						dialogOverwrite();
+					} else {
+						// add new saveName in list of saved items
+						savedFormsList.addItem({label: saveName.text, data: realSaveName});
+						doSave(savedFormsList);
+					}
+				}
+			}
+			
+			private function doSave(saveList:ArrayCollection=null):void {
+				if (saveList != null) {
+					// register new saveName in list of saved items
+					var travelForm:SharedObject = SharedObject.getLocal("travelexpense_savedforms");
+					try {
+						travelForm.data.savedFormsList = saveList;
+						travelForm.flush();
+					} catch (e:Error) {
+						trace("Local save, 'travelexpense_savedforms' failed...");
+					}
+				}
+				// do actual save
+				var event:CairngormEvent = new CairngormEvent( LocalSaveEvent.SAVE_LOCAL );
+				CairngormEventDispatcher.getInstance().dispatchEvent( event );
+				
+				if (model.screenreader)
+                	this.parentApplication.visible = true;
+                	
+                // close dialog
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function cancelSave():void {
+				// reset savename
+				model.localSaveName = "";
+			}
+			
+			private function dialogOverwrite():void {
+				// show alert box
+				var alertWindow:mx.core.IFlexDisplayObject;
+				alertWindow = PopUpManager.createPopUp(this, custom_dialog, true);
+				custom_dialog(alertWindow).alertText = resourceManager.getString(model.resources.bundleName, 'localsave_overwrite');
+				custom_dialog(alertWindow).title = resourceManager.getString(model.resources.bundleName, 'localsave_overwrite_header');;
+				custom_dialog(alertWindow).okFunctionRef = doSave;
+				custom_dialog(alertWindow).cancelFunctionRef = cancelSave;
+			}
+			
+			/* check savename for legal chars and adjust and remove any illegal chars */
+			private function savenameControl(text:String):String {
+				var illegalChars:Array = [" ", "~", "%", "&", "\\", ";", ":", "\"", "'", ",", "<", ">", "?", "#"];
+				for (var i:Number = 0; i < illegalChars.length; i++) {
+					if (text.indexOf(illegalChars[i]) != -1) {
+						text = Util.searchAndReplace(text, illegalChars[i], "_");
+					}
+				}
+				return text;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:HBox styleName="FramedBox">
+		<mx:Label id="saveName_label" text="{resourceManager.getString(model.resources.bundleName, 'localsave_savename_label')}" />
+		<mx:TextInput id="saveName" width="250" />
+	</mx:HBox>
+	
+	<mx:Canvas width="100%">
+		<mx:Button id="button_ok" left="0" width="110" enabled="{saveName.text != ''}" 
+					click="{ok_clicked()}"
+					label="{resourceManager.getString(model.resources.bundleName, button_ok.id)}"  styleName="default"/>
+					
+		<mx:Button id="button_cancel" left="120" width="110"
+					click="{cancel_clicked()}"
+					label="{resourceManager.getString(model.resources.bundleName, button_cancel.id)}"  styleName="default"/>
+	</mx:Canvas>
+	
+</mx:TitleWindow>

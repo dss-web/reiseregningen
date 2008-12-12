@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code:BasicFormBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:common="no.makingwaves.cust.dss.view.specifications.transport.common.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+			creationComplete="init()">
+			
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.MotorboatSpecificationVO;
+			import mx.events.ValidationResultEvent;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			
+			[Bindable]
+			public var travelspecifications : TravelSpecificationVO;
+			
+			[Bindable]
+			public var motorboatspecifications : MotorboatSpecificationVO;
+						
+			private function init():void {
+				motorboatspecifications = new MotorboatSpecificationVO();
+				try {
+					if (travelspecifications.specification != null) {
+						motorboatspecifications = travelspecifications.specification;
+					}
+				} catch (e:Error) { 
+					trace("motorboat.init: " + e.message);
+					motorboatspecifications = new MotorboatSpecificationVO();
+				}
+					
+				// add accessibility
+                model.accessibility.addAccessibility(motorboat_type_radio1, resourceManager.getString(model.resources.bundleName, 'motorboat_type_label'));
+                model.accessibility.addAccessibility(motorboat_type_radio2, resourceManager.getString(model.resources.bundleName, 'motorboat_type_label'));
+                // add validation
+			}
+			
+			override public function validateDetailsForm():Boolean {
+				var validation:Boolean = super.validateDetailsForm();
+				if (validation)
+					validation = distance.validateAll();
+					
+				if (validation) {
+					if (this.motorboat_type.selectedValue != motorboatspecifications.TYPE_ABOVE_50HK && this.motorboat_type.selectedValue != motorboatspecifications.TYPE_BELOW_50HK) {
+						validation = false;
+						var validationText:String = resourceManager.getString(model.resources.bundleName, "motorboat_type_validator");;
+						this.showValidationError(this.motorboat_type_radio2, validationText);
+					}
+				}
+				return validation;
+			}
+             
+			override public function submitData(specifications:*):* {
+				motorboatspecifications.distance = distance.getDistance();
+				motorboatspecifications.motorboat_type = Number(motorboat_type.selectedValue);
+				specifications.specification = motorboatspecifications;
+	           	return TravelSpecificationVO(specifications);
+            }
+		]]>
+	</mx:Script>
+
+	<mx:HBox paddingTop="10" paddingBottom="10">
+		
+		<common:distance id="distance" width="100%" paddingTop="10" paddingRight="10" travelspecifications="{travelspecifications}" />
+		
+		<mx:VBox>
+			<mx:Label id="motorboat_type_label" text="{resourceManager.getString(model.resources.bundleName, motorboat_type_label.id)}" styleName="form" />
+			<mx:HBox id="motorboat_type_box">
+				<mx:RadioButtonGroup id="motorboat_type" selectedValue="{motorboatspecifications.motorboat_type}" />
+				<mx:RadioButton id="motorboat_type_radio1" label="{resourceManager.getString(model.resources.bundleName, motorboat_type_radio1.id)}" value="{motorboatspecifications.TYPE_ABOVE_50HK}" groupName="motorboat_type" tabIndex="1660" />
+				<mx:RadioButton id="motorboat_type_radio2" label="{resourceManager.getString(model.resources.bundleName, motorboat_type_radio2.id)}" value="{motorboatspecifications.TYPE_BELOW_50HK}" groupName="motorboat_type" tabIndex="1661" />
+			</mx:HBox>
+		</mx:VBox>
+	
+	</mx:HBox>
+	
+</code:BasicFormBase>

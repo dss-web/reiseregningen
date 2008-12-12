@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BasicFormBase xmlns="no.makingwaves.cust.dss.code.*" 
+			 xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+			 xmlns:mx="http://www.adobe.com/2006/mxml"
+			 creationComplete="activate()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.TravelOutlayVO;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var travel_outlay : TravelOutlayVO;
+			
+			private var _introIntervaller : Number;
+			
+			public function init(travelOutlay:TravelOutlayVO):void {
+				travel_outlay = travelOutlay;
+				cost_specs.init(this.travel_outlay.cost);
+			}
+			
+			private function initForm():void {
+				// add validators
+				this.addValidationField(outlay_date_text, this.STRING, true, 8, 8);
+				this.addCustomStringValidation(outlay_date_text, false, false, this.DATE);
+				this.addCustomDateValidation(outlay_date, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in, null, null, outlay_date_text);
+				this.addValidationField(outlay_specification);
+				
+				// add accessibility
+				model.accessibility.addAccessibility(outlay_date_text, resourceManager.getString(model.resources.bundleName, outlay_date.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+				model.accessibility.addAccessibility(outlay_specification, resourceManager.getString(model.resources.bundleName, outlay_specification.id+'_help'));
+			}
+			
+			override public function submitData(specifications:*):* {
+				TravelOutlayVO(specifications).cost = cost_specs.getCost();
+				TravelOutlayVO(specifications).cost.update();
+				return TravelOutlayVO(specifications);
+			}
+			
+			private function textDatefieldChanged(e:FocusEvent):void {
+				var textField:TextInput = TextInput(e.currentTarget);
+				if (this.validateCustomField(textField) && textField.text != "") {
+					var dateValues:Array = textField.text.split(".");
+					if (textField == this.outlay_date_text) {
+						this.outlay_date.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+						this.travel_outlay.date = outlay_date.selectedDate;
+					}
+				}
+			}
+			
+			// FOCUS INITIALIZERS ===============================================
+			public function activate():void {
+				intro.visible = true;
+				intro.enabled = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus();
+				} catch (e:Error) { trace("outlays.activate: " + e.message); }
+			}
+			
+			private function introIn(e:FocusEvent):void {
+				if (e.target) {
+					_introIntervaller = setInterval(introInit, 1000);
+				} else {
+					try { focusManager.getNextFocusManagerComponent(true).setFocus();
+					} catch (e:Error) { trace("outlays.introIn: " + e.message); }
+				}
+			}
+			
+			private function introOut(e:FocusEvent):void {
+				clearInterval(_introIntervaller);
+				intro.enabled = false;
+				intro.visible = false;
+				initForm();
+			}
+			
+			private function introInit():void {
+				clearInterval(_introIntervaller);
+				try { outlay_date_text.setFocus();
+				} catch (e:Error) { trace("outlays.introInit: " + e.message); }
+			}
+			// end of focusinitializers==========================================
+			
+		]]>
+	</mx:Script>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox id="common_specification" width="100%" paddingTop="10" paddingBottom="10">
+		<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="introIn(event)" focusOut="introOut(event)" tabIndex="1401" />
+		<mx:HBox>
+			<mx:Label id="outlay_date_label" width="{outlay_specification_label.width}" enabled="{outlay_date_text.enabled}" 
+						text="{resourceManager.getString(model.resources.bundleName, outlay_date_label.id)}" />
+			<mx:TextInput id="outlay_date_text" width="70" maxChars="8" text="{this.getFormattedDate(this.travel_outlay.date)}" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1402" />
+			<mx:DateField id="outlay_date" creationComplete="{dateField_init(outlay_date)}" editable="true" width="17" visible="{!model.screenreader}" tabEnabled="{!model.screenreader}" tabIndex="1403"
+					selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}"
+					change="{this.travel_outlay.date = outlay_date.selectedDate}"
+				    selectedDate="{this.travel_outlay.date}" />
+			<mx:Text id="date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
+		</mx:HBox>
+		
+		<!--			
+		<mx:HBox width="100%">
+			<mx:Label id="outlays_type_label" text="{resourceManager.getString(model.resources.bundleName, outlays_type_label.id)}" />
+			<mx:RadioButtonGroup id="outlays_type" selectedValue="{this.travel_outlay.type}" />
+			<mx:RadioButton id="outlays_type_authorized" 
+						    groupName="outlays_type"	
+						    value="{this.travel_outlay.AUTHORIZED}"
+						    change="{this.travel_outlay.type = Number(this.outlays_type.selectedValue)}"
+							label="{resourceManager.getString(model.resources.bundleName, outlays_type_authorized.id)}" />
+			<mx:RadioButton id="outlays_type_unauthorized" 
+						    groupName="outlays_type"	
+						    value="{this.travel_outlay.UNAUTHORIZED}"
+						    change="{this.travel_outlay.type = Number(this.outlays_type.selectedValue)}"
+							label="{resourceManager.getString(model.resources.bundleName, outlays_type_unauthorized.id)}" />
+		</mx:HBox>
+		-->
+		
+		<mx:HBox width="100%">
+			<mx:Label id="outlay_specification_label" text="{resourceManager.getString(model.resources.bundleName, outlay_specification_label.id)}" />
+			<mx:TextInput id="outlay_specification" width="{model.fieldSizeMain}" tabIndex="1404"
+							text="{this.travel_outlay.specification}"
+							change="{this.travel_outlay.specification = outlay_specification.text}" />
+		</mx:HBox>
+		
+		<mx:HRule width="100%" />
+		
+		<common:cost id="cost_specs" width="100%" />
+		
+	</mx:VBox>
+</BasicFormBase>

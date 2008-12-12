@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: SUMMARY VIEW FOR ALL SPECIFICATIONS IN THE EXPENCE FORM -->
+
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	 		paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
+	 		creationComplete="initPage()">
+	 
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.PersonalInfoVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			private var _lastFocus:*
+			
+			private function initPage():void {
+				model.accessibility.addAccessibility(summary_specifications_default, resourceManager.getString(model.resources.bundleName, summary_specifications_default.id));
+				model.accessibility.addAccessibility(button_see_edit, resourceManager.getString(model.resources.bundleName, button_see_edit.id+"_specifications"));
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Canvas width="100%">
+		<mx:Label id="summary_specifications_default" text="{resourceManager.getString(model.resources.bundleName, summary_specifications_default.id)}:" styleName="Summary" verticalCenter="0"/>
+		<mx:Button id="button_see_edit" tabIndex="301" label="{resourceManager.getString(model.resources.bundleName, button_see_edit.id)}" right="0" styleName="secondary" width="152" height="22"
+					visible="{button_see_edit.enabled}"
+					enabled="{model.validationStatusTravel}"
+					click="{model.stateDistributer.openView(model.stateDistributer.SPESIFICATIONS)}" />
+	</mx:Canvas>
+</mx:HBox>

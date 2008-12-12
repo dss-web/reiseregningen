@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Cathrin (making Waves) -->
+<localization>
+	<type>no_BO</type>
+	<media>
+		<texts>
+			<text id="site_header" value="REISEREKNINGA PÅ WEB"/>
+			<text id="header_personal" value="Personleg informasjon og jobbdetaljar"/>
+			<text id="header_travel" value="Reisa"/>
+			<text id="header_settlement" value="Oppgjer"/>
+			<text id="button_continue" value="Framhald"/>
+			<text id="button_see_edit" value="Endre detaljar"/>
+			<text id="button_ok"/>
+			<text id="button_yes" value="Ja"/>
+			<text id="button_no" value="Nei"/>
+			<text id="button_cancel" value="Avbryt"/>
+			<text id="button_continuetravel" value="Legg til fleire"/>
+			<text id="button_registertravel" value="Registrer reisa"/>
+			<text id="button_next"/>
+			<text id="button_previous"/>
+			<text id="button_add" value="Legg til"/>
+			<text id="button_add_below" value="Legg til under"/>
+			<text id="button_add_more" value="Legg til fleire"/>
+			<text id="button_edit" value="Endre"/>
+			<text id="button_delete" value="Slett"/>
+			<text id="button_new" value="Ny reiserekning"/>
+			<text id="button_open" value="Opne reiserekning"/>
+			<text id="button_import" value="Importer reiserekning"/>
+			<text id="button_save" value="Lagre reiserekning"/>
+			<text id="button_saveas" value="Lagre som…"/>
+			<text id="button_save_form" value="Lagre reiserekning"/>
+			<text id="button_share_form" value="Lagre til deling"/>
+			<text id="button_print_form" value="Skriv ut blankett"/>
+			<text id="button_accessibility_help" value="Hjelp til brukarar med skjermlesar"/>
+			<text id="button_see_edit_personal" value="Endre detaljar for Personleg informasjon og jobbdetaljar"/>
+			<text id="button_see_edit_travel" value="Endre detaljar for Reisa"/>
+			<text id="button_see_edit_specifications" value="Endre detaljar for Detaljar og spesifikasjonar rundt reisa"/>
+			<text id="button_see_edit_settlement" value="Endre detaljar for Oppgjer"/>
+			<text id="app_intro" value="Velkommen til reiserekninga på web. Du er no i hovudmenyen og kan velje å opprette ei ny reiserekning eller opne ei tidlegare reiserekning dersom du har ei lagra på denne maskinen."/>
+			<text id="info_heading" value="Informasjon"/>
+			<text id="fieldhelp_heading" value="Utfyllingshjelp"/>
+			<text id="localsave_header" value="Lagre reiserekning lokalt"/>
+			<text id="localsave_opensaved_header" value="Opne lokalt lagra reiserekning"/>
+			<text id="localsave_opensaved_label" value="Vel lagra reiserekning"/>
+			<text id="localsave_nosaved" value="Ingen lokalt lagra reiserekningar"/>
+			<text id="localsave_savename_label" value="Lagre lokalt som"/>
+			<text id="localsave_defaultSavename" value="Reiserekning-"/>
+			<text id="localsave_overwrite_header" value="Overskrive lokalt lagra reiserekning?"/>
+			<text id="localsave_overwrite" value="Du har allereie lagra ei reiserekning med dette namnet lokalt. Ønskjer du å overskrive denne?"/>
+			<text id="unauthorized_desc_label" value="Forklar kvifor utlegget ikkje kan legitimerast"/>
+			<text id="unauthorized_desc_validator" value="Du må leggje til forklaring for kvifor utlegget ikkje kan legitimerast"/>
+			<text id="newform_dialog_title" value="Opne ny reiserekning"/>
+			<text id="newform_dialog_question" value="Ønskjer du å lukke den reiserekninga du no har open for å opprette ei ny reiserekning? Du vil miste dine registreringar/endringar etter siste lagring"/>
+			<text id="fieldhelp_11numbers" value="(11 siffer)"/>
+			<text id="fieldhelp_date" value="(DD.MM.ÅÅ)"/>
+			<text id="fieldhelp_time" value="(TTMM)"/>
+			<text id="popupblockerhelp" value="Hald Ctrl-tasten inne mens du klikkar på knappen dersom du har PopUp-blocker aktivert"/>
+			<text id="error_date_format" value="Dato må skrivast inn i formatet %1."/>
+			<text id="error_date_toolow" value="Opne reiserekning"/>
+			<text id="error_date_toohigh" value="Dato må vere sett til tidlegare enn %1."/>
+			<text id="error_time_format" value="Tidspunkt må skrivast inn i formatet %1."/>
+			<text id="error_time_toolow" value="Tisdpunkt må vere"/>
+			<text id="error_time_toohigh" value="Tidspunkt må vere tidlegare enn klokka %1."/>
+			<text id="error_field_description_default" value="Dette feltet"/>
+			<text id="error_numbers" value="%1 kan berre bestå av nummer"/>
+			<text id="error_strings" value="%1 kan berre bestå av tekst"/>
+			<text id="error_critical" value="Applikasjonskritisk feil!"/>
+			<text id="error_warning" value="Åtvaring"/>
+			<text id="error_info" value="Informasjon"/>
+			<text id="link_SPH3.3" value="SPH §3.3 http://www.sph.dep.no/templates/Kapittel.aspx?id=2002"/>
+			<text id="link_SPH4" value="SPH §4 http://www.sph.dep.no/templates/Kapittel.aspx?id=2003"/>
+			<text id="link_SPH6" value="SPH §6 http://www.sph.dep.no/templates/Kapittel.aspx?id=2005"/>
+			<text id="link_SPH7" value="SPH §7 http://www.sph.dep.no/templates/Kapittel.aspx?id=2006"/>
+			<text id="summary_personal_default" value="Personalia og jobbdetaljar er ikkje ferdig utfylte"/>
+			<text id="summary_travel_default" value="Reisedetaljar er ikkje ferdig utfylte"/>
+			<text id="summary_specifications_default" value="Utlegg, godtgjersle, trekk, reiseforskott og merknader"/>
+			<text id="summary_settlement_default" value=""/>
+			<text id="personal_intro_help" value="Her skal du fylle ut dine personlege data og jobbdetaljar. Fyll berre ut felta til høgre som er relevante for deg og din arbeidsgivar"/>
+			<text id="birthdate_label" value="Personnummer"/>
+			<text id="birthdate_help" value="Fyll ut personnummer"/>
+			<text id="birthdate_validator" value="Personnummer må fyllast ut med 11 siffer"/>
+			<text id="fullname_label" value="Fornamn/Etternamn"/>
+			<text id="fullname_help" value="Fyll ut fornamnet og etternamnet ditt"/>
+			<text id="fullname_validator" value="Fornamn"/>
+			<text id="firstname_label" value="Fornamn"/>
+			<text id="firstname_help" value="Fyll ut fornamnet ditt"/>
+			<text id="firstname_validator" value="Du må fylle ut fornamnet ditt"/>
+			<text id="lastname_label" value="Etternamn"/>
+			<text id="lastname_help" value="Fyll ut etternamnet ditt"/>
+			<text id="lastname_validator" value="Du må fylle ut etternamnet ditt"/>
+			<text id="adress_label" value="Privatadresse"/>
+			<text id="adress_help" value="Fyll ut di private postadresse"/>
+			<text id="adress_validator" value="Du må fylle ut di private postadresse"/>
+			<text id="zip_label" value="Postnummer"/>
+			<text id="zip_help" value="Fyll ut postnummer knytt til di private adresse"/>
+			<text id="zip_validator" value="Du må fylle ut postnummeret ditt, 4 siffer"/>
+			<text id="postoffice_label" value="Poststad"/>
+			<text id="postoffice_help" value="Fyll ut poststaden knytt til ditt postnummer"/>
+			<text id="postoffice_validator" value="Du få fylle ut poststaden knytt til ditt postnummer"/>
+			<text id="account_label" value="Bankkonto"/>
+			<text id="account_help" value="Fyll ut ditt banknummer, 11 siffer"/>
+			<text id="account_validator" value="Du må fylle ut banknr med 11 siffer"/>
+			<text id="jobtitle_label" value="Stilling"/>
+			<text id="jobtitle_help" value="Fyll ut din stillingstittel på arbeidsstaden din"/>
+			<text id="jobtitle_validator" value="…"/>
+			<text id="workplace_label" value="Etat/institusjon"/>
+			<text id="workplace_help" value="Fyll ut kva for etat eller institusjon du tilhøyrer"/>
+			<text id="workplace_validator" value="…"/>
+			<text id="department_label" value="Avdeling/tenestestad"/>
+			<text id="department_help" value="Fyll ut namnet på di avdeling eller din tenestestad"/>
+			<text id="department_validator" value="…"/>
+			<text id="domicialnum_label" value="Fyll ut personnummer"/>
+			<text id="domicialnum_help" value="Fyll ut kommunenummer ved din arbeidsstad"/>
+			<text id="domicialnum_validator" value="…"/>
+			<text id="domicialname_label" value="Skattekommune"/>
+			<text id="domicial_cmb_initvalue" value="- Vel kommune"/>
+			<text id="domicialname_help" value="Fyll ut namnet på skattekommunen din"/>
+			<text id="domicialname_validator" value="…"/>
+			<text id="savelocal_label" value="Lagre personalia og jobbdetaljar på denne maskinen"/>
+			<text id="savelocal_help" value="Informasjonen vil berre bli lagra på denne maskinen og med din brukar. Neste gong du opnar ei ny reiserekning vil felta bli fylte ut automatisk. "/>
+			<text id="travel_intro_help" value="Her skal du leggje inn generell informasjon om reisa. Resten av skjemaet vil basere seg på dei data du legg inn her, så ver nøyaktig med utfyllinga. Hugs også at ei reise kan starte i heimen eller på arbeidsplassen. Meir om dette finn du her: %SPH3.3%"/>
+			<text id="travel_timechange_departure_title" value="Avreisetidspunktet for reisa er endra"/>
+			<text id="travel_timechange_departure_intro" value="Som ei følgje av endra avreisetidspunkt er følgjande endringar blitt gjennomførte automatisk"/>
+			<text id="travel_timechange_departure_specifications" value="Utreisetidspunktet for den registrerte reisespesifikasjonen er endra i samsvar med endringa"/>
+			<text id="travel_timechange_departure_accomodations" value="Overnattingsstaden som er registrert på den gjeldande datoen er registrert i samsvar med endringa."/>
+			<text id="travel_timechange_arrival_title" value="Heimreisetidspunktet for reisa er endra"/>
+			<text id="travel_timechange_arrival_intro" value="Som ei følgje av endra heimreisetidspunkt er følgjande endringar blitt gjennomførte automatisk."/>
+			<text id="travel_timechange_arrival_specifications" value="Tidspunkt for retur for den registrerte reisespesifikasjonen er endra i samsvar med endringa."/>
+			<text id="travel_timechange_arrival_accomodations" value="Overnattingsstaden som er registrert på den gjeldande datoen er registrert i samsvar med endringa."/>
+			<text id="travel_timechange_notallowed_title" value="Reisetidspunkt ikkje lov å endre"/>
+			<text id="travel_timechange_notallowed_content" value="Du kan ikkje gjere om denne reisa til ei dagsreise så lenge du har spesifisert overnattingsstad eller trekk i kostgodtgjersla. Slett desse spesifikasjonane først dersom du ønskjer å endre reisetidspunkta."/>
+			<text id="travel_timechange_outro" value="Du blir rådd til å gå gjennom registrerte reisespesifikasjonar og andre detaljar for å forsikre deg om at alt stemmer ut frå den endringa du har gjort."/>
+			<text id="travel_typechange_title" value="Reisetype endra"/>
+			<text id="travel_typechange_change_alert" value="Du  er i ferd med å endre reisetypen. Dette vil påverke dei spesifikasjonar og detaljar du har registrert om reisa. Er du sikker på at du ønskjer å endre reisetypen?"/>
+			<text id="travel_typechange_change_notallowed" value="Du kan ikkje endre reisetypen så lenge det finst reisespesifikasjonar og detaljar som inneheld informasjon rundt internasjonale reiser."/>
+			<text id="location_label" value="Reisestad og -formål"/>
+			<text id="location_help" value="Skriv inn reisestad og formålet med reisa"/>
+			<text id="location_validator" value="Du må fylle ut reisestad og -formål"/>
+			<text id="traveltype_label" value="Type reise"/>
+			<text id="traveltype_help" value="Vel kva type reise denne reiserekninga gjeld for"/>
+			<text id="traveltype_validator" value="Du må velje om denne reiserekninga gjeld for ei innanlands- eller utanlandsreise"/>
+			<text id="domestic_label" value="Innanlands"/>
+			<text id="domestic_accessible" value="Reisetype"/>
+			<text id="abroad_label" value="Utanlands"/>
+			<text id="abroad_accessible" value="Reisetype"/>
+			<text id="traveltype_validator" value="Du må velje kva type reise dette er"/>
+			<text id="travelpurpose_label" value="Rekninga gjeld"/>
+			<text id="travelpurpose_help" value="Her kjem hjelpetekst vedrørande kva som er tenestereise og kva som er kurs og så vidare…"/>
+			<text id="officialjourney_label" value="Tenestereise"/>
+			<text id="course_label" value="Kurs"/>
+			<text id="other_label" value="Anna"/>
+			<text id="travelpurpose_accessible" value="Reiserekninga gjeld"/>
+			<text id="travelcause_validator" value="Du må velje kva formål reiserekninga gjeld"/>
+			<text id="departurepoint_label" value="Utreise"/>
+			<text id="departuredate_label" value="Dato"/>
+			<text id="departuredate_help" value="Utreisedato"/>
+			<text id="departuredate_validator" value="Du må fylle ut utreisedatoen."/>
+			<text id="departuredate_text_validator" value="Du må fylle ut utreisedatoen."/>
+			<text id="departuretime_label" value="Klokkeslett"/>
+			<text id="departuretime_help" value="Klokkeslett for utreisa"/>
+			<text id="departuretime_validator" value="Du må fylle ut klokkeslett for utreisa"/>
+			<text id="arrivalpoint_label" value="Retur"/>
+			<text id="arrivaldate_label" value="Dato"/>
+			<text id="arrivaldate_help" value="Innreisedato"/>
+			<text id="arrivaldate_validator" value="Du må fylle ut innreisedatoen"/>
+			<text id="arrivaldate_text_validator" value="Du må fylle ut innreisedatoen"/>
+			<text id="arrivaltime_label" value="Klokkeslett"/>
+			<text id="arrivaltime_help" value="Klokkeslett for innreisa"/>
+			<text id="arrivaltime_validator" value="Du må fylle ut klokkeslett for innreisa"/>
+			<text id="traveldetails_intro_help" value="Her skal du leggje inn reisestrekningar og dei utlegg, trekk og forskot du har hatt i samband med reisa. Reisespesifikasjon og reiseutlegg legges enklast inn dersom det gjøres i kronologisk rekkefølge (alltid start med utreisa). Husk å registrere ALLE reisestrekningar (selv dei du ikkje har hatt utlegg på). Les meir her: %SPH7%"/>
+			<text id="traveldetails_accessibility" value="Ctrl + 1 for reisespesifikasjon, Ctrl + 2 for overnatting, Ctrl + 3 for diverse utlegg, Ctrl + 4 for måltidstrekk i kostgodtgjersla, Ctrl + 5 for utbetalt reiseforskot og Ctrl + 6 for merknader til reiserekninga."/>
+			<text id="traveldetails_label" value="Reisespesifikasjon og reiseutlegg"/>
+			<text id="traveldetails_help" value="Legg til reisespesifikasjon og reiseutlegg"/>
+			<text id="traveldetails_validator"/>
+			<text id="traveldetails_button" value="Legg til"/>
+			<text id="accomodation_label" value="Overnatting"/>
+			<text id="accomodation_help" value="Legg til overnatting"/>
+			<text id="accomodation_validator"/>
+			<text id="accomodation_button" value="Legg til"/>
+			<text id="outlays_label" value="Diverse utlegg"/>
+			<text id="outlays_help" value="Legg til utlegg"/>
+			<text id="outlays_validator"/>
+			<text id="outlays_button" value="Legg til"/>
+			<text id="refundment_label" value="Andre godtgjersler"/>
+			<text id="refundment_help" value="Legg til andre godtgjersler"/>
+			<text id="refundment_validator"/>
+			<text id="refundment_button" value="Legg til"/>
+			<text id="redraws_label" value="Kostgodtgjersle: måltidstrekk"/>
+			<text id="redraws_help" value="Legg til trekk"/>
+			<text id="redraws_validator"/>
+			<text id="redraws_button" value="Legg til"/>
+			<text id="traveladvance_label" value="Reiseforskott"/>
+			<text id="traveladvance_help" value="Legg til reiseforskott"/>
+			<text id="traveladvance_validator"/>
+			<text id="traveladvance_button" value="Legg til"/>
+			<text id="notes_label" value="Merknader"/>
+			<text id="notes_help" value="Legg til merknader"/>
+			<text id="notes_validator"/>
+			<text id="notes_button" value="Legg til"/>
+			<text id="summary_text" value="Reise frå %1 til %2 med transportmiddel %3"/>
+			<text id="accomodation_busydates" value="Datoen er allereie registrert i tidlegare registrert overnatting"/>
+			<text id="transportation_intro_help" value="Definer ei reisestrekning frå avreise til nådd destinasjon. Når du har nådd destinasjon kryssar du av for det i skjemaet og strekninga/-ne blir registrert(e) i hovudskjemaet."/>
+			<text id="transportation_car_help" value="Kjøring med eigen bil blir godtgjord i samsvar med %SPH6% og %SPH7%."/>
+			<text id="transportation_taxi_help" value="Drosjerekning skal leggjast ved. Dersom drosjereisa ikkje kan legitimerast, må dette forklarast i merknadsfeltet. Sjå %SPH7%, kommentar 1"/>
+			<text id="transportation_ticket_help" value="Les meir her om rutegåande transportmiddel: %SPH4%"/>
+			<text id="transportation_other_help" value="Anna' omfattar andre framkomstmiddel til lands og til vanns som bl.a. hest, rein og traktor. Ved gange eller bruk av sykkel er minsteavstand 5 km (tur/retur) for å få godtgjersle."/>
+			<text id="transportationtype_label" value="Vel skyssmiddel"/>
+			<text id="transportationtype_help"/>
+			<text id="transportationtype_validator"/>
+			<text id="transportationtype_combo_choose" value="- Vel -"/>
+			<text id="transportationtype_combo_other" value="Andre eigna framkomstmiddel"/>
+			<text id="transportationtype_combo_bus" value="Buss/Bane/Trikk"/>
+			<text id="transportationtype_combo_car" value="Eigen bil"/>
+			<text id="transportationtype_combo_ferrie" value="Ferje"/>
+			<text id="transportationtype_combo_plain" value="Fly"/>
+			<text id="transportationtype_combo_rental" value="Leigebil"/>
+			<text id="transportationtype_combo_boat" value="Motorbåt"/>
+			<text id="transportationtype_combo_motorcycle" value="Motorsykkel"/>
+			<text id="transportationtype_combo_train" value="Tog"/>
+			<text id="transportationtype_combo_taxi" value="Taxi"/>
+			<text id="transportationtype_combo_passenger" value="Som passasjer"/>
+			<text id="travelcontinues_chk_label" value="Reisa held fram til ein annan framkomststad"/>
+			<text id="travelcontinues_chk_help" value="Kryss av dersom reisa held fram til ein annan framkomststad"/>
+			<text id="travelcontinues_chk_validator"/>
+			<text id="travelretur_chk_label" value="Retur til reisestrekning"/>
+			<text id="travelretur_chk_help" value="[...]"/>
+			<text id="travelretur_chk_validator"/>
+			<text id="locationfrom_label" value="Frå"/>
+			<text id="locationfrom_help" value="Legg til avreisestad"/>
+			<text id="locationfrom_validator" value="Skriv inn namnet på avreisestaden"/>
+			<text id="countryfrom_label" value="Land"/>
+			<text id="countryfrom_help" value="Utreiseland"/>
+			<text id="countryfrom_validator" value="Du må velje utreiseland"/>
+			<text id="cityfrom_label" value="By"/>
+			<text id="cityfrom_help" value="Utreiseby"/>
+			<text id="cityfrom_validator" value="Du må velje utreiseby"/>
+			<text id="fromdate_label" value="Dato"/>
+			<text id="fromdate_help" value="Dato for avreise"/>
+			<text id="fromdate_validator" value="Skriv inn eller vel dato for avreisa"/>
+			<text id="fromdate_text_validator" value="Skriv inn eller vel dato for avreisa."/>
+			<text id="fromtime_label" value="Klokkeslett"/>
+			<text id="fromtime_help" value="Klokkeslett for avreise"/>
+			<text id="fromtime_validator" value="Skriv inn klokkeslett for avreisa"/>
+			<text id="fromtime_text_validator" value="Skriv inn klokkeslett for avreisa"/>
+			<text id="timezonefrom_label" value="Tidssone"/>
+			<text id="timezonefrom_help" value="Tidssone for oppgitt avreisetidspunkt"/>
+			<text id="timezonefrom_validator" value="Vel tidssona for oppgitt avreisetidspunkt"/>
+			<text id="departurelocation_chk_label" value="Utreiestad"/>
+			<text id="departurelocation_chk_help" value="Kryss av dersom avreisestaden er starten av reisa for denne reiserekninga"/>
+			<text id="departurelocation_chk_validator"/>
+			<text id="locationto_label" value="Til"/>
+			<text id="locationto_help" value="Legg til destinasjonsstad"/>
+			<text id="locationto_validator" value="Skriv inn namnet på destinasjonsstaden"/>
+			<text id="countryto_label" value="Land"/>
+			<text id="countryto_help" value="Destinasjonsland"/>
+			<text id="countryto_validator" value="Du må velje destinasjonsland"/>
+			<text id="cityto_label" value="By"/>
+			<text id="cityto_help" value="Innreiseby"/>
+			<text id="cityto_validator" value="Du må velje destinasjonsby"/>
+			<text id="country_choose" value="- Vel land -"/>
+			<text id="country_default" value="Noreg"/>
+			<text id="city_choose" value="- Vel by -"/>
+			<text id="city_other" value=" -Ikkje spesifisert-"/>
+			<text id="todate_label" value="Dato"/>
+			<text id="todate_help" value="Dato for framkomst"/>
+			<text id="todate_validator" value="Skriv inn dato for når du kom til destinasjonen"/>
+			<text id="todate_text_validator" value="Skriv inn dato for når du kom til destinasjonen"/>
+			<text id="totime_label" value="Klokkeslett"/>
+			<text id="totime_help" value="Klokkeslett for framkomst"/>
+			<text id="totime_validator" value="Skriv inn klokkeslett for når du kom fram til destinasjonen"/>
+			<text id="timezoneto_label" value="Tidssone"/>
+			<text id="timezoneto_help" value="Tidssone for oppgitt retur"/>
+			<text id="timezoneto_validator" value="Vel tidssona for oppgitt retur"/>
+			<text id="destinationreached_label" value="Er du framme ved framkomststaden for denne delreisa?"/>
+			<text id="destinationreached_help" value="Vel om du er framme ved framkomststaden for denne delreisa"/>
+			<text id="destinationreached_validator" value="Du må ta stilling til om du er framme ved framkomststaden for delreisa"/>
+			<text id="travelcost_label" value="Utlegg"/>
+			<text id="travelcost_help" value="Kostnader knytte til denne reisestrekninga"/>
+			<text id="travelcost_validator" value="Du må skrive inn kostnader knytte til denne reisa"/>
+			<text id="travelcostcurrency_label" value="Valutakode"/>
+			<text id="travelcostcurrency_help" value="Valutakode"/>
+			<text id="travelcostcurrency_validator" value="Vel gjeldande valutakode for utlegget"/>
+			<text id="travelcostrate_label" value="Kurs"/>
+			<text id="travelcostrate_help" value="Valutakurs"/>
+			<text id="travelcostrate_validator" value="Skriv gjeldande kurs"/>
+			<text id="travelcostrate_info" value="Hugs å oppgi faktisk vekslingskurs for utlegget."/>
+			<text id="distance_km_label" value="Distanse i km"/>
+			<text id="distance_km_help" value="Skriv lengda på reisa oppgitt i km-tal"/>
+			<text id="distance_km_validator" value="Skriv lengda på reisa oppgitt i km-tal"/>
+			<text id="car_km_calenderyear_label" value="Km eigen bil dette kalenderåret"/>
+			<text id="car_km_calenderyear_radio1" value="0-9000 km"/>
+			<text id="car_km_calenderyear_radio2" value="over 9000 km"/>
+			<text id="car_km_calenderyear_validator" value="Vel km kjørte med eigen bil for dette kalenderåret"/>
+			<text id="car_forrestroad_chk_label" value="Kjøring på skogs- og anleggsveg"/>
+			<text id="car_forrestroad_km_label" value="Tal km"/>
+			<text id="car_forrestroad_km_help" value="…"/>
+			<text id="car_forrestroad_km_validator" value="…"/>
+			<text id="car_addon_hanger_chk_label" value="Tillegg for tilhengjar"/>
+			<text id="car_passengers_label" value="Tal passasjerar"/>
+			<text id="car_passengers_help" value="…"/>
+			<text id="motorcycle_type_label" value="Type motorsykkel"/>
+			<text id="motorcycle_type_radio1" value="Motorsykkel over 125 ccm"/>
+			<text id="motorcycle_type_radio2" value="Modell/motorsykkel over 125 ccam"/>
+			<text id="motorcycle_type_validator" value="Du må velje type motorsykkel"/>
+			<text id="motorboat_type_label" value="Type motorbåt"/>
+			<text id="motorboat_type_radio1" value="Båt med motor f.o.m. 50 hk"/>
+			<text id="motorboat_type_radio2" value="Båt med motor inntil 50 hk"/>
+			<text id="motorboat_type_validator" value="Du må velje type båt"/>
+			<text id="othertransporttype_label" value="Definer anna skyssmiddel"/>
+			<text id="othertransporttype_radio1" value="Snøscooter"/>
+			<text id="othertransporttype_radio2" value="El-bil"/>
+			<text id="othertransporttype_radio3" value="Anna"/>
+			<text id="othertransporttype_validator" value="Du må velje type framkomstmiddel"/>
+			<text id="transporttype_listlabel" value="Type"/>
+			<text id="departuredate_listlabel" value="Avreise"/>
+			<text id="departurelocation_listlabel" value="Stad"/>
+			<text id="arrivaldate_listlabel" value="Framkomst"/>
+			<text id="cost_listlabel" value="Utlegg"/>
+			<text id="accomodation_intro_help" value="Fyll ut informasjon om overnattingsstad for delar av eller heile reisa."/>
+			<text id="accomodationtype_label" value="Vel overnattingsstad"/>
+			<text id="accomodationtype_help" value="Hjelpetekst om legitimert/ulegitimert kjem..."/>
+			<text id="accomodationtype_validator"/>
+			<text id="accomodationtype_combo_choose" value="- Vel -"/>
+			<text id="accomodationtype_combo_hotel" value="Hotell"/>
+			<text id="accomodationtype_combo_unauthorized" value="Ulegitimert"/>
+			<text id="accomodationtype_combo_unauthorizedhotel" value="Ulegitimert hotell"/>
+			<text id="accomodation_unauthorized_pdfalert" value="Ulegitimert overnatting frå %1 til %2, faktisk kostnad kr %3,-"/>
+			<text id="accomodation_type_hotel" value="Hotell"/>
+			<text id="accomodation_type_hotel_unauthorized" value="Hotell, ulegitimert"/>
+			<text id="accomodation_type_unauthorized" value="Ulegitimert"/>
+			<text id="hotelname_label" value="Namn hotell"/>
+			<text id="hotelname_help" value="Skriv inn namnet på hotellet"/>
+			<text id="hotelname_validator" value="Hotellnamnet må spesifiserast"/>
+			<text id="hoteladress_label" value="Adresse"/>
+			<text id="hoteladress_help" value="Skriv inn adressa til hotellet"/>
+			<text id="hoteladress_validator" value="Adressa til hotellet må spesifiserast"/>
+			<text id="accomodation_country_label" value="Land"/>
+			<text id="accomodation_country_help" value="Overnattingsland"/>
+			<text id="accomodation_country_validator" value="Spesifiser land for overnatting"/>
+			<text id="accomodation_city_label" value="By"/>
+			<text id="accomodation_city_help" value="Overnattingsby"/>
+			<text id="accomodation_city_validator" value="Spesifiser by for overnatting"/>
+			<text id="hotel_all_journey_chk_label" value="Overnattingsstad for heile reisa"/>
+			<text id="accomodation_startdate_label" value="Frå dato"/>
+			<text id="accomodation_startdate_help" value="…"/>
+			<text id="accomodation_startdate_validator" value="Skriv inn dato for første overnattingsdag"/>
+			<text id="accomodation_startdate_text_validator" value="Skriv inn dato for første overnattingsdag"/>
+			<text id="accomodation_stopdate_label" value="Til dato"/>
+			<text id="accomodation_stopdate_help" value="…"/>
+			<text id="accomodation_stopdate_validator" value="Skriv inn dato for siste overnattingsdag"/>
+			<text id="accomodation_stopdate_text_validator" value="Skriv inn dato for siste overnattingsdag"/>
+			<text id="accomodation_breakfast_chk_label" value="Frukost inkludert"/>
+			<text id="accomodation_breakfast_num_label" value="Tal frukost inkl"/>
+			<text id="accomodation_breakfast_num_validator" value="Du må skrive inn talet på frukost som er inkludert"/>
+			<text id="summary_accomodation" value="Overnatting, %1, frå %2 til %3."/>
+			<text id="accomodation_unauthorized" value="Ulegitimert"/>
+			<text id="accomodation_unauthorized_hotel" value="Ulegitimert hotell"/>
+			<text id="accomodation_hotel" value="Hotell"/>
+			<text id="type_listlabel" value="Type"/>
+			<text id="date_listlabel" value="Dato"/>
+			<text id="location_listlabel" value="Overnattingsstad"/>
+			<text id="deduction_intro_help" value="Huk av dei måltida du har fått dekt gjennom kursavgift eller liknande"/>
+			<text id="deduction_headline_label" value="Legg til trekk"/>
+			<text id="deduction_date_label" value="Dato"/>
+			<text id="deduction_date_help" value="Dato for når trekket gjeld"/>
+			<text id="deduction_date_validator" value="Du må leggje inn dato for når trekket gjeld"/>
+			<text id="deduction_date_text_validator" value="Du må leggje inn dato for når trekket gjeld"/>
+			<text id="deduction_type_breakfast" value="Frukost"/>
+			<text id="deduction_type_lunch" value="Lunsj"/>
+			<text id="deduction_type_dinner" value="Middag"/>
+			<text id="summary_deduction" value="Trekk for %1, %2."/>
+			<text id="deductiontype_listlabel" value="Type trekk"/>
+			<text id="outlay_intro_help" value="Spesifiser utlegg du har hatt i samband med reisa. Admin.tillegg fører du opp her."/>
+			<text id="outlay_headline_label" value="Legg til utlegg"/>
+			<text id="outlay_date_label" value="Dato"/>
+			<text id="outlay_date_help" value="Skriv inn dato for når utlegget gjeld"/>
+			<text id="outlay_date_validator" value="Du må leggje inn dato for når utlegget gjeld"/>
+			<text id="outlay_date_text_validator" value="Du må leggje inn dato for når utlegget gjeld"/>
+			<text id="outlay_specification_label" value="Spesifikasjon"/>
+			<text id="outlay_specification_help" value="Spesifikasjon av kva utlegget gjeld"/>
+			<text id="outlay_specification_validator" value="Du må spesifisere kva utlegget gjeld"/>
+			<text id="outlays_type_label" value="Type utlegg"/>
+			<text id="outlays_type_authorized" value="Legitimert"/>
+			<text id="outlays_type_unauthorized" value="Ulegitimert"/>
+			<text id="summary_outlays" value="Utlegg for %1, %2 på %3"/>
+			<text id="outlaytype_listlabel" value="Type utlegg"/>
+			<text id="advance_intro_help" value="Spesifiser reiseforskott du har fått utbetalt for reisa"/>
+			<text id="advance_headline_label" value="Reiseforskott"/>
+			<text id="advance_date_label" value="Dato"/>
+			<text id="advance_date_help" value="Dato for utbetaling av reiseforskottet"/>
+			<text id="advance_date_validator" value="Du må leggje inn dato for når reiseforskottet blei utbetalt"/>
+			<text id="advance_date_text_validator" value="Du må leggje inn dato for når reiseforskottet blei utbetalt"/>
+			<text id="advance_location_label" value="Utbetalingsstad"/>
+			<text id="advance_location_help" value="Stad for utbetaling av reiseforskottet"/>
+			<text id="advance_location_validator" value="Du må leggje inn namnet på staden for når reiseforskottet blei utbetalt"/>
+			<text id="advance_value_label" value="Beløp"/>
+			<text id="advance_value_help" value="Utbetalt reiseforskott"/>
+			<text id="advance_value_validator" value="Du må skrive inn det utbetalte beløpet"/>
+			<text id="summary_advance" value="Reiseforskott på kr %1, utbetalt i %2, den %3"/>
+			<text id="advance_listlabel" value="Forskott"/>
+			<text id="notes_intro_help" value="Legg til fritekst kommentarar til reiserekninga"/>
+			<text id="notes_headline_label" value="Legg til merknad"/>
+			<text id="notes_note_label" value="Merknad"/>
+			<text id="notes_note_help" value="Skriv din merknad i feltet"/>
+			<text id="notes_note_validator" value="Du må skrive ein merknad i feltet"/>
+			<text id="summary_notes" value="Merknad: %1"/>
+			<text id="comment_listlabel" value="Merknader"/>
+			<text id="settlement_intro_help" value="Her finner du en kort oppsummering av de data du har lagt inn og tall beregnet på bakgrunn av disse. 'Lagre reiserekning' let deg lagre reiserekninga som ei fil på din PC. 'Lagre til deling' let deg lagre reiserekninga som ei fil utan personleg informasjon slik at du kan dele den med andre. 'Skriv ut blankett' lagar ein PDF som du kan skrive ut."/>
+			<text id="settlement_account_label" value="Skal konterast konto"/>
+			<text id="settlement_date_label" value="Utfylt dato"/>
+			<text id="settlement_travelnum_label" value="Reisenummer"/>
+			<text id="settlement_gridheader" value="Utrekningar"/>
+			<text id="settlement_specifications" value="Transportmiddel"/>
+			<text id="settlement_accomodations" value="Overnatting"/>
+			<text id="settlement_outlays" value="Diverse utlegg"/>
+			<text id="settlement_dailyallowance" value="Godtgjersler"/>
+			<text id="settlement_redraws" value="Trekk i kostgodtgjersle"/>
+			<text id="settlement_prepaid" value="Reiseforskott"/>
+			<text id="settlement_total" value="Nettobeløp"/>
+			<text id="settlement_error_header" value="Oppgjeret er ikkje klart"/>
+			<text id="settlement_error_intro" value="Oppgjeret er ikkje ferdig utrekna då du ikkje har fyllt ut reisedetaljane ferdig."/>
+			<text id="settlement_error_specifications" value="Reisespesifikasjonane har manglar i forhold til utreise- og innreisedag."/>
+			<text id="settlement_error_accomodations" value="Du har ikkje spesifisert nødvendige overnattingar."/>
+			<text id="settlement_error_deductions" value="Under overnattingar har du spesifisert at du har hatt frukost inkludert i opphaldet. Desse må òg spesifiserast under 'trekk i kostgodtgjersla'."/>
+			<text id="AFG" value="Afganistan"/>
+			<text id="AFG_kabul" value="Kabul"/>
+			<text id="ALB" value="Albania"/>
+			<text id="ALB_tirana" value="Tirana"/>
+			<text id="DZA" value="Algerie"/>
+			<text id="DZA_alger" value="Alger"/>
+			<text id="AGO" value="Angola"/>
+			<text id="AGO_luanda" value="Luanda"/>
+			<text id="ATG" value="Antigua og Barbuda"/>
+			<text id="ATG_st. john's" value="St. John's"/>
+			<text id="ARG" value="Argentina"/>
+			<text id="ARG_buenos aires" value="Buenos Aires"/>
+			<text id="ARM" value="Armenia"/>
+			<text id="ARM_yerevan" value="Yerevan"/>
+			<text id="AUS" value="Australia"/>
+			<text id="AUS_canberra" value="Canberra"/>
+			<text id="AUS_melbourne" value="Melbourne"/>
+			<text id="AUS_sydney" value="Sydney"/>
+			<text id="AZE" value="Azerbaijan"/>
+			<text id="AZE_baku" value="Baku"/>
+			<text id="BHS" value="Bahamas"/>
+			<text id="BHS_nassau" value="Nassau"/>
+			<text id="BHR" value="Bahrain"/>
+			<text id="BHR_al manamah" value="Al Manamah"/>
+			<text id="BHR_manama" value="Manama"/>
+			<text id="BGD" value="Bangladesh"/>
+			<text id="BGD_chittagong" value="Chittagong"/>
+			<text id="BGD_dhaka" value="Dhaka"/>
+			<text id="BRB" value="Barbados"/>
+			<text id="BRB_bridgetown" value="Bridgetown"/>
+			<text id="BEL" value="Belgia"/>
+			<text id="BEL_brussel" value="Brussel"/>
+			<text id="BEN" value="Benin"/>
+			<text id="BEN_porto-novo" value="Porto-Novo"/>
+			<text id="BMU" value="Bermuda (Br)"/>
+			<text id="BMU_hamilton" value="Hamilton"/>
+			<text id="BOL" value="Bolivia"/>
+			<text id="BOL_sucre" value="Sucre"/>
+			<text id="BIH" value="Bosnia-Hercegovina"/>
+			<text id="BIH_sarajevo" value="Sarajevo"/>
+			<text id="BWA" value="Botswana"/>
+			<text id="BWA_gaborone" value="Gaborone"/>
+			<text id="BRA" value="Brasil"/>
+			<text id="BRA_belo horizonte" value="Belo Horizonte"/>
+			<text id="BRA_brasilia" value="Brasilia"/>
+			<text id="BRA_fortaleza" value="Fortaleza"/>
+			<text id="BRA_porto alegre" value="Polo Alegre"/>
+			<text id="BRA_recife" value="Canberra"/>
+			<text id="BRA_rio de janeiro" value="Recife"/>
+			<text id="BRA_salvador" value="Salvador"/>
+			<text id="BRA_sao paulo" value="Sao Paulo"/>
+			<text id="BRN" value="Brunei"/>
+			<text id="BRN_bandar seri begawan" value="Bandar Seri Begawan"/>
+			<text id="BGR" value="Bulgaria"/>
+			<text id="BGR_sofia" value="Sofia"/>
+			<text id="BUR" value="Burma (Myanmar)"/>
+			<text id="BUR_pyinmana" value="Pyinmana"/>
+			<text id="CAN" value="Canada"/>
+			<text id="CAN_montreal" value="Montreal"/>
+			<text id="CAN_ottawa" value="Ottawa"/>
+			<text id="CAN_toronto" value="Toronto"/>
+			<text id="CHL" value="Chile"/>
+			<text id="CHL_santiago" value="Santiago"/>
+			<text id="COL" value="Colombia"/>
+			<text id="COL_bogota" value="Bogota"/>
+			<text id="COL_medellin" value="Medellin"/>
+			<text id="COL_santa fe de bogota" value="Santa Fe de Bogota"/>
+			<text id="Costa Rica" value="Costa Rica"/>
+			<text id="CUB" value="Cuba"/>
+			<text id="CUB_havana" value="Havana"/>
+			<text id="DNK" value="Danmark"/>
+			<text id="DNK_københavn" value="København"/>
+			<text id="PSE" value="Dei palestinske områda"/>
+			<text id="PSE" value="Dei palestinske områda"/>
+			<text id="DOM" value="Den dominikanske rep."/>
+			<text id="DOM_santo domingo" value="Santo Domingo"/>
+			<text id="DMA" value="Dominica"/>
+			<text id="DMA_roseau" value="Roseau"/>
+			<text id="EGY" value="Egypt"/>
+			<text id="EGY_alexandria" value="Alexandria"/>
+			<text id="EGY_cairo" value="Cairo"/>
+			<text id="EGY_kairo" value="Kairo"/>
+			<text id="CIV" value="Elfenbeinskysten"/>
+			<text id="CIV_abidjan" value="Abidjan"/>
+			<text id="CIV_yamoussoukro" value="Yamoussoukro"/>
+			<text id="ECU" value="Equador"/>
+			<text id="ECU_quito" value="Quito"/>
+			<text id="EST" value="Estland"/>
+			<text id="EST_tallinn" value="Tallinn"/>
+			<text id="ETH" value="Etiopia"/>
+			<text id="ETH_addis abeba" value="Addis Abeba"/>
+			<text id="FJI" value="Fiji"/>
+			<text id="FJI_suva" value="Suva"/>
+			<text id="PHL" value="Fillipinane"/>
+			<text id="PHL_manila" value="Manila"/>
+			<text id="FIN" value="Finland"/>
+			<text id="FIN_helsinki" value="Helsinki"/>
+			<text id="ARE" value="Foreinte Arabiske Emirat"/>
+			<text id="ARE_abu dhabi" value="Abiui Dhai"/>
+			<text id="FRA" value="Frankrike"/>
+			<text id="FRA_paris" value="Paris"/>
+			<text id="GAB" value="Gabon"/>
+			<text id="GAB_libreville" value="Libreville"/>
+			<text id="GMB" value="Gambia"/>
+			<text id="GMB_banjul" value="Banjul"/>
+			<text id="GEO" value="Georgia"/>
+			<text id="GEO_tbilisi" value="Tblisi"/>
+			<text id="GHA" value="Ghana"/>
+			<text id="GHA_accra" value="Accra"/>
+			<text id="GRD" value="Grenada"/>
+			<text id="GRD_st.george's" value="St.George's"/>
+			<text id="GTM" value="Guatemala"/>
+			<text id="GTM_guatemala" value="Guatemala"/>
+			<text id="GIN" value="Guinea"/>
+			<text id="GIN_conakry" value="Conakry"/>
+			<text id="GUY" value="Guyana"/>
+			<text id="GUY_georgetown" value="Georgetown"/>
+			<text id="HTI" value="Haiti"/>
+			<text id="HTI_port-au-prince" value="Port-au-Prince"/>
+			<text id="GRC" value="Hellas"/>
+			<text id="GRC_aten" value="Aten"/>
+			<text id="GRC_athens" value="Athens"/>
+			<text id="BLR" value="Kviterussland"/>
+			<text id="BLR_minsk" value="Minsk"/>
+			<text id="IND" value="India"/>
+			<text id="IND_ahmadabad" value="Ahmadabad"/>
+			<text id="IND_bangalore" value="Bangalore"/>
+			<text id="IND_calcutta" value="Calcutta"/>
+			<text id="IND_chennai" value="Chennai"/>
+			<text id="IND_delhi" value="Delhi"/>
+			<text id="IND_hyderabad" value="Hyderabad"/>
+			<text id="IND_mumbai" value="Mumbai"/>
+			<text id="IND_new delhi" value="New Dehli"/>
+			<text id="IND_ny delhi" value="Ny Delhi"/>
+			<text id="IND_poona" value="Poona"/>
+			<text id="IND_pune" value="Pune"/>
+			<text id="IND_surat" value="Surat"/>
+			<text id="IDN" value="Indonesia"/>
+			<text id="IDN_bandung" value="Bandung"/>
+			<text id="IDN_jakarta" value="Jakarta"/>
+			<text id="IRQ" value="Irak"/>
+			<text id="IRQ_baghdad" value="Baghdad"/>
+			<text id="IRN" value="Iran"/>
+			<text id="IRN_tehran" value="Tehran"/>
+			<text id="IRL" value="Irland"/>
+			<text id="IRL_dublin" value="Dublin"/>
+			<text id="ISL" value="Island"/>
+			<text id="ISL_reykjavik" value="Reykjavik"/>
+			<text id="ISR" value="Israel"/>
+			<text id="ISR_jerusalem" value="Jerusalem"/>
+			<text id="ITA" value="Italia"/>
+			<text id="ITA_firenze" value="Firenze"/>
+			<text id="ITA_milan" value="Milan "/>
+			<text id="ITA_milano" value="Milano"/>
+			<text id="ITA_roma" value="Roma"/>
+			<text id="ITA_venezia" value="Venezia"/>
+			<text id="Jamaica" value="Jamaica"/>
+			<text id="JPN" value="Japan"/>
+			<text id="JPN_kobe" value="Kobe"/>
+			<text id="JPN_nagoya" value="Nagoya"/>
+			<text id="JPN_osaka" value="Osaka"/>
+			<text id="JPN_osaka-kobe" value="Osaka-Kobe"/>
+			<text id="JPN_tokyo" value="Tokyo"/>
+			<text id="JOR" value="Jordan"/>
+			<text id="JOR_amman" value="Amman"/>
+			<text id="KHM" value="Kambodia"/>
+			<text id="KHM_phnom penh" value="Phnom Penh"/>
+			<text id="CMR" value="Kamerun"/>
+			<text id="CMR_yaounde" value="Yaounde"/>
+			<text id="KAZ" value="Kasakhstan"/>
+			<text id="KAZ_astana" value="Astana"/>
+			<text id="KEN" value="Kenya"/>
+			<text id="KEN_nairobi" value="Nairobi"/>
+			<text id="CHN" value="Kina"/>
+			<text id="CHN_beijing" value="Beijing"/>
+			<text id="CHN_changchun" value="Changchun"/>
+			<text id="CHN_chengdu" value="Chengdu"/>
+			<text id="CHN_chongqing" value="Chongqing"/>
+			<text id="CHN_guangzhou" value="Guangzhou"/>
+			<text id="CHN_hong kong" value="Hong Kong"/>
+			<text id="CHN_shanghai" value="Shanghai"/>
+			<text id="CHN_shenyang" value="Shenyang"/>
+			<text id="CHN_tianjin" value="Tianjin"/>
+			<text id="CHN_wuhan" value="Wuhan"/>
+			<text id="CHN_xian" value="Xian"/>
+			<text id="HRV" value="Kroatia"/>
+			<text id="HRV_zagreb" value="Zagreb"/>
+			<text id="KWT" value="Kuwait"/>
+			<text id="KWT_kuwait by" value="Kuwait by"/>
+			<text id="CYP" value="Kypros"/>
+			<text id="CYP_nicosia" value="Nicosia"/>
+			<text id="LAO" value="Laos"/>
+			<text id="LAO_vientiane" value="Vientiane"/>
+			<text id="LVA" value="Latvia"/>
+			<text id="LVA_riga" value="Riga"/>
+			<text id="LSO" value="Lesotho"/>
+			<text id="LSO_maseru" value="Maseru"/>
+			<text id="LBN" value="Libanon"/>
+			<text id="LBN_beirut" value="Beirut"/>
+			<text id="LBR" value="Liberia"/>
+			<text id="LBR_monrovia" value="Monrovia"/>
+			<text id="LBY" value="Libya"/>
+			<text id="LBY_tripoli" value="Tripoli"/>
+			<text id="LIE" value="Liechtenstein"/>
+			<text id="LIE_vaduz" value="Vaduz"/>
+			<text id="LTU" value="Litauen"/>
+			<text id="LTU_vilnius" value="Vilnius"/>
+			<text id="LUX" value="Luxembourg"/>
+			<text id="LUX_luxembourg" value="Luxembourg"/>
+			<text id="MDG" value="Madagaskar"/>
+			<text id="MDG_antananarivo" value="Antananarivo"/>
+			<text id="MKD" value="Makedonia"/>
+			<text id="MKD_skopje" value="Skopje"/>
+			<text id="MWI" value="Malawi"/>
+			<text id="MWI_lilongwe" value="Lilongwe"/>
+			<text id="MYS" value="Malaysia"/>
+			<text id="MYS_kuala lumpur" value="Kuala Lumpur"/>
+			<text id="MDV" value="Maldivene"/>
+			<text id="MDV_male" value="Male"/>
+			<text id="MLI" value="Mali"/>
+			<text id="MLI_bamako" value="Bamako"/>
+			<text id="MLT" value="Malta"/>
+			<text id="MLT_valletta" value="Valetta"/>
+			<text id="MAR" value="Marokko"/>
+			<text id="MAR_casablanca" value="Casablanca"/>
+			<text id="MAR_rabat" value="Rabat"/>
+			<text id="MUS" value="Mauritius"/>
+			<text id="MUS_port louis" value="Port Louis"/>
+			<text id="MEX" value="Mexico"/>
+			<text id="MEX_ciudad de mexico" value="Ciudad de Mexico"/>
+			<text id="MEX_guadalajara" value="Guadalajara"/>
+			<text id="MEX_mexico city" value="Mexico City"/>
+			<text id="MEX_monterrey" value="Monterrey"/>
+			<text id="MOZ" value="Mocambique"/>
+			<text id="MOZ_maputo" value="Maputo"/>
+			<text id="MDA" value="Moldova"/>
+			<text id="MDA_chisinau" value="Chisinau"/>
+			<text id="MCO" value="Monaco"/>
+			<text id="MCO_monaco" value="Monaco"/>
+			<text id="MNG" value="Mongolia"/>
+			<text id="MNG_ulan bator" value="Ulan Bator"/>
+			<text id="MNE" value="Montenegro"/>
+			<text id="MNE_podgorica" value="Podgorica"/>
+			<text id="NAM" value="Namibia"/>
+			<text id="NAM_windhoek" value="Windhoek"/>
+			<text id="NLD" value="Nederland"/>
+			<text id="NLD_amsterdam" value="Amsterdam"/>
+			<text id="NLD_den haag" value="den Haag"/>
+			<text id="ANT" value="Nederlandske Antillar"/>
+			<text id="ANT_willemstad" value="Willemstad"/>
+			<text id="NPL" value="Nepal"/>
+			<text id="NPL_katmandu" value="Katmandu"/>
+			<text id="NZL" value="New Zealand"/>
+			<text id="NZL_wellington" value="Wellington"/>
+			<text id="NIC" value="Nicaragua"/>
+			<text id="NIC_managua" value="Managua"/>
+			<text id="NGA" value="Nigeria"/>
+			<text id="NGA_abuja" value="Abuja"/>
+			<text id="NGA_lagos" value="Lagos"/>
+			<text id="OMN" value="Oman"/>
+			<text id="OMN_muscat" value="Muscat"/>
+			<text id="PAK" value="Pakistan"/>
+			<text id="PAK_islamabad" value="Islamabad"/>
+			<text id="PAK_karachi" value="Karachi"/>
+			<text id="PAK_lahore" value="Lahore"/>
+			<text id="PAN" value="Panama"/>
+			<text id="PAN_panama" value="Panama"/>
+			<text id="PNG" value="Papua - New Guinea"/>
+			<text id="PNG_port moresby" value="Port Moresby"/>
+			<text id="PRY" value="Paraguay"/>
+			<text id="PRY_asuncion" value="Asuncion"/>
+			<text id="PER" value="Peru"/>
+			<text id="PER_lima" value="Lima"/>
+			<text id="POL" value="Polen"/>
+			<text id="POL_warszawa" value="Warszawa"/>
+			<text id="PRT" value="Portugal"/>
+			<text id="PRT_lisboa" value="Lisboa"/>
+			<text id="PRI" value="Puerto Rico"/>
+			<text id="PRI_san juan" value="San Juan"/>
+			<text id="QAT" value="Qatar"/>
+			<text id="QAT_doha" value="Doha"/>
+			<text id="ROU" value="Romania"/>
+			<text id="ROU_bucuresti" value="Bucuresti"/>
+			<text id="RUS" value="Russland"/>
+			<text id="RUS_moscow" value="Moscow"/>
+			<text id="RUS_moskva" value="Moskva"/>
+			<text id="RUS_saint petersburg" value="Saint Petersburg"/>
+			<text id="RUS_st petersburg" value="St Petersburg"/>
+			<text id="RUS_st. petersburg" value="St. Petersburg"/>
+			<text id="RUS_st.petersburg" value="St.Petersburg"/>
+			<text id="SAU" value="Saudi-Arabia"/>
+			<text id="SAU_jidda" value="Jidda"/>
+			<text id="SEN" value="Senegal"/>
+			<text id="SEN_dakar" value="Dakar"/>
+			<text id="SRB" value="Serbia"/>
+			<text id="SRB_beograd" value="Beograd"/>
+			<text id="SYC" value="Seychellane"/>
+			<text id="SYC_victoria" value="Victoria"/>
+			<text id="SGP" value="Singapore"/>
+			<text id="SGP_singapore" value="Singapore"/>
+			<text id="SVK" value="Slovakia"/>
+			<text id="SVK_bratislava" value="Bratislava"/>
+			<text id="SVN" value="Slovenia"/>
+			<text id="SVN_ljubljana" value="Ljubljana"/>
+			<text id="ESP" value="Spania"/>
+			<text id="ESP_barcelona" value="Barcelona"/>
+			<text id="ESP_madrid" value="Madrid"/>
+			<text id="LKA" value="Sri Lanka"/>
+			<text id="LKA_colombo" value="Colombo"/>
+			<text id="KNA" value="St. Kitts-Nevis"/>
+			<text id="KNA_basseterre" value="Basseterre"/>
+			<text id="LCA" value="St. Lucia"/>
+			<text id="LCA_castries" value="Castries"/>
+			<text id="VCT" value="St. Vincent og Grenadinane"/>
+			<text id="VCT_kingstown" value="Kingstown"/>
+			<text id="GBR" value="Storbritannia"/>
+			<text id="GBR_london" value="London"/>
+			<text id="SDN" value="Sudan"/>
+			<text id="SDN_khartoum" value="Khartoum"/>
+			<text id="SUR" value="Surinam"/>
+			<text id="SUR_paramaribo" value="Paramaribo"/>
+			<text id="CHE" value="Sveits"/>
+			<text id="CHE_bern" value="Bern"/>
+			<text id="CHE_genève" value="Geneve"/>
+			<text id="CHE_zürich" value="Zürich"/>
+			<text id="SWE" value="Sverige"/>
+			<text id="SWE_stockholm" value="Stockholm"/>
+			<text id="SWZ" value="Swaziland"/>
+			<text id="SWZ_mbabane" value="Mbabane"/>
+			<text id="SYR" value="Syria"/>
+			<text id="SYR_damaskus" value="Damaskus"/>
+			<text id="ZAF" value="Sør-Afrika"/>
+			<text id="ZAF_cape town" value="Cape Town"/>
+			<text id="ZAF_johannesburg" value="Johannesburg"/>
+			<text id="ZAF_pretoria" value="Pretoria"/>
+			<text id="KOR" value="Sør-Korea"/>
+			<text id="KOR_seoul" value="Seoul"/>
+			<text id="TWN" value="Taiwan"/>
+			<text id="TWN_taipei" value="Taipei"/>
+			<text id="TZA" value="Tanzania"/>
+			<text id="TZA_dodoma" value="Dodoma"/>
+			<text id="THA" value="Thailand"/>
+			<text id="THA_bangkok" value="Bangkok"/>
+			<text id="TGO" value="Togo"/>
+			<text id="TGO_lome" value="Lome"/>
+			<text id="TTO" value="Trinidad og Tobago"/>
+			<text id="TTO_port of spain" value="Port of Spain"/>
+			<text id="CZE" value="Tsjekkia"/>
+			<text id="CZE_praha" value="Praha"/>
+			<text id="TUN" value="Tunisia"/>
+			<text id="TUN_tunis" value="Tunis"/>
+			<text id="TUR" value="Tyrkia"/>
+			<text id="TUR_ankara" value="Ankara"/>
+			<text id="TUR_istanbul" value="Istanbul"/>
+			<text id="DEU" value="Tyskland"/>
+			<text id="DEU_berlin" value="Berlin"/>
+			<text id="DEU_rhein-main" value="Rhein-Main"/>
+			<text id="DEU_rhein-ruhr" value="Rhein-Ruhr"/>
+			<text id="USA" value="USA"/>
+			<text id="USA_albuquerque" value="Albuquerque"/>
+			<text id="USA_atlanta" value="Atlanta"/>
+			<text id="USA_austin" value="Austin"/>
+			<text id="USA_baltimore" value="Baltimore"/>
+			<text id="USA_boston" value="Boston"/>
+			<text id="USA_charlotte" value="Charlotte"/>
+			<text id="USA_chicago" value="Chicago"/>
+			<text id="USA_cleveland" value="Cleveland"/>
+			<text id="USA_colorado" value="Colorado"/>
+			<text id="USA_columbus, ohio" value="Columbus, Ohio"/>
+			<text id="USA_dallas" value="Dallas"/>
+			<text id="USA_denver" value="Denver"/>
+			<text id="USA_detroit" value="Detroit"/>
+			<text id="USA_el paso" value="El Paso"/>
+			<text id="USA_fort worth" value="Fort Worth"/>
+			<text id="USA_fresno" value="Fresno"/>
+			<text id="USA_honolulu" value="Honolulu"/>
+			<text id="USA_houston" value="Houston"/>
+			<text id="USA_indianapolis" value="Indianapolis"/>
+			<text id="USA_jacksonville" value="Jacksonville"/>
+			<text id="USA_kansas city" value="Kansas City"/>
+			<text id="USA_las vegas" value="Las Vegas"/>
+			<text id="USA_long beach" value="Long Beach"/>
+			<text id="USA_los angeles" value="Los Angeles"/>
+			<text id="USA_louisville" value="Louisville"/>
+			<text id="USA_memphis" value="Memphis"/>
+			<text id="USA_mesa" value="Mesa"/>
+			<text id="USA_miami" value="Miami"/>
+			<text id="USA_milwaukee" value="Milwaukee"/>
+			<text id="USA_minneapolis" value="Minneapolis"/>
+			<text id="USA_nashville" value="Nashville"/>
+			<text id="USA_new orleans" value="New Orleans"/>
+			<text id="USA_new york" value="New York"/>
+			<text id="USA_new york by" value="New York by"/>
+			<text id="USA_oakland" value="Oakland"/>
+			<text id="USA_oklahoma city" value="Oklahoma City"/>
+			<text id="USA_omaha" value="Omaha"/>
+			<text id="USA_philadelphia" value="Philadelphia"/>
+			<text id="USA_phoenix" value="Phoenix"/>
+			<text id="USA_portland" value="Portland"/>
+			<text id="USA_sacramento" value="Sacramento"/>
+			<text id="USA_san antonio" value="San Anronio"/>
+			<text id="USA_san diego" value="San Diego"/>
+			<text id="USA_san francisco" value="San Francisco"/>
+			<text id="USA_san fransisko" value="San Fransisko"/>
+			<text id="USA_san jose" value="San Jose"/>
+			<text id="USA_seattle" value="Seattle"/>
+			<text id="USA_tucson" value="Tucson"/>
+			<text id="USA_tulsa" value="Tulsa"/>
+			<text id="USA_virginia beach" value="Virginia Beach"/>
+			<text id="USA_washington" value="Washington"/>
+			<text id="USA_washington d.c" value="Washington D.C"/>
+			<text id="UGA" value="Uganda"/>
+			<text id="UGA_kampala" value="Kampala"/>
+			<text id="UKR" value="Ukraina"/>
+			<text id="UKR_kiev" value="Kiev"/>
+			<text id="HUN" value="Ungarn"/>
+			<text id="HUN_budapest" value="Budapest"/>
+			<text id="URY" value="Uruguay"/>
+			<text id="URY_montevideo" value="Montevideo"/>
+			<text id="VEN" value="Venezuela"/>
+			<text id="VEN_caracas" value="Caracas"/>
+			<text id="VNM" value="Vietnam"/>
+			<text id="VNM_hanoi" value="Hanopi"/>
+			<text id="VNM_ho chi minh city" value="Ho Chi Minh City"/>
+			<text id="YEM" value="Yemen"/>
+			<text id="YEM_sana" value="Sana"/>
+			<text id="ZMB" value="Zambia"/>
+			<text id="ZMB_lusaka" value="Lusaka"/>
+			<text id="ZWE" value="Zimbabwe"/>
+			<text id="ZWE_harare" value="Harare"/>
+			<text id="TLS" value="Aust-Timor"/>
+			<text id="TLS_dili" value="Dili"/>
+			<text id="AUT" value="Austerrike"/>
+			<text id="AUT_wien" value="Wien"/>
+		</texts>
+	</media>
+	<formatting>
+		<format id="date" type="DATE_FORMAT" value="DD.MM.YY"/>
+		<format id="time" type="TIME_FORMAT" value="HHMM"/>
+		<format id="days" type="DAYS_NAMES" value="Søn,Man,Tir,Ons,Tor,Fre,Lør"/>
+		<format id="chars" type="LEGAL_CHARS" value="abcdefghijklmnopqrstuvwxyzæøå ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ"/>
+		<format id="nums" type="LEGAL_NUMS" value="0123456789"/>
+		<format id="months" type="MONTH_NAMES" value="Januar,Februar,Mars,April,Mai,Juni,Juli,August,September,Oktober,November,Desember"/>
+		<format id="currency_symbol" type="CURRENCY_SYMBOL" value="Kr"/>
+		<format id="currency_default_code" type="CURRENCY_DEFAULT" value="NOK"/>
+		<format id="decimal_separator" type="DECIMAL_SEPARATOR" value=","/>
+	</formatting>
+</localization>

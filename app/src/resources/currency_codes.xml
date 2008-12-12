@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<currency_codes>
+	<code id="AED" description="United Arab Emirates, Dirhams" factor="1" />
+	<code id="AFN" description="Afghanistan, Afghanis" factor="1" />
+	<code id="ALL" description="Albania, Leke" factor="1" />
+	<code id="AMD" description="Armenia, Drams" factor="1" />
+	<code id="ANG" description="Netherlands Antilles, Guilders (also called Florins)" factor="1" />
+	<code id="AOA" description="Angola, Kwanza" factor="1" />
+	<code id="ARS" description="Argentina, Pesos" factor="1" />
+	<code id="AUD" description="Australia, Dollars" factor="1" />
+	<code id="AWG" description="Aruba, Guilders (also called Florins)" factor="1" />
+	<code id="AZN" description="Azerbaijan, New Manats" factor="1" />
+	<code id="BAM" description="Bosnia and Herzegovina, Convertible Marka" factor="1" />
+	<code id="BBD" description="Barbados, Dollars" factor="1" />
+	<code id="BDT" description="Bangladesh, Taka" factor="1" />
+	<code id="BGN" description="Bulgaria, Leva" factor="1" />
+	<code id="BHD" description="Bahrain, Dinars" factor="1" />
+	<code id="BIF" description="Burundi, Francs" factor="1" />
+	<code id="BMD" description="Bermuda, Dollars" factor="1" />
+	<code id="BND" description="Brunei Darussalam, Dollars" factor="1" />
+	<code id="BOB" description="Bolivia, Bolivianos" factor="1" />
+	<code id="BRL" description="Brazil, Brazil Real" factor="1" />
+	<code id="BSD" description="Bahamas, Dollars" factor="1" />
+	<code id="BTN" description="Bhutan, Ngultrum" factor="1" />
+	<code id="BWP" description="Botswana, Pulas" factor="1" />
+	<code id="BYR" description="Belarus, Rubles" factor="1" />
+	<code id="BZD" description="Belize, Dollars" factor="1" />
+	<code id="CAD" description="Canada, Dollars" factor="1" />
+	<code id="CDF" description="Congo/Kinshasa, Congolese Francs" factor="1" />
+	<code id="CHF" description="Switzerland, Francs" factor="100" />
+	<code id="CLP" description="Chile, Pesos" factor="100" />
+	<code id="CNY" description="China, Yuan Renminbi" factor="100" />
+	<code id="COP" description="Colombia, Pesos" factor="1" />
+	<code id="CRC" description="Costa Rica, Colones" factor="1" />
+	<code id="CUP" description="Cuba, Pesos" factor="1" />
+	<code id="CVE" description="Cape Verde, Escudos" factor="1" />
+	<code id="CYP" description="Cyprus, Pounds (expires 2008-Jan-31)" factor="1" />
+	<code id="CZK" description="Czech Republic, Koruny" factor="100" />
+	<code id="DJF" description="Djibouti, Francs" factor="1" />
+	<code id="DKK" description="Denmark, Kroner" factor="100" />
+	<code id="DOP" description="Dominican Republic, Pesos" factor="1" />
+	<code id="DZD" description="Algeria, Algeria Dinars" factor="1" />
+	<code id="EEK" description="Estonia, Krooni" factor="1" />
+	<code id="EGP" description="Egypt, Pounds" factor="1" />
+	<code id="ERN" description="Eritrea, Nakfa" factor="1" />
+	<code id="ETB" description="Ethiopia, Birr" factor="1" />
+	<code id="EUR" description="Euro Member Countries, Euro" factor="1" />
+	<code id="FJD" description="Fiji, Dollars" factor="1" />
+	<code id="FKP" description="Falkland Islands (Malvinas), Pounds" factor="1" />
+	<code id="GBP" description="United Kingdom, Pounds" factor="1" />
+	<code id="GEL" description="Georgia, Lari" factor="1" />
+	<code id="GGP" description="Guernsey, Pounds" factor="1" />
+	<code id="GHS" description="Ghana, Cedis" factor="1" />
+	<code id="GIP" description="Gibraltar, Pounds" factor="1" />
+	<code id="GMD" description="Gambia, Dalasi" factor="1" />
+	<code id="GNF" description="Guinea, Francs" factor="1" />
+	<code id="GTQ" description="Guatemala, Quetzales" factor="1" />
+	<code id="GYD" description="Guyana, Dollars" factor="1" />
+	<code id="HKD" description="Hong Kong, Dollars" factor="1" />
+	<code id="HNL" description="Honduras, Lempiras" factor="1" />
+	<code id="HRK" description="Croatia, Kuna" factor="100" />
+	<code id="HTG" description="Haiti, Gourdes" factor="1" />
+	<code id="HUF" description="Hungary, Forint" factor="100" />
+	<code id="IDR" description="Indonesia, Rupiahs" factor="100" />
+	<code id="ILS" description="Israel, New Shekels" factor="1" />
+	<code id="IMP" description="Isle of Man, Pounds" factor="1" />
+	<code id="INR" description="India, Rupees" factor="1" />
+	<code id="IQD" description="Iraq, Dinars" factor="100" />
+	<code id="IRR" description="Iran, Rials" factor="100" />
+	<code id="ISK" description="Iceland, Kronur" factor="100" />
+	<code id="JEP" description="Jersey, Pounds" factor="1" />
+	<code id="JMD" description="Jamaica, Dollars" factor="1" />
+	<code id="JOD" description="Jordan, Dinars" factor="1" />
+	<code id="JPY" description="Japan, Yen" factor="100" />
+	<code id="KES" description="Kenya, Shillings" factor="1" />
+	<code id="KGS" description="Kyrgyzstan, Soms" factor="1" />
+	<code id="KHR" description="Cambodia, Riels" factor="1" />
+	<code id="KMF" description="Comoros, Francs" factor="1" />
+	<code id="KPW" description="Korea (North), Won" factor="1" />
+	<code id="KRW" description="Korea (South), Won" factor="100" />
+	<code id="KWD" description="Kuwait, Dinars" factor="1" />
+	<code id="KYD" description="Cayman Islands, Dollars" factor="1" />
+	<code id="KZT" description="Kazakhstan, Tenge" factor="1" />
+	<code id="LAK" description="Laos, Kips" factor="1" />
+	<code id="LBP" description="Lebanon, Pounds" factor="100" />
+	<code id="LKR" description="Sri Lanka, Rupees" factor="1" />
+	<code id="LRD" description="Liberia, Dollars" factor="1" />
+	<code id="LSL" description="Lesotho, Maloti" factor="1" />
+	<code id="LTL" description="Lithuania, Litai" factor="100" />
+	<code id="LVL" description="Latvia, Lati" factor="1" />
+	<code id="LYD" description="Libya, Dinars" factor="1" />
+	<code id="MAD" description="Morocco, Dirhams" factor="100" />
+	<code id="MDL" description="Moldova, Lei" factor="1" />
+	<code id="MGA" description="Madagascar, Ariary" factor="1" />
+	<code id="MKD" description="Macedonia, Denars" factor="1" />
+	<code id="MMK" description="Myanmar (Burma), Kyats" factor="1" />
+	<code id="MNT" description="Mongolia, Tugriks" factor="1" />
+	<code id="MOP" description="Macau, Patacas" factor="1" />
+	<code id="MRO" description="Mauritania, Ouguiyas" factor="1" />
+	<code id="MTL" description="Malta, Liri (expires 2008-Jan-31)" factor="1" />
+	<code id="MUR" description="Mauritius, Rupees" factor="1" />
+	<code id="MVR" description="Maldives (Maldive Islands), Rufiyaa" factor="1" />
+	<code id="MWK" description="Malawi, Kwachas" factor="1" />
+	<code id="MXN" description="Mexico, Pesos" factor="100" />
+	<code id="MYR" description="Malaysia, Ringgits" factor="1" />
+	<code id="MZN" description="Mozambique, Meticais" factor="1" />
+	<code id="NAD" description="Namibia, Dollars" factor="1" />
+	<code id="NGN" description="Nigeria, Nairas" factor="1" />
+	<code id="NIO" description="Nicaragua, Cordobas" factor="1" />
+	<code id="NOK" description="Norway, Krone" factor="1" />
+	<code id="NPR" description="Nepal, Nepal Rupees" factor="1" />
+	<code id="NZD" description="New Zealand, Dollars" factor="1" />
+	<code id="OMR" description="Oman, Rials" factor="1" />
+	<code id="PAB" description="Panama, Balboa" factor="1" />
+	<code id="PEN" description="Peru, Nuevos Soles" factor="1" />
+	<code id="PGK" description="Papua New Guinea, Kina" factor="1" />
+	<code id="PHP" description="Philippines, Pesos" factor="1" />
+	<code id="PKR" description="Pakistan, Rupees" factor="1" />
+	<code id="PLN" description="Poland, Zlotych" factor="1" />
+	<code id="PYG" description="Paraguay, Guarani" factor="1" />
+	<code id="QAR" description="Qatar, Rials" factor="1" />
+	<code id="RON" description="Romania, New Lei" factor="1" />
+	<code id="RSD" description="Serbia, Dinars" factor="1" />
+	<code id="RUB" description="Russia, Rubles" factor="1" />
+	<code id="RWF" description="Rwanda, Rwanda Francs" factor="1" />
+	<code id="SAR" description="Saudi Arabia, Riyals" factor="1" />
+	<code id="SBD" description="Solomon Islands, Dollars" factor="1" />
+	<code id="SCR" description="Seychelles, Rupees" factor="1" />
+	<code id="SDG" description="Sudan, Pounds" factor="1" />
+	<code id="SEK" description="Sweden, Kronor" factor="100" />
+	<code id="SGD" description="Singapore, Dollars" factor="1" />
+	<code id="SHP" description="Saint Helena, Pounds" factor="1" />
+	<code id="SKK" description="Slovakia, Koruny" factor="100" />
+	<code id="SLL" description="Sierra Leone, Leones" factor="1" />
+	<code id="SOS" description="Somalia, Shillings" factor="1" />
+	<code id="SPL" description="Seborga, Luigini" factor="1" />
+	<code id="SRD" description="Suriname, Dollars" factor="1" />
+	<code id="STD" description="São Tome and Principe, Dobras" factor="1" />
+	<code id="SVC" description="El Salvador, Colones" factor="1" />
+	<code id="SYP" description="Syria, Pounds" factor="1" />
+	<code id="SZL" description="Swaziland, Emalangeni" factor="1" />
+	<code id="THB" description="Thailand, Baht" factor="1" />
+	<code id="TJS" description="Tajikistan, Somoni" factor="1" />
+	<code id="TMM" description="Turkmenistan, Manats" factor="1" />
+	<code id="TND" description="Tunisia, Dinars" factor="1" />
+	<code id="TOP" description="Tonga, Pa'anga" factor="1" />
+	<code id="TRY" description="Turkey, New Lira" factor="1" />
+	<code id="TTD" description="Trinidad and Tobago, Dollars" factor="1" />
+	<code id="TVD" description="Tuvalu, Tuvalu Dollars" factor="1" />
+	<code id="TWD" description="Taiwan, New Dollars" factor="1" />
+	<code id="TZS" description="Tanzania, Shillings" factor="100" />
+	<code id="UAH" description="Ukraine, Hryvnia" factor="1" />
+	<code id="UGX" description="Uganda, Shillings" factor="1" />
+	<code id="USD" description="United States of America, Dollars" factor="1" />
+	<code id="UYU" description="Uruguay, Pesos" factor="100" />
+	<code id="UZS" description="Uzbekistan, Sums" factor="1" />
+	<code id="VEB" description="Venezuela, Bolivares (expires 2008-Jun-30)" factor="1" />
+	<code id="VEF" description="Venezuela, Bolivares Fuertes" factor="1" />
+	<code id="VND" description="Viet Nam, Dong" factor="1" />
+	<code id="VUV" description="Vanuatu, Vatu" factor="1" />
+	<code id="WST" description="Samoa, Tala" factor="1" />
+	<code id="XAF" description="Communauté Financière Africaine BEAC, Francs" factor="1" />
+	<code id="XAG" description="Silver, Ounces" factor="1" />
+	<code id="XAU" description="Gold, Ounces" factor="1" />
+	<code id="XCD" description="East Caribbean Dollars" factor="1" />
+	<code id="XDR" description="International Monetary Fund (IMF) Special Drawing Rights" factor="1" />
+	<code id="XOF" description="Communauté Financière Africaine BCEAO, Francs" factor="100" />
+	<code id="XPD" description="Palladium Ounces" factor="1" />
+	<code id="XPF" description="Comptoirs Français du Pacifique Francs" factor="100" />
+	<code id="XPT" description="Platinum, Ounces" factor="1" />
+	<code id="YER" description="Yemen, Rials" factor="1" />
+	<code id="ZAR" description="South Africa, Rand" factor="1" />
+	<code id="ZMK" description="Zambia, Kwacha" factor="1" />
+	<code id="ZWD" description="Zimbabwe, Zimbabwe Dollars" factor="100" />
+</currency_codes>

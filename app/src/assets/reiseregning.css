@@ -1,0 +1,437 @@
+/* CSS file */
+ToggleButtonBar
+{
+	firstButtonStyleName: "toggleButtonLeft";
+	buttonStyleName: "toggleButtonMiddle";
+	lastButtonStyleName: "toggleButtonRight";
+	selectedButtonTextStyleName: toggleButtonBarSelectedButtonText;
+}
+
+.toggleButtonLeft 
+{
+	disabledSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_left_normal');
+    downSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_left_normal');
+    overSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_left_normal');
+    upSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_left_normal');
+    selectedDisabledSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_left_normal');
+    selectedDownSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_left_normal');
+    selectedOverSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_left_normal');
+    selectedUpSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_left_normal');
+	paddingTop: 2;
+    
+}
+
+.toggleButtonMiddle
+{
+	disabledSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_middle_normal');
+    downSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_middle_normal');
+    overSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_middle_normal');
+    upSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_middle_normal');
+    selectedDisabledSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_middle_normal');
+    selectedDownSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_middle_normal');
+    selectedOverSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_middle_normal');
+    selectedUpSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_middle_normal');
+    
+}
+
+.toggleButtonRight
+{
+	disabledSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_right_normal');
+    downSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_right_normal');
+    overSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_right_normal');
+    upSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_right_normal');
+    selectedDisabledSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_right_normal');
+    selectedDownSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_right_normal');
+    selectedOverSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_right_normal');
+    selectedUpSkin: Embed(source='media/images/flashskins.swf', symbol='mc_toggle_selected_right_normal');
+    
+}
+
+Application {
+   backgroundColor: #F5F6F5;
+   backgroundGradientColors: #9bafb9, #68808c;
+   backgroundGradientAlphas: 0, 0;
+}
+Container.menuline
+{
+	backgroundColor: #E8F1F7;
+	borderStyle: none;
+	backgroundImage: Embed(source='media/images/bck_menuline.png', scaleGridTop='6', scaleGridBottom='40', scaleGridLeft='1', scaleGridRight='88');
+	backgroundSize: "100%";
+	paddingBottom: 20;
+}
+Container.headerBox
+{
+	backgroundImage: Embed(source="media/images/bck_headers.png", scaleGridTop='1', scaleGridBottom='39', scaleGridLeft='1', scaleGridRight='59');
+	backgroundSize: "100%";
+	fontWeight: bold;
+	fontSize: 14;
+	color: #575757;
+	paddingLeft: 10;
+	paddingRight: 10;
+	paddingTop: 10;
+	paddingBottom: 10;
+	fontFamily: Arial;
+}
+Container.formsBox
+{
+	paddingLeft: 10;
+	paddingRight: 10;
+	paddingTop: 10;
+	paddingBottom: 10;
+}
+
+Container.topbar
+{
+	backgroundColor: #E6E6E6;
+	borderStyle: none;
+	backgroundImage: Embed(source='media/images/bck_topbar.png', scaleGridTop='10', scaleGridBottom='30', scaleGridLeft='10', scaleGridRight='50');
+	backgroundSize: "100%";
+}
+
+Container.introbox
+{
+	backgroundImage: Embed(source="media/images/bck_introbox.png", scaleGridTop='32', scaleGridBottom='80', scaleGridLeft='12', scaleGridRight='196');
+	backgroundSize: "100%";
+	borderStyle: none;
+	fontSize: 11;
+	fontFamily: Verdana;
+	paddingLeft: 20;
+	paddingRight: 2;
+	color: #575757;
+	paddingTop: 10;
+	paddingBottom: 10;
+}
+
+global
+{
+	focusThickness: 3;
+}
+
+DataGrid {
+   backgroundAlpha: 0;
+   alternatingItemColors: #ffffff, #d6d6d6;
+   headerColors: #ffffff, #ffffff;
+   horizontalGridLines: true;
+   horizontalGridLineColor: #d6d6d6;
+   verticalGridLines: false;
+   useRollOver: true;
+   rollOverColor: #f5f5f5;
+   textRollOverColor: #7e7e7e;
+   borderThickness: 0;
+   selectionColor: #cfebec;
+   color: #7e7e7e;
+   textSelectedColor: #7e7e7e;
+   dropShadowEnabled: false;
+   fontFamily: Verdana;
+   headerStyleName: "mydataGridHeaderStyle";
+   fontSize: 9;
+}
+ComboBox
+{
+	color: #494949;
+	textRollOverColor: #7E7E7E;
+	textSelectedColor: #7E7E7E;
+	fontFamily: Verdana;
+	fontSize: 11;
+	fontWeight: bold;
+	dropdownStyleName: comboBoxDropdown;
+}
+
+.mydataGridHeaderStyle {
+   color: #494949;
+   fontWeight: bold;
+   fontStyle: normal;
+   textDecoration: none;
+}
+
+Button.default
+{
+	upSkin: Embed(source='media/images/flashskins.swf', symbol='standardbutton_normal');
+	fontFamily: Verdana;
+	fontSize: 11;
+	fontWeight: bold;
+	color: #FFFFFF;
+	textSelectedColor: #FFFFFF;
+	textRollOverColor: #FFFFFF;
+	overSkin: Embed(source='media/images/flashskins.swf', symbol='standardbutton_rollover');
+	downSkin: Embed(source='media/images/flashskins.swf', symbol='standardbutton_down');
+	disabledSkin: Embed(source='media/images/flashskins.swf', symbol='standardbutton_inactive');
+	
+}
+
+Button.secondary
+{
+	upSkin: Embed(source='media/images/flashskins.swf', symbol='secondary_normal');
+	overSkin: Embed(source='media/images/flashskins.swf', symbol='secondary_rollover');
+	downSkin: Embed(source='media/images/flashskins.swf', symbol='secondary_down');
+	disabledSkin: Embed(source='media/images/flashskins.swf', symbol='secondary_inactive');
+	fontFamily: Verdana;
+	fontSize: 11;
+	color: #575757;
+	textRollOverColor: #575757;
+	textSelectedColor: #575757;
+	
+}
+Button.smallicon80
+{
+	upSkin: Embed(source='media/images/flashskins.swf', symbol='small80_normal');
+	overSkin: Embed(source='media/images/flashskins.swf', symbol='small80_rollover');
+	downSkin: Embed(source='media/images/flashskins.swf', symbol='small80_down');
+	disabledSkin: Embed(source='media/images/flashskins.swf', symbol='small80_inactive');
+	paddingLeft: 2;
+	textAlign: left;
+	horizontalGap: 5;
+}
+Button.smallicon120
+{
+	upSkin: Embed(source='media/images/flashskins.swf', symbol='small120_normal');
+	overSkin: Embed(source='media/images/flashskins.swf', symbol='small120_rollover');
+	downSkin: Embed(source='media/images/flashskins.swf', symbol='small120_down');
+	disabledSkin: Embed(source='media/images/flashskins.swf', symbol='small120_inactive');
+	paddingLeft: 2;
+	textAlign: left;
+	horizontalGap: 5;
+}
+VRule
+{
+	strokeColor: #CBCBCB;
+}
+HRule
+{
+	strokeColor: #CBCBCB;
+}
+Button.bigIcon
+{
+	textAlign: left;
+	fontFamily: Arial;
+	fontWeight: normal;
+	fontSize: 13;
+	color: #075484;
+	textRollOverColor: #075484;
+	textSelectedColor: #075484;
+	horizontalGap: 4;
+	upSkin: Embed(source='media/images/flashskins.swf', symbol='bigIconInvisible_normal');
+	overSkin: Embed(source='media/images/flashskins.swf', symbol='bigIconInvisible_rollover');
+	downSkin: Embed(source='media/images/flashskins.swf', symbol='bigIconInvisible_down');
+	disabledSkin: Embed(source='media/images/flashskins.swf', symbol='bigIconInvisible_normal');
+}
+Container.FramedBox
+{
+	borderStyle: solid;
+	borderThickness: 1;
+    backgroundColor: #FFFFFF;
+  	borderColor: #E8E9E4;
+}
+Container.ApplicationBox
+{
+	backgroundImage: Embed(source="media/images/bck_application.png", scaleGridTop='5', scaleGridBottom='30', scaleGridLeft='19', scaleGridRight='37');
+	backgroundSize: "100%";
+	paddingLeft: 18;
+	paddingRight: 18;
+}
+
+Container.Group
+{
+	backgroundSize: "100%";
+	backgroundImage: Embed(source="media/images/bck_group.png", scaleGridTop='1', scaleGridBottom='40', scaleGridLeft='1', scaleGridRight='40');
+	paddingLeft: 10;
+	paddingRight: 10;
+	paddingTop: 20;
+	paddingBottom: 15;
+}
+
+Container.HelpBox
+{
+	borderStyle: solid;
+	borderThickness: 1;
+	cornerRadius: 0;
+	paddingTop: 5;
+    paddingBottom: 5; 
+    paddingLeft: 5;
+    paddingRight: 5;
+	backgroundColor: #FFFFFF;
+	backgroundSize: "100%";
+	fontFamily: Verdana;
+	fontSize: 11;
+	color: #575757;
+	borderColor: #276693;
+	dropShadowColor: #000000;
+	dropShadowEnabled: true;
+	shadowDirection: right;
+	backgroundImage: Embed(source="media/images/bck_infobox.png", scaleGridTop='10', scaleGridBottom='32', scaleGridLeft='1', scaleGridRight='187');
+}
+
+Container.InfoBox
+{
+	borderStyle: solid;
+	borderThickness: 1;
+	cornerRadius: 0;
+	paddingTop: 5;
+    paddingBottom: 5; 
+    paddingLeft: 5;
+    paddingRight: 5;
+	backgroundColor: #FFFFFF;
+	backgroundSize: "100%";
+	fontFamily: Verdana;
+	fontSize: 11;
+	color: #323232;
+	borderColor: #276693;
+	dropShadowColor: #000000;
+	dropShadowEnabled: true;
+	shadowDirection: right;
+	backgroundImage: Embed(source="media/images/bck_infobox.png", scaleGridTop='10', scaleGridBottom='32', scaleGridLeft='1', scaleGridRight='187');
+}
+
+Container.icon
+{
+	borderStyle: solid;
+	cornerRadius: 5;
+	backgroundColor: #004990;
+	backgroundSize: auto;
+	fontFamily: Verdana;
+	fontSize: 8;
+	fontWeight: bold;
+	color: #FFFFFF;
+	paddingTop: 5;
+    paddingBottom: 5; 
+    paddingLeft: 5;
+    paddingRight: 5;
+}
+
+.TightFrame
+{
+	borderStyle: solid;
+	borderThickness: 1;
+	paddingTop: 0;
+    paddingBottom: 0; 
+}
+
+Text.H1
+{
+	color: #696868;
+	fontFamily: "Helvetica Neue";
+	fontSize: 20;
+	fontWeight: bold;
+	selectable: false;
+}
+
+Text.Summary
+{
+	color: #494949;
+	fontFamily: Verdana;
+	fontSize: 11;
+	fontWeight: bold;
+	selectable: false;
+}
+
+Text.Help
+{
+	color: #000000;
+	fontFamily: Verdana;
+	fontSize: 10;
+	fontWeight: normal;
+	selectable: false;
+	paddingBottom: 10;
+	paddingLeft: 0;
+	paddingTop: 10;
+}
+
+Text.validator
+{
+	color: red;
+	fontFamily: Verdana;
+	fontSize: 12;
+	fontWeight: bold;
+	selectable: false;
+}
+
+Label.H2
+{
+	fontFamily: Verdana;
+	fontSize: 14;
+	fontWeight: bold;
+	textAlign: left;
+	color: #004990;
+	selectable: false;
+}
+Label.normal
+{
+	fontThickness: 2;
+	fontWeight: normal;
+	fontSize: 11;
+	selectable: false;
+	fontFamily: Verdana;
+	color: #494949;
+}
+Label.form
+{
+	fontWeight: bold;
+	textAlign: right;
+	fontFamily: Verdana;
+	fontSize: 11;
+	color: #494949;
+}
+
+TitleWindow
+{
+	borderColor: #D3D3D3;
+	cornerRadius: 0;
+	titleStyleName: titleWindowTitle;
+	borderAlpha: 1.0;
+	backgroundColor: #D3D3D3;
+	borderThicknessLeft: 3;
+	borderThicknessRight: 3;
+	borderThicknessBottom: 2;
+	controlBarStyleName: titleWindowControlBar;
+}
+Container.WindowedNavigation
+{
+	backgroundColor: #D3D3D3;
+	paddingTop: 10;
+	paddingBottom: 10;
+}
+.titleWindowTitle
+{
+	fontFamily: Verdana;
+	fontSize: 13;
+	fontWeight: bold;
+	color: #575757;
+}
+.comboBoxDropdown
+{
+	rollOverColor: #F5F5F5;
+	selectionColor: #CFEBEC;
+	fontFamily: Verdana;
+	fontSize: 11;
+	color: #7E7E7E;
+	textRollOverColor: #7E7E7E;
+	textSelectedColor: #7E7E7E;
+}
+@font-face
+{
+	fontFamily: "Helvetica Neue";
+	fontWeight: bold;
+	fontStyle: normal;
+	src: local("Helvetica Neue");
+}
+.titleWindowControlBar
+{
+}
+@font-face
+{
+	fontFamily: Verdana;
+	fontWeight: bold;
+	fontStyle: normal;
+	src: local("Verdana");
+}
+@font-face
+{
+	fontFamily: Verdana;
+	fontWeight: normal;
+	fontStyle: normal;
+	src: local("Verdana");
+}
+.toggleButtonBarSelectedButtonText
+{
+}

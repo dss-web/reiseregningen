@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: SUMMARY VIEW FOR BASIC TRAVEL INFO -->
+
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	 		paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
+	 		creationComplete="initPage()">
+	 
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+						
+			private function initPage():void {
+				model.accessibility.addAccessibility(info_travel, model.summaryTextTravel);
+				model.accessibility.addAccessibility(button_see_edit, resourceManager.getString(model.resources.bundleName, button_see_edit.id+"_travel"));
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Canvas width="100%">
+		<mx:Label id="info_travel" text="{model.summaryTextTravel}" styleName="Summary"  verticalCenter="0" width="100%"/>
+		<mx:Button id="button_see_edit" tabIndex="201" right="0" styleName="secondary" width="152" height="22"
+					visible="{button_see_edit.enabled}"
+					enabled="{model.validationStatusPersonal}"
+					label="{resourceManager.getString(model.resources.bundleName, button_see_edit.id)}" 
+					click="{model.stateDistributer.openView(model.stateDistributer.TRAVEL)}" />
+	</mx:Canvas>
+</mx:VBox>

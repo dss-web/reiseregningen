@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<resource id="languages" url="resources/languages.xml" />
+	<resource id="rateRules" url="resources/rateRules.xml" />
+	<resource id="ratesInternational" url="resources/ratesInternational.xml" />
+	<resource id="currencyCodes" url="resources/currency_codes.xml" />
+	<resource id="postalCodes" url="resources/postoffice_codes.xml" />
+	<resource id="domicialNumberCodes" url="resources/domicialnumbers.xml" />
+	<resource id="webservices" url="http://213.225.125.209/TravelExpWS/TravelExpense.asmx" />
+	<resource id="cross-domain-policy" url="http://213.225.125.209/crossdomain.xml" />
+	<resource id="ws_connection" url="http://213.225.125.209/TravelExpWS/GetStoredData.aspx" />
+	<resource id="ws_xml_uploader" url="http://213.225.125.209/TravelExpWS/Uploader.ashx" />
+</resources>

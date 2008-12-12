@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: BASE FORM INPUT VIEW FOR ACCOMOCATIONS -->
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:outlay="no.makingwaves.cust.dss.view.specifications.outlays.*"
+		xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+		xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+		creationComplete="init();" move="{removeHelpScreens()}"
+		title="{resourceManager.getString(model.resources.bundleName, 'outlay_headline_label')}">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import no.makingwaves.cust.dss.code.util.Util;
+			import mx.collections.Sort;
+			import no.makingwaves.cust.dss.vo.TravelOutlayVO;
+			import mx.effects.easing.Exponential;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.util.keycontroller.KeyCombo;
+			import no.makingwaves.util.keycontroller.KeyController;
+			import no.makingwaves.util.keycontroller.KeyControllerEvent;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			[Bindable]
+			public var travel_outlay : TravelOutlayVO;
+			[Bindable]
+			public var _editMode : Boolean;
+						
+			private function init(rePositionWindow:Boolean=true):void {
+				//PopUpManager.centerPopUp(this);
+                if (rePositionWindow) {
+                	this.x = (this.stage.width / 2) - (this.width / 2);
+					this.y += (model.positionParameter) - (this.height / 2);
+                }
+				
+				// initialize help text for this section
+				model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'outlay_intro_help'));
+                
+                // check for active/editable specification
+                if (this.travel_outlay == null) {
+                	this.travel_outlay = new TravelOutlayVO();
+                	_editMode = false;
+                } else {
+                	_editMode = true;
+                }
+                
+                // init sub components
+                boxOutlay.init(this.travel_outlay);
+                // add accessibility settings  
+                // short-cuts
+                registerKeyCombos();    
+                
+                if (model.screenreader)
+                	this.parentApplication.visible = false;       
+            
+				initAccessibility();          
+            }
+			
+			private function initAccessibility():void {
+				if (!model.screenreader) {
+					try {
+						accessibilitytext.removeChild(this.accessibility_introtext);
+					} catch (e:Error) { trace("travel_outlays.initAccessiblity: " + e.message);}
+					
+				} else {
+					this.accessibility_introtext.savelocal_infobtn.setFocus();
+					//model.accessibility.addAccessibility(this.accessibility_introtext, model.helpTextPopUp);
+				}
+			}
+			
+			private function registerKeyCombos():void {
+				var keyController:KeyController = new KeyController(this);
+				// set keyboard shortcuts
+				keyController.setKeyWatch(13); 					// ENTER
+				keyController.setKeyWatch(27); 					// ESC
+				keyController.addEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
+			}
+		
+			private function keyComboPressed(event:KeyControllerEvent):void {
+				var pressedCombo:KeyCombo = event.keyCombo;
+				if (!pressedCombo.ctrl && !pressedCombo.shift && !pressedCombo.alt) {
+					if (pressedCombo.keyCode == 13) {
+						this.continueClicked();
+					} else if (pressedCombo.keyCode == 27) {
+						this.close();
+					}
+				}
+			}
+            
+            private function autoFillIn():void {
+            }
+            
+            private function continueClicked(addMoreMode:Boolean=false):void {
+            	if (validateForm()) {
+            		// submit data from the common form
+            		travel_outlay = this.boxOutlay.submitData(travel_outlay);
+            		// calculate this outlay cost
+					model.calculator.calculateOutlay(travel_outlay);
+					
+		            if (!_editMode)
+		            	model.travelOutlayList.addItem(boxOutlay.travel_outlay);
+					
+					if (!addMoreMode) {
+		            	close();
+		            } else {
+		            	clearFields();
+		            }
+		            
+	           }
+            }
+            
+            private function validateForm():Boolean {
+            	var validMain : Boolean = true;
+            	validMain = this.boxOutlay.validateDetailsForm();
+        		if (validMain) {
+            		validMain = this.boxOutlay.validateCustomFields();
+            	}
+            	return (validMain);
+            }
+
+            private function close():void {
+            	if (model.screenreader)
+                	this.parentApplication.visible = true;
+
+            	// remove validators
+	            this.boxOutlay.disableValidation();
+            	// remove pop-up
+                this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+                //PopUpManager.removePopUp(this);
+            }
+            
+            private function clearFields():void {
+            	// reset references/bindings
+            	this.travel_outlay = null;
+            	boxOutlay.clearFields();
+            	this.init(false);
+            	boxOutlay.activate();
+            }
+            
+            private function removeHelpScreens():void {
+            	try {
+            		boxOutlay.undisplayAllValidators();
+            	} catch (e:Error) { trace("travel_outlays.removeHelpScreens: " + e.message); }
+            }
+
+		]]>
+	</mx:Script>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" backgroundColor="#FFFFFF">
+		
+		<mx:Box id="accessibilitytext" width="100%">
+			<comp:infobutton id="accessibility_introtext" buttonTabIndex="1400" textReference="{model.helpTextPopUp}" />
+		</mx:Box>
+		
+		<mx:HBox width="100%">
+			
+	    	<outlay:outlays id="boxOutlay" width="100%" />
+			
+			<mx:VRule height="100%" />
+			
+			<mx:VBox id="helpText" width="150" height="{boxOutlay.height}" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:Text htmlText="{model.helpTextPopUp}" width="100%" />		
+			</mx:VBox>
+		</mx:HBox>	
+		
+	</mx:VBox>
+	<mx:Canvas width="100%" styleName="WindowedNavigation">
+		<mx:HBox right="0">
+			
+			<mx:Button id="button_cancel" styleName="secondary" height="22" tabIndex="1842"
+						click="{close()}"
+						label="{resourceManager.getString(model.resources.bundleName, button_cancel.id)}" />
+						
+			<mx:Button id="button_ok" styleName="secondary" height="22" tabIndex="1840"
+						click="{continueClicked()}"
+						label="{resourceManager.getString(model.resources.bundleName, button_ok.id)}" />
+			
+			<mx:Button id="button_add_more" styleName="secondary" height="22" tabIndex="1841"
+						click="{continueClicked(true)}"
+						enabled="{!this._editMode}"
+						label="{resourceManager.getString(model.resources.bundleName, button_add_more.id)}" />
+			
+		</mx:HBox>	
+	</mx:Canvas>
+	
+</mx:TitleWindow>

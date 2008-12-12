@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: PRESENTATION OF ALL DIFFERENT SPECIFICATIONS IN THE EXPENSE FORM -->
+
+<code:ValidationBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:trans="no.makingwaves.cust.dss.view.specifications.transport.*"
+			xmlns:acc="no.makingwaves.cust.dss.view.specifications.accomodation.*"
+			xmlns:deduction="no.makingwaves.cust.dss.view.specifications.deduction.*"
+			xmlns:outlay="no.makingwaves.cust.dss.view.specifications.outlays.*"
+			xmlns:advance="no.makingwaves.cust.dss.view.specifications.advance.*"
+			xmlns:comment="no.makingwaves.cust.dss.view.specifications.comments.*"
+			xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+	 		paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
+			visible="{this.enabled}" width="100%" height="100%"
+			creationComplete="initPage()">
+	
+	<!--
+	<mx:Style source="assets/reiseregning.css"/>
+	-->
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.core.UIComponent;
+			import mx.core.Container;
+			import no.makingwaves.util.keycontroller.KeyCombo;
+			import no.makingwaves.util.keycontroller.KeyControllerEvent;
+			import no.makingwaves.util.keycontroller.KeyController;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
+			import mx.managers.PopUpManager;
+            import mx.core.IFlexDisplayObject;
+			import mx.binding.utils.BindingUtils;
+			import no.makingwaves.cust.dss.vo.PersonalInfoVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import no.makingwaves.cust.dss.view.specifications.travel_specification;
+			import no.makingwaves.cust.dss.view.specifications.travel_accomodation;
+			import no.makingwaves.util.Util;
+			
+			private const _labelWidth:Number = 400;
+			
+			private var _lastFocus:*
+			private var addWindow:IFlexDisplayObject;
+
+			private var _introIntervaller : Number;
+			
+			private var screenReaderLastContainer : Container;
+			private var screenReaderFocusComponent : UIComponent;
+			
+			private function initPage():void {}
+			
+			public function saveData():void {
+				// clear assistance
+				setAssistance("", model.SPESIFICATIONS);
+			} 
+			
+			public function activate():void {
+				// set screenreader mode?
+				if (model.screenreader)
+					this.setCurrentState("screenreaderUser", false);
+					
+				// add accessibility
+				initAccessibility();
+				model.accessibility.addAccessibility(traveldetails_addbutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_add') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'traveldetails_label')));
+				model.accessibility.addAccessibility(traveldetails_editbutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_edit') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'traveldetails_label')));
+				model.accessibility.addAccessibility(traveldetails_deletebutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_delete') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'traveldetails_label')));
+				
+				model.accessibility.addAccessibility(accomodation_button, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_add') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'accomodation_label')));
+				model.accessibility.addAccessibility(accomodation_editbutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_edit') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'accomodation_label')));
+				model.accessibility.addAccessibility(accomodation_deletebutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_delete') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'accomodation_label')));
+				
+				model.accessibility.addAccessibility(outlays_button, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_add') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'outlays_label')));
+				model.accessibility.addAccessibility(outlays_editbutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_edit') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'outlays_label')));
+				model.accessibility.addAccessibility(outlays_deletebutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_delete') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'outlays_label')));
+				
+				model.accessibility.addAccessibility(redraws_button, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_add') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'redraws_label')));
+				model.accessibility.addAccessibility(deduction_editbutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_edit') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'redraws_label')));
+				model.accessibility.addAccessibility(deduction_deletebutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_delete') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'redraws_label')));
+				
+				model.accessibility.addAccessibility(traveladvance_button, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_add') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'traveladvance_label')));
+				model.accessibility.addAccessibility(traveladvance_editbutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_edit') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'traveladvance_label')));
+				model.accessibility.addAccessibility(traveladvance_deletebutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_delete') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'traveladvance_label')));
+				
+				model.accessibility.addAccessibility(notes_button, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_add') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'notes_label')));
+				model.accessibility.addAccessibility(notes_editbutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_edit') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'notes_label')));
+				model.accessibility.addAccessibility(notes_deletebutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_delete') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'notes_label')));
+				// check wether to remove some of the boxes
+				if (model.travelLength.days < 1 && !model.screenreader) {
+					// accomodation is not needed
+					this.accomodationbox.height = 0;
+					this.accomodationbox.enabled = false;
+					this.accomodationbox.visible = false;
+					this.accomodationbox.includeInLayout = false;
+					/*
+					this.redrawsbox.height = 0;
+					this.redrawsbox.enabled = false;
+					this.redrawsbox.visible = false;
+					this.redrawsbox.includeInLayout = false;
+					*/
+				} else if (model.travelLength.days >= 1 && !model.screenreader) {
+					this.accomodationbox.percentHeight = 100;
+					this.accomodationbox.includeInLayout = true;
+					this.accomodationbox.enabled = true;
+					this.accomodationbox.visible = true;
+					/*
+					this.redrawsbox.percentHeight = 100;
+					this.redrawsbox.includeInLayout = true;
+					this.redrawsbox.enabled = true;
+					this.redrawsbox.visible = true;
+					*/
+				}
+				// set short-cuts
+				registerKeyCombos();
+				// set assistance
+				setAssistance("traveldetails_intro_help", model.SPESIFICATIONS);
+				// set init focus
+				intro.enabled = true;
+				intro.visible = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus();
+				} catch (e:Error) { trace("specifications.activate: " + e.message); }
+			}
+			
+			private function initAccessibility():void {
+				if (!model.screenreader) {
+					try {
+						//accessibilitytext.removeChild(this.accessibility_introtext);
+						this.removeChild(this.accessibilitytext);
+						this.removeChild(this.screenreaderButtons_row1);
+						this.removeChild(this.screenreaderButtons_row2);
+					} catch (e:Error) { trace("specifications.initAccessibility: " + e.message);}
+					
+				} else {
+					//model.accessibility.addAccessibility(this.accessibility_introtext, resourceManager.getString(model.resources.bundleName, "traveldetails_intro_help"));
+				}
+			}
+			
+			private function introIn():void {
+				_introIntervaller = setInterval(introInit, 1000);
+			}
+			
+			private function introOut():void {
+				clearInterval(_introIntervaller);
+				intro.visible = false;
+				intro.enabled = false;
+			}
+			
+			private function introInit():void {
+				introOut();
+				if (model.screenreader) {
+					try { accessibility_introtext.savelocal_infobtn.setFocus();
+					} catch (e:Error) { trace("specifications.introInit (1): " + e.message); }
+				} else {
+					try { traveldetails_addbutton.setFocus();
+					} catch (e:Error) { trace("specifications.introInit (2): " + e.message); }
+				}
+			}
+			
+			private function registerKeyCombos():void {
+				var keyController:KeyController = new KeyController(this);
+				// set keyboard shortcuts
+				keyController.setKeyWatch(49,true,false); 					// Alt + 1
+				keyController.setKeyWatch(50,true,false); 					// Alt + 2
+				keyController.setKeyWatch(51,true,false); 					// Alt + 3
+				keyController.setKeyWatch(52,true,false); 					// Alt + 4
+				keyController.setKeyWatch(53,true,false); 					// Alt + 5
+				keyController.setKeyWatch(54,true,false); 					// Alt + 6
+												
+				keyController.addEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
+			}
+		
+			private function keyComboPressed(event:KeyControllerEvent):void {
+				var pressedCombo:KeyCombo = event.keyCombo;
+				
+				// Alt + any key
+				if (pressedCombo.ctrl && !pressedCombo.shift && !pressedCombo.alt) {
+					if (pressedCombo.keyCode == 49) {
+						if (model.screenreader) {
+							this.screenReaderActivation(this.specificationbox);
+						} else {
+							try { this.traveldetails_addbutton.setFocus();
+							} catch (e:Error) { trace("specifications.keyComboPressed (1): " + e.message); }
+						}
+												
+					} else if (pressedCombo.keyCode == 50) {
+						if (model.screenreader) {
+							this.screenReaderActivation(this.accomodationbox);
+						} else {
+							try { this.accomodation_button.setFocus();
+							} catch (e:Error) { trace("specifications.keyComboPressed (2): " + e.message); }
+						}
+						
+					} else if (pressedCombo.keyCode == 51) {
+						if (model.screenreader) {
+							this.screenReaderActivation(this.outlaysbox);
+						} else {
+							try { this.outlays_button.setFocus();
+							} catch (e:Error) { trace("specifications.keyComboPressed (3): " + e.message); }
+						}
+						
+					} else if (pressedCombo.keyCode == 52) {
+						if (model.screenreader) {
+							this.screenReaderActivation(this.redrawsbox);
+						} else {
+							try { this.redraws_button.setFocus();
+							} catch (e:Error) { trace("specifications.keyComboPressed (4): " + e.message); }
+						}
+						
+					} else if (pressedCombo.keyCode == 53) {
+						if (model.screenreader) {
+							this.screenReaderActivation(this.traveladvancebox);
+						} else {
+							try { this.traveladvance_button.setFocus();
+							} catch (e:Error) { trace("specifications.keyComboPressed (5): " + e.message); }
+						}
+						
+					} else if (pressedCombo.keyCode == 54) {
+						if (model.screenreader) {
+							this.screenReaderActivation(this.notesbox);
+						} else {
+							try { this.notes_button.setFocus();
+							} catch (e:Error) { trace("specifications.keyComboPressed (6): " + e.message); }
+						}
+					}
+				}
+			}
+			
+			private function addSpecification():void {
+				//if (!this.specificationlist.getSelectedStatus())
+					model.activeSpecification = null;
+
+				addWindow = PopUpManager.createPopUp(this, travel_specification, true);
+				addWindow.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+			}
+			
+			private function addAccomodation():void {
+				addWindow = PopUpManager.createPopUp(this, travel_accomodation, true);
+				addWindow.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+			}
+			
+			private function addDeduction():void {
+				addWindow = PopUpManager.createPopUp(this, travel_deduction, true);
+				addWindow.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+			}
+			
+			private function addOutlay():void {
+				addWindow = PopUpManager.createPopUp(this, travel_outlays, true);
+				addWindow.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+			}
+			
+			private function addAdvance():void {
+				addWindow = PopUpManager.createPopUp(this, travel_advances, true);
+				addWindow.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+			}
+			
+			private function addComment():void {
+				addWindow = PopUpManager.createPopUp(this, travel_comments, true);
+				addWindow.addEventListener(CloseEvent.CLOSE, closeWindowHandler);
+			}
+			
+			private function closeWindowHandler(e:CloseEvent):void {
+				addWindow.removeEventListener(CloseEvent.CLOSE, closeWindowHandler);
+				PopUpManager.removePopUp(addWindow);
+				
+				this.focusManager.activate();
+				trace("nextTabIndex: " + this.focusManager.nextTabIndex);
+			}
+			
+			override public function validateDetailsForm():Boolean {
+				return model.validationStatusSpecs = super.validateDetailsForm();
+			}
+			
+			private function screenReaderActivation(containerToActivate:Container):void {
+				if (screenReaderLastContainer != null) {
+					screenReaderLastContainer.width = 0;
+					screenReaderLastContainer.height = 0;
+					screenReaderLastContainer.enabled = false;
+					screenReaderLastContainer.visible = false;
+					screenReaderLastContainer.includeInLayout = false;
+				}
+				containerToActivate.includeInLayout = true;
+				containerToActivate.visible = true;
+				containerToActivate.enabled = true;
+				containerToActivate.percentWidth = 100;
+				containerToActivate.percentHeight = 100;
+				screenReaderLastContainer = containerToActivate;
+				try { containerToActivate.focusManager.getNextFocusManagerComponent().setFocus();
+				} catch (e:Error) { trace("specifications.screenReaderActivation: " + e.message); }
+				
+				initFocusComponent(containerToActivate);
+			}
+			
+			private function initFocusComponent(containerToActivate:Container):void {
+				if (containerToActivate == this.specificationbox) {
+					screenReaderFocusComponent = this.traveldetails_addbutton;
+				} else if (containerToActivate == this.accomodationbox) {
+					screenReaderFocusComponent = this.accomodation_button;
+				} else if (containerToActivate == this.outlaysbox) {
+					screenReaderFocusComponent = this.outlays_button;
+				} else if (containerToActivate == this.redrawsbox) {
+					screenReaderFocusComponent = this.redraws_button;
+				} else if (containerToActivate == this.traveladvancebox) {
+					screenReaderFocusComponent = this.traveladvance_button;
+				} else if (containerToActivate == this.notesbox) {
+					screenReaderFocusComponent = this.notes_button;
+				}
+				var timer:Timer = new Timer(500, 1);
+				timer.addEventListener(TimerEvent.TIMER_COMPLETE, setFocusComponent);
+				timer.start();
+			}
+			
+			private function setFocusComponent(e:TimerEvent):void {
+				try { screenReaderFocusComponent.setFocus();
+				} catch(e:Error) { trace("specifications.setFocusComponent: " + e.message); }
+			}
+		]]>
+	</mx:Script>
+	
+	<code:states>
+		<mx:State id="screenreaderUser" name="screenreaderUser">
+			<mx:AddChild relativeTo="{screenreaderButtons_row1}">
+				<mx:Button id="scrbtn_specifications" tabIndex="251" styleName="secondary" height="22"
+							click="{screenReaderActivation(specificationbox)}" 
+							label="{resourceManager.getString(model.resources.bundleName, traveldetails_label.id)}" />
+			</mx:AddChild>	
+			
+			<mx:AddChild relativeTo="{screenreaderButtons_row1}">
+				<mx:Button id="scrbtn_accomodations" tabIndex="252" styleName="secondary" height="22" 
+							enabled="{(!model.travelLength.days == 0)}"
+							visible="{(!model.travelLength.days == 0)}"
+							click="{screenReaderActivation(accomodationbox)}" 
+							label="{resourceManager.getString(model.resources.bundleName, accomodation_label.id)}" />
+			</mx:AddChild>	
+			
+			<mx:AddChild relativeTo="{screenreaderButtons_row1}">
+				<mx:Button id="scrbtn_outlays" tabIndex="253" styleName="secondary" height="22"
+							click="{screenReaderActivation(outlaysbox)}" 
+							label="{resourceManager.getString(model.resources.bundleName, outlays_label.id)}" />
+			</mx:AddChild>	
+			
+			<mx:AddChild relativeTo="{screenreaderButtons_row2}">
+				<mx:Button id="scrbtn_redraws" tabIndex="254" styleName="secondary" height="22"
+							enabled="{(!model.travelLength.days == 0)}"
+							visible="{(!model.travelLength.days == 0)}"
+							click="{screenReaderActivation(redrawsbox)}" 
+							label="{resourceManager.getString(model.resources.bundleName, redraws_label.id)}" />
+			</mx:AddChild>	
+			
+			<mx:AddChild relativeTo="{screenreaderButtons_row2}">
+				<mx:Button id="scrbtn_advance" tabIndex="255" styleName="secondary" height="22"
+							click="{screenReaderActivation(traveladvancebox)}"  
+							label="{resourceManager.getString(model.resources.bundleName, traveladvance_label.id)}" />
+			</mx:AddChild>	
+			
+			<mx:AddChild relativeTo="{screenreaderButtons_row2}">
+				<mx:Button id="scrbtn_notes" tabIndex="256" styleName="secondary" height="22" 
+							click="{screenReaderActivation(notesbox)}" 
+							label="{resourceManager.getString(model.resources.bundleName, notes_label.id)}" />
+			</mx:AddChild>	
+			
+			<mx:SetProperty target="{specificationbox}" name="width" value="0" />	
+			<mx:SetProperty target="{specificationbox}" name="height" value="0" />
+			<mx:SetProperty target="{specificationbox}" name="enabled" value="false" />
+			<mx:SetProperty target="{specificationbox}" name="visible" value="false" />
+			<mx:SetProperty target="{specificationbox}" name="includeInLayout" value="false" />
+			
+			<mx:SetProperty target="{accomodationbox}" name="width" value="0" />	
+			<mx:SetProperty target="{accomodationbox}" name="height" value="0" />
+			<mx:SetProperty target="{accomodationbox}" name="enabled" value="false" />
+			<mx:SetProperty target="{accomodationbox}" name="visible" value="false" />
+			<mx:SetProperty target="{accomodationbox}" name="includeInLayout" value="false" />
+			
+			<mx:SetProperty target="{outlaysbox}" name="width" value="0" />	
+			<mx:SetProperty target="{outlaysbox}" name="height" value="0" />
+			<mx:SetProperty target="{outlaysbox}" name="enabled" value="false" />
+			<mx:SetProperty target="{outlaysbox}" name="visible" value="false" />
+			<mx:SetProperty target="{outlaysbox}" name="includeInLayout" value="false" />
+			
+			<!--mx:SetProperty target="{redrawsbox}" name="width" value="0" />	
+			<mx:SetProperty target="{redrawsbox}" name="height" value="0" />
+			<mx:SetProperty target="{redrawsbox}" name="enabled" value="false" />
+			<mx:SetProperty target="{redrawsbox}" name="visible" value="false" />
+			<mx:SetProperty target="{redrawsbox}" name="includeInLayout" value="false" /-->
+			
+			<mx:SetProperty target="{traveladvancebox}" name="width" value="0" />	
+			<mx:SetProperty target="{traveladvancebox}" name="height" value="0" />
+			<mx:SetProperty target="{traveladvancebox}" name="enabled" value="false" />
+			<mx:SetProperty target="{traveladvancebox}" name="visible" value="false" />
+			<mx:SetProperty target="{traveladvancebox}" name="includeInLayout" value="false" />
+			
+			<mx:SetProperty target="{notesbox}" name="width" value="0" />	
+			<mx:SetProperty target="{notesbox}" name="height" value="0" />
+			<mx:SetProperty target="{notesbox}" name="enabled" value="false" />
+			<mx:SetProperty target="{notesbox}" name="visible" value="false" />
+			<mx:SetProperty target="{notesbox}" name="includeInLayout" value="false" />
+		</mx:State>
+	</code:states>
+
+	<mx:TextInput id="intro" tabIndex="257" width="0" height="0" alpha="0" focusIn="{introIn()}" focusOut="{introOut()}" />
+	
+	<mx:Box id="accessibilitytext" width="100%">
+		<comp:infobutton id="accessibility_introtext" buttonTabIndex="250" textReference="traveldetails_intro_help"
+							 enabled="{model.screenreader}" visible="{model.screenreader}" />
+<!--			
+		<mx:TextInput id="accessibility_introtext" tabIndex="250" width="0" height="0" editable="false" styleName="accessibilityInfo"
+				  text="{resourceManager.getString(model.resources.bundleName, 'traveldetails_intro_help')}" />
+-->				  
+	</mx:Box>
+	
+	<mx:HBox id="screenreaderButtons_row1" />
+	<mx:HBox id="screenreaderButtons_row2" />
+	
+	<mx:VBox id="specificationbox" width="100%">
+		<mx:HBox width="100%" styleName="Group">
+			<mx:Label id="traveldetails_label" width="100%" text="{resourceManager.getString(model.resources.bundleName, traveldetails_label.id)}" styleName="form" textAlign="left" />
+			
+			<mx:Button id="traveldetails_addbutton" styleName="smallicon80" tabIndex="258"
+							label="{resourceManager.getString(model.resources.bundleName, 'button_add')}"
+							click="{this.addSpecification()}">
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_add.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="traveldetails_editbutton" styleName="smallicon80" tabIndex="259"
+							label="{resourceManager.getString(model.resources.bundleName, 'button_edit')}" 
+							enabled="{specificationlist.active_btn_edit}"
+							click="{this.specificationlist.editSpecification()}">
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_edit.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="traveldetails_deletebutton" styleName="smallicon80" tabIndex="260" 
+							label="{resourceManager.getString(model.resources.bundleName, 'button_delete')}" 
+							enabled="{specificationlist.active_btn_delete}"
+							click="{this.specificationlist.deleteSpecification()}">
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_delete.png')</mx:icon>
+			</mx:Button>
+		</mx:HBox>
+		<mx:VBox width="100%">
+			<trans:resumeList id="specificationlist" width="100%" tabIndex="261" tabEnabled="true" />
+		</mx:VBox>
+	</mx:VBox>
+	
+	<mx:VBox id="accomodationbox" width="100%" paddingTop="10">
+		<mx:HBox width="100%" styleName="Group">
+			<mx:Label id="accomodation_label" width="100%" text="{resourceManager.getString(model.resources.bundleName, accomodation_label.id)}" styleName="form" textAlign="left" />
+			
+			<mx:Button id="accomodation_button" styleName="smallicon80" tabIndex="263" 
+						label="{resourceManager.getString(model.resources.bundleName, accomodation_button.id).replace('%1', model.travelLength.days)}" 
+						click="{addAccomodation();}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_add.png')</mx:icon>
+			</mx:Button>
+					
+			<mx:Button id="accomodation_editbutton" styleName="smallicon80" tabIndex="264"
+							label="{resourceManager.getString(model.resources.bundleName, 'button_edit')}" 
+							enabled="{this.accomodationlist.active_btn_edit}"
+							click="{this.accomodationlist.editSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_edit.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="accomodation_deletebutton" styleName="smallicon80" tabIndex="265" 
+							label="{resourceManager.getString(model.resources.bundleName, 'button_delete')}" 
+							enabled="{this.accomodationlist.active_btn_delete}"
+							click="{this.accomodationlist.deleteSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_delete.png')</mx:icon>
+			</mx:Button>
+		</mx:HBox>
+		<mx:VBox width="100%">
+			<acc:resumeList id="accomodationlist" width="100%" tabIndex="266" tabEnabled="true" />
+		</mx:VBox>
+	</mx:VBox>
+	
+	<mx:VBox id="outlaysbox" width="100%" paddingTop="10">
+		<mx:HBox width="100%" styleName="Group">
+			<mx:Label id="outlays_label" width="100%" text="{resourceManager.getString(model.resources.bundleName, outlays_label.id)}" styleName="form" textAlign="left" />
+			
+			<mx:Button id="outlays_button" styleName="smallicon80" tabIndex="268" 
+						label="{resourceManager.getString(model.resources.bundleName, outlays_button.id)}" 
+						click="{addOutlay();}"  >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_add.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="outlays_editbutton" styleName="smallicon80" tabIndex="269" 
+							label="{resourceManager.getString(model.resources.bundleName, 'button_edit')}" 
+							enabled="{this.outlaylist.active_btn_edit}"
+							click="{this.outlaylist.editSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_edit.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="outlays_deletebutton" styleName="smallicon80" tabIndex="270"  
+							label="{resourceManager.getString(model.resources.bundleName, 'button_delete')}" 
+							enabled="{this.outlaylist.active_btn_delete}"
+							click="{this.outlaylist.deleteSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_delete.png')</mx:icon>
+			</mx:Button>
+		</mx:HBox>	
+		<mx:VBox width="100%">
+			<outlay:resumeList id="outlaylist" tabIndex="271" tabEnabled="true" />
+		</mx:VBox>
+	</mx:VBox>
+	
+	<mx:VBox id="redrawsbox" width="100%" paddingTop="10">
+		<mx:HBox width="100%" styleName="Group">
+			<mx:Label id="redraws_label" width="100%" text="{resourceManager.getString(model.resources.bundleName, redraws_label.id)}" styleName="form" textAlign="left" />
+			
+			<mx:Button id="redraws_button" styleName="smallicon80" tabIndex="273"  
+						label="{resourceManager.getString(model.resources.bundleName, redraws_button.id)}" 
+						click="{addDeduction();}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_add.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="deduction_editbutton" styleName="smallicon80" tabIndex="274"  
+							label="{resourceManager.getString(model.resources.bundleName, 'button_edit')}" 
+							enabled="{this.deductionlist.active_btn_edit}"
+							click="{this.deductionlist.editSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_edit.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="deduction_deletebutton" styleName="smallicon80" tabIndex="275" 
+							label="{resourceManager.getString(model.resources.bundleName, 'button_delete')}" 
+							enabled="{this.deductionlist.active_btn_delete}"
+							click="{this.deductionlist.deleteSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_delete.png')</mx:icon>
+			</mx:Button>
+		</mx:HBox>
+		<mx:VBox width="100%">
+			<deduction:resumeList id="deductionlist" tabIndex="276" tabEnabled="true"  />
+		</mx:VBox>
+	</mx:VBox>
+			
+	<mx:VBox id="traveladvancebox" width="100%" paddingTop="10">
+		<mx:HBox width="100%" styleName="Group">
+			<mx:Label id="traveladvance_label" width="100%" text="{resourceManager.getString(model.resources.bundleName, traveladvance_label.id)}" styleName="form" textAlign="left" />
+			
+			<mx:Button id="traveladvance_button" styleName="smallicon80" tabIndex="278" 
+						label="{resourceManager.getString(model.resources.bundleName, traveladvance_button.id)}" 
+						click="{addAdvance();}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_add.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="traveladvance_editbutton" styleName="smallicon80" tabIndex="279" 
+							label="{resourceManager.getString(model.resources.bundleName, 'button_edit')}" 
+							enabled="{this.traveladvancelist.active_btn_edit}"
+							click="{this.traveladvancelist.editSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_edit.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="traveladvance_deletebutton" styleName="smallicon80" tabIndex="280" 
+							label="{resourceManager.getString(model.resources.bundleName, 'button_delete')}" 
+							enabled="{this.traveladvancelist.active_btn_delete}"
+							click="{this.traveladvancelist.deleteSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_delete.png')</mx:icon>
+			</mx:Button>
+		</mx:HBox>
+		<mx:VBox width="100%">
+			<advance:resumeList id="traveladvancelist" tabIndex="281" tabEnabled="true"  />
+		</mx:VBox>
+	</mx:VBox>
+	
+	<mx:VBox id="notesbox" width="100%" paddingTop="10">
+		<mx:HBox width="100%" styleName="Group">
+			<mx:Label id="notes_label" width="100%" text="{resourceManager.getString(model.resources.bundleName, notes_label.id)}" styleName="form" textAlign="left" />
+			
+			<mx:Button id="notes_button" styleName="smallicon80" tabIndex="283"
+						label="{resourceManager.getString(model.resources.bundleName, notes_button.id)}" 
+						click="{addComment();}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_add.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="notes_editbutton" styleName="smallicon80" tabIndex="284"
+							label="{resourceManager.getString(model.resources.bundleName, 'button_edit')}" 
+							enabled="{this.noteslist.active_btn_edit}"
+							click="{this.noteslist.editSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_edit.png')</mx:icon>
+			</mx:Button>
+			
+			<mx:Button id="notes_deletebutton" styleName="smallicon80" tabIndex="285"
+							label="{resourceManager.getString(model.resources.bundleName, 'button_delete')}" 
+							enabled="{this.noteslist.active_btn_delete}"
+							click="{this.noteslist.deleteSpecification()}" >
+				<mx:icon>@Embed(source='assets/media/images/icons/btn_delete.png')</mx:icon>
+			</mx:Button>
+		</mx:HBox>
+		<mx:VBox width="100%">
+				<comment:resumeList id="noteslist" tabIndex="286" tabEnabled="true" />
+		</mx:VBox>
+	</mx:VBox>
+	
+	<mx:Canvas width="100%">
+		<mx:Button id="button_continue" tabIndex="299" visible="true" right="0" styleName="default"  width="110" height="30"
+					enabled="{model.validationStatusTravel}"
+					label="{resourceManager.getString(model.resources.bundleName, button_continue.id)}"
+					click="{continueClicked()}"/>
+	</mx:Canvas>
+</code:ValidationBase>

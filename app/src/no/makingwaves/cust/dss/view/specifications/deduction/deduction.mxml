@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BasicFormBase xmlns="no.makingwaves.cust.dss.code.*" 
+			 xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+			 xmlns:mx="http://www.adobe.com/2006/mxml" creationPolicy="auto"
+			 creationComplete="activate()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.CostVO;
+			import no.makingwaves.cust.dss.vo.TravelDeductionVO;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var travel_deduction : TravelDeductionVO;
+			[Bindable]
+			public var formValid : Boolean = false;
+			
+			private var _introIntervaller : Number;
+			
+			private function init():void {
+				// add accessibility
+				deduction_type_breakfast
+				model.accessibility.addAccessibility(deduction_date_text, resourceManager.getString(model.resources.bundleName, deduction_date.id+'_help') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+				model.accessibility.addAccessibility(deduction_type_breakfast, resourceManager.getString(model.resources.bundleName, deduction_type_breakfast.id));
+				model.accessibility.addAccessibility(deduction_type_lunch, resourceManager.getString(model.resources.bundleName, deduction_type_lunch.id));
+				model.accessibility.addAccessibility(deduction_type_dinner, resourceManager.getString(model.resources.bundleName, deduction_type_dinner.id));
+				// add validators
+				this.addCustomStringValidation(deduction_date_text, false, false, this.DATE);	
+				this.addValidationField(deduction_date_text, this.STRING, true, 8, 8);
+				this.addCustomDateValidation(deduction_date, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in, null, null, deduction_date_text);
+				
+				this.setValidationStatus();				
+			}
+			
+			override public function submitData(specifications:*):* {
+				TravelDeductionVO(specifications).cost = new CostVO(); 
+				TravelDeductionVO(specifications).cost.update();
+				return TravelDeductionVO(specifications);
+			}
+			
+			private function textDatefieldChanged(e:FocusEvent):void {
+				var textField:TextInput = TextInput(e.currentTarget);
+				if (this.validateCustomField(textField) && textField.text != "") {
+					var dateValues:Array = textField.text.split(".");
+					if (textField == this.deduction_date_text) {
+						this.deduction_date.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+						this.travel_deduction.date = deduction_date.selectedDate;
+					}
+				}
+			}
+			
+			// FOCUS INITIALIZERS ===============================================
+			public function activate():void {
+				//init();
+				intro.visible = true;
+				intro.enabled = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus(); trace("setFocus deduction.activate");
+				} catch (e:Error) { trace("deduction.activate: " + e.message); }
+			}
+			
+			private function introIn(e:FocusEvent):void {
+				if (e.target) {
+					_introIntervaller = setInterval(introInit, 1000);
+				} else {
+					try { focusManager.getNextFocusManagerComponent(true).setFocus(); trace("setFocus deduction.introIn");
+					} catch (e:Error) { trace("deduction.introInit: " + e.message); }
+				}
+			}
+			
+			private function introOut(e:FocusEvent):void {
+				clearInterval(_introIntervaller);
+				intro.enabled = false;
+				intro.visible = false;
+				init();
+			}
+			
+			private function introInit():void {
+				clearInterval(_introIntervaller);
+				try { deduction_date_text.setFocus(); trace("setFocus deduction.introInit");
+				} catch (e:Error) { trace("deduction.introInit: " + e.message); }
+			
+			}
+			// end of focusinitializers==========================================
+			
+			public function setValidationStatus():void {
+				if (deduction_date.selectedDate != null &&
+				   (deduction_type_breakfast.selected || deduction_type_lunch.selected || deduction_type_dinner.selected))
+				   {
+				   		this.formValid = true;
+				   } else {
+				   		this.formValid = false;
+				   }
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox id="common_specification" width="100%" paddingTop="10" paddingBottom="10">
+		<mx:HBox>
+
+			<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="introIn(event)" focusOut="introOut(event)" tabIndex="1301" />
+		
+			
+			<mx:Label id="deduction_date_label" enabled="{deduction_date_text.enabled}"  
+						text="{resourceManager.getString(model.resources.bundleName, deduction_date_label.id)}" />
+			<mx:TextInput id="deduction_date_text" width="70" maxChars="8" text="{this.getFormattedDate(this.travel_deduction.date)}" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1302" />			
+			<mx:DateField id="deduction_date" creationComplete="{dateField_init(deduction_date)}" editable="true" width="17" visible="{!model.screenreader}" tabEnabled="{!model.screenreader}"
+					selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}" tabIndex="1303"
+					change="{this.travel_deduction.date = deduction_date.selectedDate; setValidationStatus();}"
+				    selectedDate="{this.travel_deduction.date}" />
+			<mx:Text id="date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
+		</mx:HBox>
+					
+		<mx:HBox width="100%">
+			
+			<mx:CheckBox id="deduction_type_breakfast" selected="{this.travel_deduction.breakfast}" tabIndex="1304"
+						   change="{travel_deduction.breakfast = deduction_type_breakfast.selected; setValidationStatus();}"	
+						   label="{resourceManager.getString(model.resources.bundleName, deduction_type_breakfast.id)}" />
+			
+						   
+			<mx:CheckBox id="deduction_type_lunch" selected="{this.travel_deduction.lunch}" tabIndex="1305"
+						   change="{travel_deduction.lunch = deduction_type_lunch.selected; setValidationStatus();}"
+						   label="{resourceManager.getString(model.resources.bundleName, deduction_type_lunch.id)}" />
+			
+			<mx:CheckBox id="deduction_type_dinner" selected="{this.travel_deduction.dinner}" tabIndex="1306"
+						   change="{travel_deduction.dinner = deduction_type_dinner.selected; setValidationStatus();}"	
+						   label="{resourceManager.getString(model.resources.bundleName, deduction_type_dinner.id)}" />	
+		</mx:HBox>
+	</mx:VBox>
+</BasicFormBase>

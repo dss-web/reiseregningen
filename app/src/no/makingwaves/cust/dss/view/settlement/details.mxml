@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: FORM INPUT AND PRESENTATION VIEW FOR SETTLEMENT INFORMATION -->
+
+<code:ValidationBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+	 		paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
+			visible="{this.enabled}"
+			creationComplete="initPage()">
+	 
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.cust.dss.vo.TravelDeductionVO;
+			import no.makingwaves.util.date.DateRanger;
+			import no.makingwaves.cust.dss.vo.TravelAccomodationVO;
+			import no.makingwaves.util.Util;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
+			import no.makingwaves.cust.dss.events.GetTravelXmlEvent;
+			import no.makingwaves.cust.dss.events.GetTravelPdfEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import mx.events.ValidationResultEvent;
+			import mx.binding.utils.BindingUtils;
+			import no.makingwaves.cust.dss.vo.PersonalInfoVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import no.makingwaves.cust.dss.view.components.custom_alert;
+			
+			[Bindable]
+			private var _settlementArray:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			private var costSpecification:String;
+			[Bindable]
+			private var costAccomodation:String;
+			[Bindable]
+			private var costOutlay:String;
+			[Bindable]
+			private var costTravelAdvace:String;
+			[Bindable]
+			private var costRedraws:String;
+			[Bindable]
+			private var costDailyAllowance:String;
+			[Bindable]
+			private var costPrepaid:String;
+			[Bindable]
+			private var costTotal:String;
+			
+			private var _lastFocus:*
+			private var _introIntervaller : Number;
+			
+			private const _labelWidth:Number = 110;
+			
+			private function initPage():void {
+				this.addCustomStringValidation(settlement_date_text, false, false, this.DATE);	
+				this.addValidationField(settlement_date_text, this.STRING, true, 8, 8);
+			}
+			
+			public function saveData():void {
+				setAssistance("", model.SETTLEMENT);
+				model.activeTravel.travel_number = this.settlement_travelnum.text;
+			} 
+			
+			public function activate():void {
+				// add accessibility settings
+				initAccessibility();
+				// set assistance
+				setAssistance("settlement_intro_help", model.SETTLEMENT);
+				// validate travel specifications and give respons to user
+				validateTravelSpecifications();
+				
+				// set init focus
+				intro.enabled = true;
+				intro.visible = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus();
+				} catch (e:Error) { trace("settlement.activate: " + e.message); }
+				// calculate numbers
+				doCalculations();
+			}
+			
+			private function initAccessibility():void {
+				if (!model.screenreader) {
+					try {
+						accessibilitytext.removeChild(this.accessibility_introtext);
+					} catch (e:Error) { trace("settlement.initAccessibility: " + e.message);}
+					
+				} else {
+					model.accessibility.addAccessibility(this.settlement_account, resourceManager.getString(model.resources.bundleName, settlement_account.id+'_label'));
+					model.accessibility.addAccessibility(this.settlement_date_text, resourceManager.getString(model.resources.bundleName, 'settlement_date_label'));
+					model.accessibility.addAccessibility(this.settlement_travelnum, resourceManager.getString(model.resources.bundleName, 'settlement_travelnum_label'));
+				}
+			}
+			
+			private function introIn():void {
+				_introIntervaller = setInterval(introInit, 1000);
+			}
+			
+			private function introOut():void {
+				clearInterval(_introIntervaller);
+				intro.enabled = false;
+				intro.visible = false;
+			}
+			
+			private function introInit():void {
+				introOut();
+				if (!model.screenreader) {
+					try { settlement_account.setFocus();
+					} catch (e:Error) { trace("settlement.introInit (1): " + e.message); }
+				} else {
+					try { accessibility_introtext.savelocal_infobtn.setFocus();
+					} catch (e:Error) { trace("settlement.introInit (2): " + e.message); }
+				}
+			}
+			
+			private function validateTravelSpecifications():void {
+				// check wether the travel specifications are complete registered
+				var regStartDate:Boolean = false;
+				var regEndDate:Boolean = false;
+				if (model.travelSpecsList.length > 0) {
+					// check the first specification
+					var firstSpec:TravelSpecificationVO = model.travelSpecsList.getItemAt(0) as TravelSpecificationVO;
+					if (Util.formatDate(firstSpec.from_date) == Util.formatDate(model.activeTravel.travel_date_out)) {
+						regStartDate = true;
+					}
+					// check the last specification
+					var lastSpec:TravelSpecificationVO = model.travelSpecsList.getItemAt(model.travelSpecsList.length-1) as TravelSpecificationVO;
+					if (Util.formatDate(lastSpec.to_date) == Util.formatDate(model.activeTravel.travel_date_in)) {
+						regEndDate = true;
+					}
+				}
+				/* old calculation of specifications
+				for (var s:Number = 0; s < model.travelSpecsList.length; s++) {
+					var travelspec:TravelSpecificationVO = TravelSpecificationVO(model.travelSpecsList.getItemAt(s));
+					if (travelspec.is_travel_start && !regStartDate) {
+						if (Util.formatDate(travelspec.from_date) == Util.formatDate(model.activeTravel.travel_date_out)) {
+							regStartDate = true;
+						}
+					}
+					if (regStartDate && !regEndDate && travelspec.is_travel_end) {
+						if (Util.formatDate(travelspec.to_date) == Util.formatDate(model.activeTravel.travel_date_in)) {
+							regEndDate = true;
+						}
+					}
+				}
+				*/
+				var specError:String = "";
+				if (!(regStartDate && regEndDate)) {
+					// travelspecifications are not completed
+					specError = resourceManager.getString(model.resources.bundleName, 'settlement_error_specifications');
+				}				
+
+				// check wether accomodations are complete registered
+				var nightsOfTravel:Number = model.travelLength.total_24hours;
+				var nightsOfAccomodation:Number = 0;
+				var numOfBreakfasts:Number = 0;
+				for (var a:Number = 0; a < model.travelAccomodationList.length; a++) {
+					var travelacc:TravelAccomodationVO = TravelAccomodationVO(model.travelAccomodationList.getItemAt(a));
+					var accRange:DateRanger = new DateRanger();
+					accRange.getDateRange(travelacc.fromdate, travelacc.todate);
+					nightsOfAccomodation += accRange.total_24hours;
+					// check wether breakfast is included
+					if (travelacc.breakfast_inluded != 0) {
+						numOfBreakfasts += travelacc.breakfast_inluded;
+					}
+				}
+				var accError:String = "";
+				if (nightsOfTravel != nightsOfAccomodation) {
+					// accomodations are not completed
+					accError = resourceManager.getString(model.resources.bundleName, 'settlement_error_accomodations');
+				}
+				
+				/*
+				// check wether daily allowance deductions are registered according to what specified in accomodations
+				var numOfDeductedBreakfasts:Number = 0;
+				for (var d:Number = 0; d < model.travelDeductionList.length; d++) {
+					var traveldeduction:TravelDeductionVO = TravelDeductionVO(model.travelDeductionList.getItemAt(d));
+					if (traveldeduction.breakfast) {
+						numOfDeductedBreakfasts++;
+					}
+				}
+				var deductionError:String = "";
+				if (numOfBreakfasts != numOfDeductedBreakfasts) {
+					// correct number of deducted breakfast not registered.
+					deductionError = resourceManager.getString(model.resources.bundleName, 'settlement_error_deductions');
+				}
+				*/
+				
+				// alert user of any missing specifications?
+				//if (specError != "" || accError != "" || deductionError != "") {
+				if (specError != "" || accError != "") {
+					var errorHeader:String = resourceManager.getString(model.resources.bundleName, 'settlement_error_header');
+					var errorMessage:String = resourceManager.getString(model.resources.bundleName, 'settlement_error_intro');
+					if (specError != "")
+						errorMessage += "\n\n" + specError;
+						
+					if (accError != "")
+						errorMessage += "\n\n" + accError;
+						
+					//if (deductionError != "")
+					//	errorMessage += "\n\n" + deductionError;
+						
+					// alert user
+					var alertWindow:mx.core.IFlexDisplayObject;
+					alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
+					custom_alert(alertWindow).alertText = errorMessage;
+					custom_alert(alertWindow).title = errorHeader;
+				}
+			}
+			
+			private function doCalculations():void {
+				this._settlementArray = new ArrayCollection();
+				this._settlementArray.addItem({label: resourceManager.getString(model.resources.bundleName, 'settlement_specifications'), data: model.calculator.calculateSpecifications().toFixed(2)});
+				this._settlementArray.addItem({label: resourceManager.getString(model.resources.bundleName, 'settlement_accomodations'), data: model.calculator.calculateAccomodations().toFixed(2)});
+				this._settlementArray.addItem({label: resourceManager.getString(model.resources.bundleName, 'settlement_outlays'), data: model.calculator.calculateOutlays().toFixed(2)});
+				this._settlementArray.addItem({label: resourceManager.getString(model.resources.bundleName, 'settlement_dailyallowance'), data: model.calculator.calculateAllowances().toFixed(2)});
+				this._settlementArray.addItem({label: resourceManager.getString(model.resources.bundleName, 'settlement_redraws'), data: model.calculator.calculateDeductions().toFixed(2)});
+				this._settlementArray.addItem({label: resourceManager.getString(model.resources.bundleName, 'settlement_prepaid'), data: model.calculator.calculateTraveladvances().toFixed(2)});
+				this._settlementArray.addItem({label: resourceManager.getString(model.resources.bundleName, 'settlement_total'), data: model.calculator.calculate().toFixed(2)});
+			}
+			
+			public function validateForm():Boolean {
+				var vResult:ValidationResultEvent;
+            	/*
+            	vResult = val_fnummer.validate();
+            	if (vResult.type==ValidationResultEvent.INVALID) { vResult.currentTarget.source.setFocus(); return false; }
+            	*/
+            	return true;
+			}
+			
+			public function openPdf():void {
+				var event:CairngormEvent = new CairngormEvent( GetTravelPdfEvent.GET_TRAVEL_PDF );
+				CairngormEventDispatcher.getInstance().dispatchEvent( event );
+			}
+			
+			public function getXML(includePersonalInfo:Boolean=true):void {
+				model.saveWithPersonalInfo = includePersonalInfo;
+				var event:CairngormEvent = new CairngormEvent( GetTravelXmlEvent.GET_TRAVEL_XML );
+				CairngormEventDispatcher.getInstance().dispatchEvent( event );
+			}
+			
+			private function dateChanged(newDate:Date=null, updateText:Boolean=true):void {
+				// update date text field?
+				if (updateText)
+					this.settlement_date_text.text = this.getFormattedDate(newDate);
+			}
+						
+			private function textDatefieldChanged(e:FocusEvent):void {
+				var textField:TextInput = TextInput(e.currentTarget);
+				if (this.validateCustomField(textField)) {
+					var dateValues:Array = textField.text.split(".");
+					if (textField.text != "") {
+						this.settlement_date.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+					} else {
+						this.settlement_date.selectedDate = null;
+					}
+					this.settlement_date.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+					this.dateChanged(this.settlement_date.selectedDate, false);				
+				}
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HBox width="100%" paddingBottom="20" paddingRight="20" horizontalGap="90">
+		<mx:VBox>
+			<mx:Box id="accessibilitytext" width="100%">
+				<comp:infobutton id="accessibility_introtext" buttonTabIndex="351" textReference="settlement_intro_help" accessibilityLabel="{resourceManager.getString(model.resources.bundleName, 'header_settlement')}"
+							 enabled="{model.screenreader}" visible="{model.screenreader}"/>
+<!--			
+				<mx:TextInput id="accessibility_introtext" tabIndex="351" width="0" height="0" editable="false" styleName="accessibilityInfo"
+						  text="{resourceManager.getString(model.resources.bundleName, 'settlement_intro_help')}" />
+-->				
+				<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="{introIn()}" focusOut="{introOut()}" enabled="{this.enabled}" tabIndex="150" />
+								
+			</mx:Box>
+			<mx:HBox>
+				<mx:Label id="settlement_account_label" width="{_labelWidth}" styleName="form"
+						  text="{resourceManager.getString(model.resources.bundleName, settlement_account_label.id)}" />
+				<mx:TextInput id="settlement_account" tabIndex="352" width="{model.fieldSizeMain*.6}" maxChars="11" 
+							  text="{model.activePerson.account}"  />
+				
+			</mx:HBox>
+			
+			<mx:HBox>
+				<mx:Label id="settlement_date_label" width="{_labelWidth}" styleName="form"
+						  text="{resourceManager.getString(model.resources.bundleName, settlement_date_label.id)}" />
+				<mx:TextInput id="settlement_date_text" width="70" maxChars="8" 
+							  enabled="{this.enabled}" tabIndex="353"
+							  text="{this.getFormattedDate(model.activeTravel.travel_date_out)}" 
+							  focusOut="{this.textDatefieldChanged(event)}"  />
+				<mx:DateField id="settlement_date" creationComplete="{dateField_init(settlement_date)}" editable="true" width="17" visible="{!model.screenreader}"  tabEnabled="{!model.screenreader}"
+							    selectedDate="{new Date()}" tabIndex="354"
+							    change="{this.dateChanged(this.settlement_date.selectedDate)}" />
+				<mx:Text id="settlement_date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
+			</mx:HBox>
+			
+			<mx:HBox>
+				<mx:Label id="settlement_travelnum_label" width="{_labelWidth}" styleName="form"
+						  text="{resourceManager.getString(model.resources.bundleName, settlement_travelnum_label.id)}" />
+				<mx:TextInput id="settlement_travelnum" text="{model.activeTravel.travel_number}" tabIndex="355" width="{model.fieldSizeMain*.3}" />
+				
+			</mx:HBox>
+			
+		</mx:VBox>
+		
+		<mx:DataGrid id="grid_settlement" tabIndex="356" rowCount="{((this._settlementArray.length > 0) ? this._settlementArray.length : 1)}" width="100%" height="100%" 
+				dataProvider="{this._settlementArray}" selectable="false">
+				
+        	<mx:columns>
+	        	<mx:DataGridColumn id="column1" headerText="" dataField="label" sortable="false" />
+	        	<mx:DataGridColumn id="column2" headerText="{resourceManager.getString(model.resources.bundleName, 'settlement_gridheader')}" dataField="data" sortable="false" textAlign="right" />				
+			</mx:columns>
+		</mx:DataGrid>
+		<!--
+		<mx:Canvas width="100%" paddingRight="20">
+			<mx:VBox left="0">
+				<mx:Text text="{resourceManager.getString(model.resources.bundleName, 'settlement_specifications')}:"  />
+				<mx:Text text="{resourceManager.getString(model.resources.bundleName, 'settlement_accomodations')}:"  />
+				<mx:Text text="{resourceManager.getString(model.resources.bundleName, 'settlement_outlays')}:"  />
+				<mx:Text text="{resourceManager.getString(model.resources.bundleName, 'settlement_dailyallowance')}:"  />
+				<mx:Text text="{resourceManager.getString(model.resources.bundleName, 'settlement_redraws')}:"  />
+				<mx:Text text="{resourceManager.getString(model.resources.bundleName, 'settlement_prepaid')}:"  />
+				<mx:Text text="{resourceManager.getString(model.resources.bundleName, 'settlement_total')}:" fontWeight="bold"  />
+			</mx:VBox>
+			<mx:VBox right="0">
+				<mx:Text tabIndex="357" text="{this.costSpecification}" textAlign="right"  />
+				<mx:Text text="{this.costAccomodation}" textAlign="right"  />
+				<mx:Text text="{this.costOutlay}" textAlign="right"  />
+				<mx:Text text="{this.costDailyAllowance}" textAlign="right"  />
+				<mx:Text text="{this.costRedraws}" textAlign="right"  />
+				<mx:Text text="{this.costPrepaid}" textAlign="right"  />
+				<mx:Text text="{this.costTotal}" textAlign="right" fontWeight="bold"  />
+			</mx:VBox>
+		</mx:Canvas>
+		-->
+	</mx:HBox>
+	
+	<mx:Canvas width="100%">
+		<mx:Button id="xml_export" tabIndex="398" visible="true" right="180" styleName="default"  width="160" height="30" 
+			       click="{getXML()}"
+			       toolTip="{resourceManager.getString(model.resources.bundleName, 'popupblockerhelp')}" 
+				   label="{resourceManager.getString(model.resources.bundleName, 'button_save_form')}"/>
+				   
+		<mx:Button id="pdf" tabIndex="399" visible="true" right="350" styleName="secondary"  width="160" height="30"
+				   click="{openPdf()}"  
+			       toolTip="{resourceManager.getString(model.resources.bundleName, 'popupblockerhelp')}"
+			       label="{resourceManager.getString(model.resources.bundleName, 'button_print_form')}">
+			<mx:icon>@Embed(source='assets/media/images/icons/btn_print.png')</mx:icon>
+		</mx:Button>
+		
+		<mx:Button id="xml_exportShare" tabIndex="400" visible="true" styleName="default"  width="160" height="30" 
+			       click="{getXML(false)}"
+			       toolTip="{resourceManager.getString(model.resources.bundleName, 'popupblockerhelp')}" 
+				   label="{resourceManager.getString(model.resources.bundleName, 'button_share_form')}" right="10"/>
+	</mx:Canvas>
+	
+</code:ValidationBase>

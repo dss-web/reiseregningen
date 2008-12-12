@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="initPage()" width="100%" styleName="TightFrame"
+	updateComplete="initPage()">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.UIComponent;
+			import mx.managers.IFocusManagerComponent;
+			import mx.containers.TitleWindow;
+			import no.makingwaves.cust.dss.vo.TicketSpecificationVO;
+			import mx.controls.Alert;
+			import no.makingwaves.util.Util;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
+			import mx.managers.PopUpManager;
+            import mx.core.IFlexDisplayObject;
+			import no.makingwaves.cust.dss.view.specifications.travel_specification;
+			
+			//private var defaultColor:
+			
+			[Bindable]
+			public var travelspecifications : TravelSpecificationVO; 
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			[Bindable]
+			public var addbutton : UIComponent;
+
+			[Bindable]
+			public var active_btn_edit : Boolean = true;
+			[Bindable]
+			public var active_btn_delete : Boolean = true;
+			[Bindable]
+			public var summaryText : String = "";
+			
+			private var addWindow:IFlexDisplayObject;
+				
+			private function initPage():void {
+				summaryText = resourceManager.getString(model.resources.bundleName, 'summary_text');
+				summaryText = summaryText.replace("%1", travelspecifications.from_destination);
+				summaryText = summaryText.replace("%2", travelspecifications.to_destination);
+				summaryText = summaryText.replace("%3", travelspecifications.transportation_type);
+				//speaker_summary.text = summaryText;
+				// add accessibility
+				model.accessibility.addAccessibility(speaker_summary, speaker_summary.text);
+				model.accessibility.addAccessibility(btn_spec_edit, "Edit this specification");
+				model.accessibility.addAccessibility(btn_spec_delete, "Delete this specification");
+				
+				// check wether it is a travel start and has continous distances after - if so, disable delete button
+				if (travelspecifications.is_travel_start || travelspecifications.is_travel_end) {
+					var specList:ArrayCollection = model.travelSpecsList;
+					for (var i:Number = 0; i < specList.length; i++) {
+						if (specList.getItemAt(i) == travelspecifications) {
+							if (i < (specList.length-1)) {
+								active_btn_delete = false;
+								break;
+							}
+						}
+					}
+				}
+				// disable buttons it screenreader is active
+				if (model.screenreader) {
+					this.btn_spec_delete.enabled = false;
+					this.btn_spec_edit.enabled = false;
+				}
+					
+			}		
+			
+			private function getFormattedDateAndTime(date:Date, time:String):String {
+				var formattedDate:String = "";
+				if (date != null) {
+					var dateFormat:String = resourceManager.getString(model.resources.getResourceBundleName(), 'DATE_FORMAT');
+					formattedDate = Util.formatDate(date, dateFormat);
+					
+					if (time != "") 	
+						formattedDate += ", kl." + time.substr(0,2) + ":" + time.substr(2,2);
+						
+				}
+				return formattedDate;
+			}
+			
+			private function editSpecification():void {
+				//model.activeSpecification = travelspecifications;
+				var popupSpec:travel_specification = travel_specification(PopUpManager.createPopUp(this, travel_specification, true));
+				popupSpec.travelspecifications = travelspecifications;
+			}
+			
+			private function deleteSpecification():void {
+				for (var i:Number = 0; i < model.travelSpecsList.length; i++) {
+					if (model.travelSpecsList.getItemAt(i) == travelspecifications) {
+						model.travelSpecsList.removeItemAt(i);
+						break;
+					}
+				}
+			}
+			
+			public function setActive():void {
+				this.btn_spec_delete.enabled = this.active_btn_delete;
+				this.btn_spec_edit.enabled = this.active_btn_edit;
+				
+				model.activeSpecification = travelspecifications;
+				box.setStyle("backgroundColor", "#004990");
+				box.setStyle("backgroundAlpha", "0.4");
+			}
+			
+			public function setInactive():void {
+				if (model.screenreader) {
+					this.btn_spec_delete.enabled = false;
+					this.btn_spec_edit.enabled = false;
+				}
+				try { 
+					var focus:IFocusManagerComponent = focusManager.getFocus();
+					if (focusManager.getFocus() != this.speaker_summary && 
+						focusManager.getFocus() != this.btn_spec_edit &&  
+						focusManager.getFocus() != this.btn_spec_delete &&
+						focusManager.getFocus() != this.addbutton) {
+							box.setStyle("backgroundColor", "#FFFFFF");
+							model.activeSpecification = null;	
+						}
+					
+				} catch (e:Error) {
+					model.activeSpecification = null;
+				}
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:HBox id="box" width="100%" focusEnabled="true" 
+			click="{setActive()}" 
+			useHandCursor="true" buttonMode="true" mouseChildren="false"
+		    label="{summaryText}">
+
+		<mx:TextInput id="speaker_summary" width="0" height="0" alpha="0"
+						focusIn="{setActive()}" focusOut="{setInactive()}" /> 
+		
+		<mx:Image id="spec_type" verticalCenter="0" width="5%"
+				   source="{'assets/media/images/icons/transportation/'+ travelspecifications.transportation_type +'.jpg'}" />
+
+		<mx:Text id="spec_startdate" verticalCenter="0" width="22%" selectable="false" 
+					text="{getFormattedDateAndTime(travelspecifications.from_date,travelspecifications.from_time)}"  />
+					
+		<mx:Text id="spec_startplace" verticalCenter="0" width="31%" selectable="false" 
+					text="{travelspecifications.from_destination + ' - ' + travelspecifications.to_destination}" />
+					
+		<mx:Text id="spec_stopdate" verticalCenter="0" width="22%" selectable="false" 
+					text="{getFormattedDateAndTime(travelspecifications.to_date,travelspecifications.to_time)}" />
+					
+		<mx:Text id="spec_price" verticalCenter="0" textAlign="right" width="12%" selectable="false" 
+					text="{'NOK ' + travelspecifications.cost.local_cost}" />
+			
+		<mx:Button id="btn_spec_edit" label="Endre" verticalCenter="0" width="4%" click="{editSpecification()}"
+						enabled="{active_btn_edit}" focusIn="{setActive()}" focusOut="{setInactive()}" />
+						
+		<mx:Button id="btn_spec_delete" label="Slette" verticalCenter="0" width="4%" click="{deleteSpecification()}" 
+					    enabled="{active_btn_delete}" focusIn="{setActive()}" focusOut="{setInactive()}" />
+					  
+	</mx:HBox>
+</mx:HBox>

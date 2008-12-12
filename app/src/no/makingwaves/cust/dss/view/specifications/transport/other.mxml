@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code:BasicFormBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:common="no.makingwaves.cust.dss.view.specifications.transport.common.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+			creationComplete="init()">
+			
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.OtherSpecificationVO;
+			import mx.events.ValidationResultEvent;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			
+			[Bindable]
+			public var travelspecifications : TravelSpecificationVO;
+						
+			[Bindable]
+			public var otherspecifications :  OtherSpecificationVO;;
+			
+			private function init():void {
+				otherspecifications = new OtherSpecificationVO();
+				try {
+					if (travelspecifications.specification != null) {
+						otherspecifications = travelspecifications.specification;
+					}
+				} catch (e:Error) { 
+					trace("other.init: " + e.message);
+					otherspecifications = new OtherSpecificationVO();
+				}
+				// add accessibility
+                model.accessibility.addAccessibility(othertransporttype_radio1, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
+                model.accessibility.addAccessibility(othertransporttype_radio2, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
+                model.accessibility.addAccessibility(othertransporttype_radio3, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
+			}
+			
+			override public function autoFillIn(editMode:Boolean=false):void {}
+			
+			override public function validateDetailsForm():Boolean {
+				var validation:Boolean = super.validateDetailsForm();
+				if (validation)
+					validation = distance.validateAll();
+					 
+				if (validation) {
+					if (this.other_type.selectedValue != otherspecifications.TYPE_EL_CAR && this.other_type.selectedValue != otherspecifications.TYPE_OTHER && this.other_type.selectedValue != otherspecifications.TYPE_SNOWMOBILE) {
+						validation = false;
+						var validationText:String = resourceManager.getString(model.resources.bundleName, "othertransporttype_validator");;
+						this.showValidationError(this.othertransporttype_radio3, validationText);
+					}
+				}
+				return validation;
+			}
+             
+			override public function submitData(specifications:*):* {
+				otherspecifications.distance = distance.getDistance();
+				otherspecifications.other_type = Number(other_type.selectedValue);
+				travelspecifications.specification = otherspecifications;
+	           	return TravelSpecificationVO(specifications);
+            }
+		]]>
+	</mx:Script>
+		
+	<mx:HBox paddingTop="10" paddingBottom="10">
+		<common:distance id="distance" width="100%" paddingTop="10" paddingRight="10" travelspecifications="{travelspecifications}" />
+		
+		<mx:VBox>
+			<mx:Label id="othertransporttype_label" text="{resourceManager.getString(model.resources.bundleName, othertransporttype_label.id)}" styleName="form" />
+			<mx:HBox id="othertransport_type_box">
+				<mx:RadioButtonGroup id="other_type" selectedValue="{otherspecifications.other_type}" />
+				<mx:RadioButton id="othertransporttype_radio1" label="{resourceManager.getString(model.resources.bundleName, othertransporttype_radio1.id)}" value="{otherspecifications.TYPE_SNOWMOBILE}" groupName="other_type" tabIndex="1640" />
+				<mx:RadioButton id="othertransporttype_radio2" label="{resourceManager.getString(model.resources.bundleName, othertransporttype_radio2.id)}" value="{otherspecifications.TYPE_EL_CAR}" groupName="other_type" tabIndex="1641" />
+				<mx:RadioButton id="othertransporttype_radio3" label="{resourceManager.getString(model.resources.bundleName, othertransporttype_radio3.id)}" value="{otherspecifications.TYPE_OTHER}" groupName="other_type" tabIndex="1642" />
+			</mx:HBox>
+		</mx:VBox>
+	</mx:HBox>		
+</code:BasicFormBase>

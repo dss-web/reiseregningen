@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code:BasicFormBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:specs="no.makingwaves.cust.dss.view.specifications.*"
+			xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+			creationComplete="initCreationComplete()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.CostVO;			
+			
+			[Bindable]
+			public var costVO : CostVO;
+			
+			private var autoFillInMode : Boolean = true;
+			
+			private var ready : Boolean = false;
+			
+			public function init(cost:CostVO):void {
+				costVO = cost;
+				initCreationComplete();
+			}
+			
+			private function initCreationComplete():void {
+				if (ready)
+					initPage();
+					
+				ready = true;
+			}
+			
+			private function initPage():void {
+				costchoice.selectedIndex = model.activeTravel.travel_type;
+				/*
+				if (this.autoFillInMode) {
+					if (costchoice.selectedChild.id == "cost_local") {
+						var costStr:String = costVO.cost.toString();
+						this.travelcost.text = (costStr != "0") ? costStr : "0";
+					}
+				}
+				*/	
+				if (costchoice.selectedChild.id != "cost_local") {
+					cost_currency.autoFillInMode = this.autoFillInMode;
+					cost_currency.init(this.costVO);
+				}
+				
+			}
+			
+			private function localCostAdded(event:Event):void {
+				this.addValidationField(travelcost);
+				this.addCustomStringValidation(travelcost, false, true, this.VALIDATOR_FORMAT_DOUBLE);
+			}
+			
+			override public function clearFields():void {
+				super.clearFields();
+				if (costchoice.selectedChild.id == "cost_local") {
+					travelcost.text = "";
+				} else {
+					cost_currency.clearFields();
+				}
+				//ready = false;
+			}
+			
+			override public function autoFillIn(editMode:Boolean=false):void {
+				if (costchoice.selectedChild.id == "cost_local") {
+					this.autoFillInMode = true;
+					
+				} else {
+					cost_currency.autoFillInMode = true;
+				}
+			}
+			
+			private function reinit():void {
+				if (costchoice.selectedChild.id == "cost_local") {
+					// add accessibility props
+					model.accessibility.addAccessibility(travelcost, resourceManager.getString(model.resources.bundleName, travelcost+'_label'));
+					// add accessibility props
+					model.accessibility.addAccessibility(travelcost, resourceManager.getString(model.resources.bundleName, travelcost.id+'_label'));
+					// add validation
+					this.addValidationField(travelcost);
+					this.addCustomStringValidation(travelcost, false, true);
+				}			
+			}
+			
+			public function getCost():CostVO {
+				if (validateAll()) {
+					if (costchoice.selectedChild.id == "cost_local") {
+						this.costVO.cost = Number(travelcost.text);
+						return this.costVO;
+					} else {
+						return this.cost_currency.getCost();
+					}
+				}
+				return new CostVO();
+			}
+			
+			override public function validateAll():Boolean {
+				var valid:Boolean = super.validateAll();
+				if (costchoice.selectedChild.id != "cost_local") {
+					valid = valid && cost_currency.validateAll();
+				}
+				return valid;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:ViewStack id="costchoice" change="{reinit()}">
+		<mx:Box id="empty" />
+					
+		<mx:HBox id="cost_local" addedToStage="{localCostAdded(event)}">
+			<mx:Label id="travelcost_label" text="{resourceManager.getString(model.resources.bundleName, travelcost_label.id)}"  width="50" styleName="form"/>
+			<mx:TextInput id="travelcost" width="50" textAlign="right" tabIndex="1700"
+				            added="{model.accessibility.addAccessibility(travelcost, resourceManager.getString(model.resources.bundleName, travelcost.id+'_help'))}"
+							text="{costVO.cost}" />
+			<mx:Label text=",-" />
+		</mx:HBox>
+		
+		<common:cost_currency id="cost_currency" width="100%" />	
+	</mx:ViewStack>
+	
+</code:BasicFormBase>

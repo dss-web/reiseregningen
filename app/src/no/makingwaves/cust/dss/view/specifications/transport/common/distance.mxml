@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code:BasicFormBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:specs="no.makingwaves.cust.dss.view.specifications.*"
+			xmlns:common="no.makingwaves.cust.dss.view.specifications.transport.common.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+			creationComplete="initPage()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.CommonSpecificationVO;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;			
+			
+			[Bindable]
+			public var travelspecifications : TravelSpecificationVO;
+			[Bindable]
+			public var commonspecifications : CommonSpecificationVO;
+			
+			private var autoFillInMode : Boolean = false;
+			
+			private function initPage():void {
+				commonspecifications = new CommonSpecificationVO();
+				try 
+				{
+					var distance:Number = CommonSpecificationVO(travelspecifications.specification).distance;
+					commonspecifications.distance = distance;
+				} 
+				catch(e:Error) 
+				{
+					commonspecifications.distance = 0;
+				}
+				// add accessibility props
+				model.accessibility.addAccessibility(distance_km, resourceManager.getString(model.resources.getResourceBundleName(), distance_km.id+'_label'));
+				// add validation
+				this.addValidationField(distance_km);
+				this.addCustomStringValidation(distance_km, false, true);
+				// editmode?
+				if (this.autoFillInMode) {
+					distance_km.text = commonspecifications.distance.toString();
+				}
+			}
+			
+			override public function submitData(specifications:*):* {
+				CommonSpecificationVO(specifications.specification).distance = Number(distance_km.text);
+				return TravelSpecificationVO(specifications);
+			}
+			
+			override public function clearFields():void {
+				distance_km.text = "";
+			}
+			
+			override public function autoFillIn(editMode:Boolean=false):void {
+				this.autoFillInMode = true;
+			}
+			
+			public function getDistance():Number {
+				return Number(distance_km.text);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:HBox id="distancebox">
+		<mx:Label id="distance_km_label" text="{resourceManager.getString(model.resources.getResourceBundleName(), distance_km_label.id)}" styleName="form" />
+		<mx:TextInput id="distance_km" text="{commonspecifications.distance}" width="50" tabIndex="1630" />
+		<mx:Label text="km" />
+	</mx:HBox>
+		
+</code:BasicFormBase>

@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: BASE FORM INPUT VIEW FOR ACCOMOCATIONS -->
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:acc="no.makingwaves.cust.dss.view.specifications.accomodation.*"
+		xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+		xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+		creationComplete="init();"
+		creationPolicy="auto" move="{removeHelpScreens()}"
+		title="{resourceManager.getString(model.resources.bundleName, 'accomodationtype_label')}">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import no.makingwaves.cust.dss.code.util.Util;
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import no.makingwaves.cust.dss.vo.CostVO;
+			import mx.effects.easing.Exponential;
+			import no.makingwaves.cust.dss.vo.TravelAccomodationVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.util.keycontroller.KeyCombo;
+			import no.makingwaves.util.keycontroller.KeyController;
+			import no.makingwaves.util.keycontroller.KeyControllerEvent;
+			import no.makingwaves.cust.dss.view.components.custom_alert;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			public var travelaccomodations : TravelAccomodationVO;
+			
+			private var _continueTravel : Boolean = false;
+			private var _editMode : Boolean = false;
+			
+			private function init():void {
+                this.x = (this.stage.width / 2) - (this.width / 2);
+				this.y += (model.positionParameter) - (this.height / 2);
+				
+				// initialize help text for this section -- 'accomodation_intro_help'
+				model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'accomodation_intro_help'));
+                
+                // check for active/editable specification
+                if (travelaccomodations != null) {
+                	_editMode = true;
+                } else {
+                	travelaccomodations = new TravelAccomodationVO();
+                	_editMode = false;
+                }
+                cmb_accomodationtype.enabled = !_editMode;
+                model.accessibility.addAccessibility(cmb_accomodationtype, resourceManager.getString(model.resources.bundleName, 'accomodationtype_label'));
+                // set init state
+                setCurrentState("base", false);
+                // init cost fields
+                cost_specification.init(travelaccomodations.actual_cost);
+                // check for editMode to change from default state
+                if (_editMode)
+                	autoFillIn();
+                	
+             
+                // short-cuts
+                registerKeyCombos(); 
+                
+                if (model.screenreader)
+                	this.parentApplication.visible = false;        
+            
+				initAccessibility();          
+            }
+			
+			private function initAccessibility():void {
+				if (!model.screenreader) {
+					try {
+						accessibilitytext.removeChild(this.accessibility_introtext);
+					} catch (e:Error) { trace("travel_accomodation.initAccessibility: " + e.message);}
+					
+				} else {
+					this.accessibility_introtext.savelocal_infobtn.setFocus();
+					//model.accessibility.addAccessibility(this.accessibility_introtext, model.helpTextPopUp);
+				}
+			}
+			
+			private function registerKeyCombos():void {
+				var keyController:KeyController = new KeyController(this);
+				// set keyboard shortcuts
+				keyController.setKeyWatch(13); 					// ENTER
+				keyController.setKeyWatch(27); 					// ESC
+				keyController.addEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
+			}
+		
+			private function keyComboPressed(event:KeyControllerEvent):void {
+				var pressedCombo:KeyCombo = event.keyCombo;
+				if (!pressedCombo.ctrl && !pressedCombo.shift && !pressedCombo.alt) {
+					if (pressedCombo.keyCode == 13) {
+						this.continueClicked();
+					} else if (pressedCombo.keyCode == 27) {
+						this.close();
+					}
+				}
+			}
+            
+            private function autoFillIn():void {
+            	for (var i:Number = 0; i < accomodationlist.length; i++) {
+            		if (accomodationlist.getItemAt(i).data == travelaccomodations.type) {
+            			cmb_accomodationtype.selectedIndex = i;
+            			break;           			
+            		}
+            	}
+            	setAccomodationState(cmb_accomodationtype.selectedItem);
+            }
+            
+            private function continueClicked():void {
+            	if (validateForm()) {
+            		this.travelaccomodations.type = cmb_accomodationtype.selectedItem.data;
+	            	
+	            	if (this.travelaccomodations.type == this.travelaccomodations.TYPE_HOTEL) {
+	            		// submit data from the hotel form
+	            		travelaccomodations = hotel.submitData(travelaccomodations);
+	            	} else {
+	            		if (this.travelaccomodations.type == this.travelaccomodations.TYPE_UNATHORIZED_HOTEL) {
+	            			travelaccomodations = hotel.submitData(travelaccomodations);
+	            		}
+	            		// use official rate to calc cost of unauthorized accomodation
+	            		travelaccomodations.cost = new CostVO();
+	            		//travelaccomodations.cost.cost = model.travelRates.accomodation_domestic_03;
+	            	}
+	            	travelaccomodations.actual_cost = cost_specification.getCost();
+	            	travelaccomodations.actual_cost.update();
+	            	
+	            	// submit data from the common form
+	            	travelaccomodations = common.submitData(travelaccomodations);
+	            	
+					if (travelaccomodations != null) {
+		            	// calculate this accomodation cost
+						model.calculator.calculateAccomodation(travelaccomodations);
+						if (!_editMode) {
+		            		model.travelAccomodationList.addItem(travelaccomodations);
+		            	}
+		            	
+		            	close();
+		   			}
+            	}
+            }
+            
+            private function validateForm():Boolean {
+            	var validMain : Boolean = true;
+            	if (this.currentState == "hotel_state") {
+            		validMain = this.hotel.validateDetailsForm();
+            		if (validMain) {
+	            		validMain = this.hotel.validateCustomFields();
+	            	}
+            	}
+            	// validate common form
+            	if (validMain) {
+            		validMain = this.common.validateDetailsForm();
+            		if (validMain) {
+	            		validMain = this.common.validateCustomFields();
+	            	}
+	            }
+            	
+            	return (validMain);
+            }
+
+            private function close():void {
+            	if (model.screenreader)
+                	this.parentApplication.visible = true;
+                	
+            	if (this.common != null) {
+	            	// remove validators
+	            	this.common.disableValidation();
+	            	if (this.currentState == "hotel_state") {
+	            		this.hotel.disableValidation();
+	            	}
+	            }
+            	// remove pop-up
+                this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+                //PopUpManager.removePopUp(this);
+            }
+            
+            private function clearFields():void {
+            	// reset references/bindings
+            	travelaccomodations = new TravelAccomodationVO();
+            	cmb_accomodationtype.selectedIndex = 0;
+
+            	button_ok.label = resourceManager.getString(model.resources.bundleName, button_ok.id);
+            	
+            }
+            
+            private function removeHelpScreens():void {
+            	try {
+            		if (this.common != null) {
+		            	// remove validators
+		            	this.common.undisplayAllValidators();
+		            	if (this.currentState == "hotel_state") {
+		            		this.hotel.undisplayAllValidators();
+		            	}
+		            }
+            	} catch (e:Error) { trace("travel_accomodation.removeHelpScreens: " + e.message); }
+            }
+            
+            public function setAccomodationState(selectedObject:Object):void {
+            	var newState:Number = selectedObject.data;
+            	button_ok.enabled = (newState > 0);
+            	if (newState == 1) {
+            		setCurrentState("hotel_state", this.model.runTransitions);
+            	} else if (newState == 2) {
+            		setCurrentState("unauthorized_state", this.model.runTransitions);
+            	} else if (newState == 3) {
+            		setCurrentState("unauthorized_hotel_state", this.model.runTransitions);
+            	} else {
+            		setCurrentState("base", this.model.runTransitions);
+            	}
+            }
+
+		]]>
+	</mx:Script>
+	
+	<mx:Model id="accomodationtypes">
+		<obj>
+			<item label="{resourceManager.getString(model.resources.bundleName, 'accomodationtype_combo_choose')}" data="0"/>
+			<item label="{resourceManager.getString(model.resources.bundleName, 'accomodationtype_combo_hotel')}" data="1"/>
+			<item label="{resourceManager.getString(model.resources.bundleName, 'accomodationtype_combo_unauthorized')}" data="2"/>
+			<item label="{resourceManager.getString(model.resources.bundleName, 'accomodationtype_combo_unauthorizedhotel')}" data="3"/>
+		</obj>
+	</mx:Model>
+	
+	<mx:ArrayCollection id="accomodationlist" source="{accomodationtypes.item}"/>
+	
+	<!-- TRANSITIONS ================================================================= -->
+	
+	<mx:transitions>
+    	<mx:Transition fromState="*" toState="*">
+    		<mx:Parallel id="t1" targets="{[boxAccomodation,this]}">
+    			<mx:Blur blurXFrom="10" blurXTo="0" blurYFrom="10" blurYTo="0" duration="500" easingFunction="Exponential.easeIn" />
+    			<mx:Resize duration="500" easingFunction="Exponential.easeIn"/>
+			</mx:Parallel>
+    	</mx:Transition>
+    </mx:transitions>
+    
+	<!-- STATES FOR DIFFERENT TRANSPORTATIONS ======================================== -->
+	
+	<mx:states>
+		<mx:State id="base" name="base">
+			<mx:AddChild relativeTo="{boxAccomodation}">
+				<acc:hotel id="hotel" travelaccomodations="{travelaccomodations}" enabled="false" visible="false" />
+			</mx:AddChild>	
+			<mx:AddChild relativeTo="{boxAccomodation}">
+				<acc:common id="common" travelaccomodations="{travelaccomodations}" enabled="false" visible="false" />
+			</mx:AddChild>	
+			<mx:AddChild relativeTo="{boxAccomodation}">
+				<common:cost id="cost_specification" width="100%" paddingTop="10" enabled="false" visible="false" />
+			</mx:AddChild>
+		</mx:State>
+		
+		<mx:State id="hotel_state" name="hotel_state" basedOn="base">
+			<mx:SetProperty target="{hotel}" name="visible" value="true" />
+			<mx:SetProperty target="{common}" name="visible" value="true" />
+			<mx:SetProperty target="{cost_specification}" name="visible" value="true" />
+			
+			<mx:SetProperty target="{hotel}" name="enabled" value="true" />
+			<mx:SetProperty target="{common}" name="enabled" value="true" />
+			<mx:SetProperty target="{cost_specification}" name="enabled" value="true" />
+		</mx:State>
+		
+		<mx:State id="unauthorized_state" name="unauthorized_state" basedOn="hotel_state">
+			<mx:RemoveChild target="{hotel}" />
+			<mx:SetProperty target="{common}" name="visible" value="true" />
+			<mx:SetProperty target="{cost_specification}" name="visible" value="true" />
+			
+			<mx:SetProperty target="{common}" name="enabled" value="true" />
+			<mx:SetProperty target="{cost_specification}" name="enabled" value="true" />
+			<!-- <mx:RemoveChild target="{cost_specification}" /> -->
+		</mx:State>
+		
+		<mx:State id="unauthorized_hotel_state" name="unauthorized_hotel_state" basedOn="base">
+			<mx:SetProperty target="{hotel}" name="visible" value="true" />
+			<mx:SetProperty target="{common}" name="visible" value="true" />
+			<mx:SetProperty target="{cost_specification}" name="visible" value="true" />
+			
+			<mx:SetProperty target="{hotel}" name="enabled" value="true" />
+			<mx:SetProperty target="{common}" name="enabled" value="true" />
+			<mx:SetProperty target="{cost_specification}" name="enabled" value="true" />
+			
+			<!-- <mx:RemoveChild target="{cost_specification}" /> -->
+		</mx:State>
+	</mx:states>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" backgroundColor="#FFFFFF">
+		
+		<mx:Box id="accessibilitytext" width="100%">
+			<comp:infobutton id="accessibility_introtext" buttonTabIndex="1500" textReference="{model.helpTextPopUp}" />
+		</mx:Box>
+		
+		<mx:VBox>
+			<mx:HBox>
+				<mx:Label id="accomodationtype_label" text="{resourceManager.getString(model.resources.getResourceBundleName(), accomodationtype_label.id)}"/>
+				<mx:ComboBox id="cmb_accomodationtype" tabIndex="1501" 
+								width="{model.fieldSizeMain}"
+								dataProvider="{accomodationlist}"
+								change="{setAccomodationState(cmb_accomodationtype.selectedItem)}"  />
+				
+				<comp:infobutton id="accomodationtype_help" buttonTabIndex="1502" textReference="accomodationtype_help" />
+			</mx:HBox>
+			
+			<mx:HRule width="100%" />
+			
+			<mx:HBox width="100%">
+		    	<mx:VBox id="boxAccomodation" width="100%" />
+				
+				<mx:VRule height="100%" />
+				
+				<mx:VBox id="helpText" width="150" height="{boxAccomodation.height}" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:Text htmlText="{model.helpTextPopUp}" width="100%" />	
+				</mx:VBox>
+			</mx:HBox>	
+		
+		</mx:VBox>
+	</mx:VBox>
+	
+	<mx:Canvas width="100%" styleName="WindowedNavigation">
+		<mx:HBox right="0">
+					
+			<mx:Button id="button_cancel" styleName="secondary" tabIndex="1851"
+					click="{close()}"
+					label="{resourceManager.getString(model.resources.bundleName, button_cancel.id)}"  height="22"/>
+			
+			<mx:Button id="button_ok" styleName="secondary" tabIndex="1850"
+					enabled="false"
+					click="{continueClicked()}"
+					label="{resourceManager.getString(model.resources.bundleName, button_ok.id)}"  height="22"/>
+						
+		</mx:HBox>	
+	</mx:Canvas>
+</mx:TitleWindow>

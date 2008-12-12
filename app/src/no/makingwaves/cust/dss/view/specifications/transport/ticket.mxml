@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code:BasicFormBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:transport="no.makingwaves.cust.dss.view.specifications.transport.*"
+			xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.CostVO;
+			import no.makingwaves.cust.dss.vo.TicketSpecificationVO;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;			
+			
+			[Bindable]
+			public var travelspecifications : TravelSpecificationVO;
+			[Bindable]
+			public var onlyAsPassenger : Boolean = false;
+			
+			public function init(specs:TravelSpecificationVO):void {
+				this.travelspecifications = specs;
+				this.travelspecifications.specification = new TicketSpecificationVO();
+				if (!onlyAsPassenger) {
+					costform.init(travelspecifications.cost);
+				} else {
+					costform.includeInLayout = false;
+					costform.visible = false;
+				}
+			}
+			
+			override public function submitData(specifications:*):* {
+				TravelSpecificationVO(specifications).cost = (!onlyAsPassenger) ? costform.getCost() : new CostVO();
+				TravelSpecificationVO(specifications).cost.update();
+				return TravelSpecificationVO(specifications);
+			}
+			
+			override public function clearFields():void {
+				super.clearFields();
+				if (!onlyAsPassenger) {
+					costform.clearFields();
+				}
+			}
+			
+			override public function validateCustomFields():Boolean {
+				return (super.validateCustomFields() && costform.validateAll());
+			}
+			
+			override public function autoFillIn(editMode:Boolean=false):void {
+				costform.autoFillIn(editMode);
+			}
+			
+		]]>
+	</mx:Script>	
+		
+	<common:cost id="costform" paddingTop="10" width="100%" />
+	
+</code:BasicFormBase>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: INFO HELP COMPONENT FOR DISPLAYING EXTRA HELP INFORMATION -->
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+			creationComplete="initPage()" focusEnabled="true"
+			click="{callFromContainer.closeInfoWindow()}">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.Container;
+			import no.makingwaves.cust.dss.code.ValidationBase;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.core.UIComponent;
+			import mx.managers.PopUpManager;
+			import mx.managers.IFocusManagerComponent;
+			import mx.managers.IFocusManagerContainer;
+			import no.makingwaves.cust.dss.view.components.infobutton;
+			
+			[Bindable]
+			public var infoText : String = "";
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			public var nextFocusComponent : UIComponent;
+			public var callFromContainer : infobutton;
+			
+			private var timer : Timer;
+						
+			private function initPage():void {
+				fadein.play([this]);
+				
+				model.accessibility.addAccessibility(infoTextDisplayer, infoText);
+				
+				try { infoTextDisplayer.setFocus();
+				} catch (e:Error) { trace("infoDisplayer.initPage: " + e.message); }
+			}
+			
+			private function initFocus():void {	
+				// change focus
+				try { this.nextFocusComponent.setFocus();
+				} catch (e:Error) { trace("infoDisplayer.initFocus: " + e.message); }
+				IFocusManagerContainer(this).focusManager.deactivate();
+				IFocusManagerContainer(nextFocusComponent.parent).focusManager.activate();
+				focusManager.setFocus(nextFocusComponent as IFocusManagerComponent);
+				
+				//  tell caller that everything is in place
+				this.callFromContainer.windowReady = true;
+				// init Timer to auto-close win after x seconds
+				initTimer();
+			}
+			
+			private function initTimer():void {
+				timer = new Timer(15000,1);
+				timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEventHandler);
+				timer.start();
+			}
+			
+			private function timerEventHandler(e:TimerEvent):void {
+				callFromContainer.closeInfoWindow();
+			}
+			
+			private function closeMe():void {
+				try { timer.stop(); } catch (e:Error) { trace("infoDisplayer.closeMe: " + e.message); }
+				PopUpManager.removePopUp(this);
+			}
+			
+			public function hide():void {
+				fadeout.play([this]);
+			} 
+			
+			public function close():void {
+				 closeMe();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Fade id="fadein" alphaFrom="0" alphaTo="1" duration="500" target="{this}" effectEnd="{initFocus()}" />
+	<mx:Fade id="fadeout" alphaFrom="1" alphaTo="0" duration="500" target="{this}" effectEnd="{closeMe()}" />
+	
+	<mx:HBox id="boxInfo" styleName="InfoBox">
+		<mx:Text id="infoTextDisplayer" htmlText="{infoText}" selectable="false" width="160" paddingBottom="3" paddingTop="3" paddingLeft="3" paddingRight="3" />
+	</mx:HBox>
+	
+</mx:Canvas>

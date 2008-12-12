@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code:BasicFormBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:specs="no.makingwaves.cust.dss.view.specifications.*"
+			xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+			width="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off"
+			creationComplete="initCreationComplete()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import no.makingwaves.cust.dss.vo.CurrencyCodeVO;
+			import mx.collections.ArrayCollection;
+			import no.makingwaves.cust.dss.vo.CostVO;
+			
+			[Bindable]
+			public var costVO : CostVO;
+			
+			[Bindable]
+			private var _currencycodes : ArrayCollection = new ArrayCollection();
+			
+			private var _defaultCurrency : String;
+			
+			public var autoFillInMode : Boolean = false;
+			
+			private var ready : Boolean = false;
+			
+			private var desc_box_height : Number;
+			
+			public function init(cost:CostVO):void {
+				costVO = cost;
+				initCreationComplete();
+			}
+			
+			private function initCreationComplete():void {
+				if (ready)
+					initPage();
+					
+				ready = true;
+			}
+			
+			private function initPage():void {
+//				showCostDescription(false);
+				// get default currency
+				_defaultCurrency = resourceManager.getString(model.resources.bundleName, 'CURRENCY_DEFAULT');
+				// add accessibility props
+				model.accessibility.addAccessibility(travelcost, resourceManager.getString(model.resources.bundleName, travelcost.id+'_help'));
+				model.accessibility.addAccessibility(travelcurrencycode, resourceManager.getString(model.resources.bundleName, travelcurrencycode.id+'_help'));
+				model.accessibility.addAccessibility(travelcostrate, resourceManager.getString(model.resources.bundleName, travelcostrate.id+'_help'));
+				// add validation
+				this.addValidationField(travelcost);
+				this.addValidationField(travelcostrate);
+				this.addCustomStringValidation(travelcost, false, true, this.VALIDATOR_FORMAT_DOUBLE);
+				this.addCustomStringValidation(travelcostrate, false, true, this.VALIDATOR_FORMAT_DOUBLE);
+				
+				// create currency code list
+				getCurrecyCodeList();
+				setInitialCurrencyCombo(this.costVO.cost_currency);
+				
+				if (autoFillInMode) {
+					this.autoFillIn();
+				}
+			}
+			
+			private function getCurrecyCodeList():void {
+				var codelist:ArrayCollection = model.currencyCodes;
+				_currencycodes.removeAll();
+				for (var i:Number = 0; i < codelist.length; i++) {
+					var currencycode:CurrencyCodeVO = CurrencyCodeVO(codelist.getItemAt(i));
+					_currencycodes.addItem({label: currencycode.code, data: {code: currencycode.code, factor: currencycode.factor}});
+				}
+				var sort:Sort = new Sort();
+				sort.fields = [new SortField("label", true)];
+			    _currencycodes.sort = sort;
+			    _currencycodes.refresh();
+			}
+			
+			override public function clearFields():void {
+				super.clearFields();
+				travelcost.text = "";
+				travelcurrencycode.selectedIndex = 0;
+				travelcostrate.text = "";
+				//ready = false;
+			}
+			
+			override public function autoFillIn(editMode:Boolean=false):void {
+				var costStr:String = costVO.cost.toString();
+				travelcost.text = (costStr != "0") ? costStr : "0";
+				this.setInitialCurrencyCombo(costVO.cost_currency);
+				this.travelcostrate.text = Number(costVO.cost_currency_rate * this.travelcurrencycode.selectedItem.data.factor).toFixed(2);
+				//this.cost_unauthorized_chk.selected = costVO.authorized;
+				//this.unauthorized_desc.text = costVO.desc;
+				//showCostDescription(costVO.authorized);
+			}
+			
+			public function getCost():CostVO {
+				this.costVO.cost = Number(this.travelcost.text);
+				this.costVO.cost_currency = this.travelcurrencycode.selectedItem.data.code;
+				this.costVO.cost_currency_rate = Number(this.travelcostrate.text) / this.travelcurrencycode.selectedItem.data.factor;
+				return this.costVO;
+			}
+			
+			private function setInitialCurrencyCombo(currencyCode:String):void {
+				if (currencyCode == "")
+					currencyCode = _defaultCurrency;
+					
+				for (var i:Number = 0; i < _currencycodes.length; i++) {
+            		if (_currencycodes.getItemAt(i).label == currencyCode) {
+            			travelcurrencycode.selectedIndex = i;
+            			break;           			
+            		}
+            	} 
+            	
+            	this.travelcostrate.enabled = Boolean(travelcurrencycode.selectedItem.data.code != _defaultCurrency);
+			}
+			
+			private function currencyCodeChanged(event:ListEvent):void {
+				this.travelcostrate.enabled = Boolean(event.currentTarget.selectedItem.data.code != _defaultCurrency);
+				this.travelcostrate.text = Number(costVO.cost_currency_rate * event.currentTarget.selectedItem.data.factor).toFixed(2);
+			} 
+/*			
+			private function costAuthorizedChaged(e:Event):void {
+				showCostDescription(cost_unauthorized_chk.selected);
+			}
+			
+			private function showCostDescription(show:Boolean):void {
+				if (show) {
+					unauthorized_desc_box.height = desc_box_height;
+					unauthorized_desc_box.visible = true;
+					this.height += desc_box_height;
+					this.addValidationField(unauthorized_desc);
+				} else {
+					this.height -= desc_box_height;
+					unauthorized_desc_box.height = 0;
+					unauthorized_desc_box.visible = false;
+					this.removeValidation(unauthorized_desc);
+				}
+			}
+*/
+
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%">
+		<mx:HBox width="100%">
+			<mx:HBox width="100%">
+				<mx:Label id="travelcost_label" text="{resourceManager.getString(model.resources.getResourceBundleName(), travelcost_label.id)}" styleName="form" width="50"/>
+				<mx:ComboBox id="travelcurrencycode" width="{model.fieldSizeMain*.4}" tabIndex="1701"
+								change="{currencyCodeChanged(event)}"
+								dataProvider="{_currencycodes}" />
+		
+				<mx:TextInput id="travelcost" width="50" textAlign="right" tabIndex="1702"
+								text="{costVO.cost}" />
+				
+				<!-- <mx:Label id="travelcostcurrency_label" text="{resourceManager.getString(model.resources.getResourceBundleName(), travelcostcurrency_label.id)}" textAlign="right" paddingLeft="5" /> -->
+				
+				<mx:Label id="travelcostrate_label" text="{resourceManager.getString(model.resources.getResourceBundleName(), travelcostrate_label.id)}" textAlign="right" paddingLeft="5" />
+				<mx:TextInput id="travelcostrate" width="50" textAlign="right" tabIndex="1703"
+								 />
+								
+				<comp:infobutton id="savelocal_infobtn" buttonTabIndex="1704" textReference="travelcostrate_info" visible="{travelcostrate.enabled}" />
+			</mx:HBox>
+			<mx:HBox paddingLeft="20" visible="{model.activeTravel.travel_type == model.activeTravel.ABROAD}">
+<!--
+				<mx:CheckBox id="cost_unauthorized_chk" click="{costAuthorizedChaged(event)}" />
+
+				<mx:Label id="cost_unauthorized_label" text="{resourceManager.getString(model.resources.getResourceBundleName(), 'outlays_type_unauthorized')}"  />
+-->
+			</mx:HBox>
+		</mx:HBox>
+
+<!--		
+		<mx:VBox id="unauthorized_desc_box" paddingLeft="{this.width*.2}" paddingTop="10" added="{desc_box_height = unauthorized_desc_box.height}">
+				<mx:Label id="unauthorized_desc_label" enabled="{cost_unauthorized_chk.selected}" 
+						   text="{resourceManager.getString(model.resources.getResourceBundleName(), unauthorized_desc_label.id)}" />
+				<mx:TextArea id="unauthorized_desc" enabled="{cost_unauthorized_chk.selected}"
+					   		  height="50" width="{this.width*.8}" />	
+		</mx:VBox>
+-->		
+	</mx:VBox>
+</code:BasicFormBase>

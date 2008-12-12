@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: SUMMARY VIEW FOR PERSONAL INFORMATION DETAILS -->
+
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
+	 creationComplete="initPage()">
+	 
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			private function initPage():void {
+				model.accessibility.addAccessibility(summaryText, model.summaryTextPersonal);
+				model.accessibility.addAccessibility(button_see_edit, resourceManager.getString(model.resources.bundleName, button_see_edit.id+"_personal"));
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Canvas width="100%">
+		<mx:Label id="summaryText" text="{model.summaryTextPersonal}" width="100%" styleName="Summary"  verticalCenter="0" />
+		<mx:Button id="button_see_edit" tabIndex="101" right="0" styleName="secondary" width="152" height="22"
+					visible="{button_see_edit.enabled}"
+					label="{resourceManager.getString(model.resources.bundleName, button_see_edit.id)}" 
+					click="{model.stateDistributer.openView(model.stateDistributer.PERSONAL)}"  />
+	</mx:Canvas>
+</mx:HBox>

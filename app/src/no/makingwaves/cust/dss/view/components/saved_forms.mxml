@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: OPEN SAVED FORMS DIALOG -->
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+				creationComplete="init()" borderAlpha="0.9"
+				title="{resourceManager.getString(model.resources.getResourceBundleName(), 'localsave_opensaved_header')}">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			public var localSavedList:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			public var okFunctionRef : Function;
+			
+			private function init():void {
+				//PopUpManager.centerPopUp(this);
+				this.x = (this.stage.width / 2) - (this.width / 2);
+				this.y += (model.positionParameter) - (this.height / 2);
+                
+				var travelForm:SharedObject = SharedObject.getLocal("travelexpense_savedforms");
+				trace("SharedObject is " + travelForm.size + " bytes");
+				var savedFormsList:ArrayCollection = travelForm.data.savedFormsList;
+				if (savedFormsList != null) {
+					localSavedList = savedFormsList;
+				} else {
+					var noSavedMsg:String = resourceManager.getString(model.resources.bundleName, 'localsave_nosaved');
+					localSavedList.addItem({label: noSavedMsg, data: ""});
+				}
+				
+				// add accessibility
+				model.accessibility.addAccessibility(localSavedForms, resourceManager.getString(model.resources.bundleName, 'localsave_opensaved_label'));
+				model.accessibility.addAccessibility(button_ok, resourceManager.getString(model.resources.bundleName, button_ok.id));
+				model.accessibility.addAccessibility(button_cancel, resourceManager.getString(model.resources.bundleName, button_cancel.id));
+				
+				if (model.screenreader)
+                	this.parentApplication.visible = false;
+			}
+			
+			private function cancel_clicked():void {
+				if (model.screenreader)
+                	this.parentApplication.visible = true;
+                	
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function ok_clicked():void {
+				if (model.screenreader)
+                	this.parentApplication.visible = true;
+                	
+				model.localSaveName = localSavedForms.selectedItem.data;
+				okFunctionRef.call(this);
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:HBox styleName="FramedBox">
+		<mx:Label id="localSavedForms_label" text="{resourceManager.getString(model.resources.bundleName, 'localsave_opensaved_label')}" />
+		<mx:ComboBox id="localSavedForms" 
+				  dataProvider="{localSavedList}"  width="330"/>
+	</mx:HBox>
+	
+	<mx:Canvas width="100%">			
+		<mx:Button id="button_ok" left="0" width="110" 
+					click="{ok_clicked()}"
+					label="{resourceManager.getString(model.resources.bundleName, button_ok.id)}"  styleName="default"/>
+					
+		<mx:Button id="button_cancel" left="120" width="110" 
+					click="{cancel_clicked()}"
+					label="{resourceManager.getString(model.resources.bundleName, button_cancel.id)}"  styleName="default"/>
+		
+	</mx:Canvas>
+	
+</mx:TitleWindow>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BasicFormBase xmlns="no.makingwaves.cust.dss.code.*" 
+			 xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+			 xmlns:mx="http://www.adobe.com/2006/mxml"
+			 creationComplete="activate()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.TravelAdvanceVO;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var travel_advance : TravelAdvanceVO;
+			
+			private var _introIntervaller : Number;
+			
+			private function init():void {
+				// add accessibility settings
+                model.accessibility.addAccessibility(advance_date_text, resourceManager.getString(model.resources.bundleName, advance_date.id+'_help') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+                model.accessibility.addAccessibility(advance_location, resourceManager.getString(model.resources.bundleName, advance_location.id+'_help'));
+                model.accessibility.addAccessibility(advance_value, resourceManager.getString(model.resources.bundleName, advance_value.id+'_help'));
+                
+				// add validators
+				this.addValidationField(advance_date_text, this.STRING, true, 8, 8);
+				this.addCustomStringValidation(advance_date_text, false, false, this.DATE);	
+				this.addCustomStringValidation(advance_value, false, true, this.VALIDATOR_FORMAT_DOUBLE);
+			}
+			
+			private function textDatefieldChanged(e:FocusEvent):void {
+				var textField:TextInput = TextInput(e.currentTarget);
+				if (this.validateCustomField(textField) && textField.text != "") {
+					var dateValues:Array = textField.text.split(".");
+					if (textField == this.advance_date_text) {
+						this.advance_date.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
+						this.travel_advance.date = advance_date.selectedDate;
+					}
+				}
+			}
+			
+			private function getValidAmount():Number {
+				if (this.validateCustomField(advance_value)) {
+					return Number(advance_value.text);
+				} else {
+					return null;
+				}
+			}
+			
+			// FOCUS INITIALIZERS ===============================================
+			public function activate():void {
+				intro.visible = true;
+				intro.enabled = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus();
+				} catch (e:Error) { trace("advance.activate: " + e.message); }
+			}
+			
+			private function introIn(e:FocusEvent):void {
+				if (e.target) {
+					_introIntervaller = setInterval(introInit, 1000);
+				} else {
+					try { focusManager.getNextFocusManagerComponent(true).setFocus();
+					} catch (e:Error) { trace("advance.introIn: " + e.message); }
+				}
+			}
+			
+			private function introOut(e:FocusEvent):void {
+				clearInterval(_introIntervaller);
+				intro.enabled = false;
+				intro.visible = false;
+				init();
+			}
+			
+			private function introInit():void {
+				clearInterval(_introIntervaller);
+				try { advance_date_text.setFocus();
+				} catch (e:Error) { trace("advance.introInit: " + e.message); }
+			}
+			// end of focusinitializers==========================================
+			
+		]]>
+	</mx:Script>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox id="common_specification" width="100%" paddingTop="10" paddingBottom="10">
+		<mx:HBox>
+			<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="introIn(event)" focusOut="introOut(event)" tabIndex="1201" />
+			
+			<mx:Label id="advance_date_label" width="{advance_location_label.width}" enabled="{advance_date_text.enabled}" 
+						text="{resourceManager.getString(model.resources.bundleName, advance_date_label.id)}" styleName="form" />
+			<mx:TextInput id="advance_date_text" width="70" maxChars="8" text="{this.getFormattedDate(this.travel_advance.date)}" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1202" />			
+			<mx:DateField id="advance_date" creationComplete="{dateField_init(advance_date)}" editable="true" width="17" visible="{!model.screenreader}"  tabEnabled="{!model.screenreader}"
+					showToday="true" tabIndex="1203"
+					change="{this.travel_advance.date = advance_date.selectedDate}"
+				    selectedDate="{this.travel_advance.date}" />
+			<mx:Text id="date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
+		</mx:HBox>
+					
+		<mx:HBox width="100%" paddingBottom="10">
+			<mx:Label id="advance_location_label" text="{resourceManager.getString(model.resources.bundleName, advance_location_label.id)}" styleName="form" />
+			<mx:TextInput id="advance_location" width="{model.fieldSizeMain}" tabIndex="1204"
+							text="{this.travel_advance.location}"
+							change="{this.travel_advance.location = advance_location.text}" />
+		</mx:HBox>
+		
+		<mx:HRule width="100%" />
+		
+		<mx:HBox width="100%" paddingTop="10">
+			<mx:Label id="advance_value_label" text="{resourceManager.getString(model.resources.bundleName, advance_value_label.id)}" styleName="form" />
+			<mx:TextInput id="advance_value" width="50" tabIndex="1205"
+							text="{this.travel_advance.cost}"
+							change="{this.travel_advance.cost = getValidAmount()}" />
+		</mx:HBox>
+		
+	</mx:VBox>
+</BasicFormBase>

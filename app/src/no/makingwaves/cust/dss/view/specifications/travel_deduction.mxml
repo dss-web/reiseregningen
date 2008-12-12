@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: BASE FORM INPUT VIEW FOR TRAVEL DEDUCTIONS -->
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:deduction="no.makingwaves.cust.dss.view.specifications.deduction.*"
+		xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+		xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+		creationComplete="init()" move="{removeHelpScreens()}" close="{removeHelpScreens()}"
+		title="{resourceManager.getString(model.resources.bundleName, 'deduction_headline_label')}">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import no.makingwaves.cust.dss.code.util.Util;
+			import no.makingwaves.cust.dss.vo.TravelDeductionVO;
+			import mx.effects.easing.Exponential;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.managers.PopUpManager;
+			import no.makingwaves.util.keycontroller.KeyCombo;
+			import no.makingwaves.util.keycontroller.KeyController;
+			import no.makingwaves.util.keycontroller.KeyControllerEvent;
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			[Bindable]
+			public var deduction : TravelDeductionVO;
+			
+			private var _editMode : Boolean;
+			
+			private var _keyController:KeyController;
+			
+			private function init(rePositionWindow:Boolean=true):void {
+				//PopUpManager.centerPopUp(this);
+                if (rePositionWindow) {
+                	this.x = (this.stage.width / 2) - (this.width / 2);
+					this.y += (model.positionParameter) - (this.height / 2);
+                }
+				
+				// initialize help text for this section
+				model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'deduction_intro_help'));
+                
+                // check for active/editable specification
+                if (deduction == null) {
+                	_editMode = false;
+                	deduction = new TravelDeductionVO();
+                } else {
+                	_editMode = true;
+                } 
+                // short-cuts
+                registerKeyCombos(); 
+                
+                if (model.screenreader)
+                	this.parentApplication.visible = false;   
+                	
+                initAccessibility();          
+            }
+			
+			private function initAccessibility():void {
+				if (!model.screenreader) {
+					try {
+						//this.accessibility_introtext.parent.removeChild(this.accessibility_introtext);
+						this.accessibility_introtext.visible = false;
+						this.accessibility_introtext.includeInLayout = false;
+					} catch (e:Error) { trace("travel_deduction.initAccessiblity: " + e.message); }
+					
+				} else {
+					this.accessibility_introtext.savelocal_infobtn.setFocus(); trace("setFocus travel_deduction initAccessibility")
+					//model.accessibility.addAccessibility(this.accessibility_introtext, model.helpTextPopUp);
+				}
+			}
+			
+			private function registerKeyCombos():void {
+				if (_keyController == null) {
+					_keyController = new KeyController(this);
+					// set keyboard shortcuts
+					_keyController.setKeyWatch(13); 					// ENTER
+					_keyController.setKeyWatch(27); 					// ESC
+					_keyController.addEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
+				}
+			}
+			
+			private function unregisterKeyCombos():void {
+				_keyController.removeEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
+				_keyController = null;
+			}
+		
+			private function keyComboPressed(event:KeyControllerEvent):void {
+				var pressedCombo:KeyCombo = event.keyCombo;
+				if (!pressedCombo.ctrl && !pressedCombo.shift && !pressedCombo.alt) {
+					if (pressedCombo.keyCode == 13) {
+						this.continueClicked();
+					} else if (pressedCombo.keyCode == 27) {
+						this.close();
+					}
+				}
+			}
+            
+            private function autoFillIn():void {
+            }
+            
+            private function continueClicked(addMoreMode:Boolean=false):void {
+            	if (validateForm()) {
+            		// submit data from the common form
+            		deduction = boxDeduction.submitData(deduction);
+            		// check wether deduction is already registered on this date
+            		var updated:Boolean = false;
+            		for (var i:Number = 0; i < model.travelDeductionList.length; i++) {
+            			var modelDate:Date = TravelDeductionVO(model.travelDeductionList.getItemAt(i)).date
+            			var deductionDate:Date = deduction.date;
+            			if (Util.formatDate(modelDate) == Util.formatDate(deductionDate)) {
+            				updated = true;
+            				model.travelDeductionList.setItemAt(deduction, i);
+            			}
+            		}
+            		// calculate this accomodation cost
+					model.calculator.calculateDeductions(deduction);
+					
+		            if (!_editMode && !updated)
+		            	model.travelDeductionList.addItem(boxDeduction.travel_deduction);
+		            	
+					if (!addMoreMode) {
+		            	this.close();
+		            } else {
+		            	this.clearFields();
+		            }
+	           }
+            }
+            
+            private function validateForm():Boolean {
+            	var validMain : Boolean = true;
+            	validMain = this.boxDeduction.validateDetailsForm();
+        		if (validMain) {
+            		validMain = this.boxDeduction.validateCustomFields();
+            	}
+            	return (validMain);
+            }
+
+            private function close():void {
+            	if (model.screenreader)
+                	this.parentApplication.visible = true;
+
+            	// remove validators
+	            this.boxDeduction.disableValidation();
+	            unregisterKeyCombos();
+            	// remove pop-up
+                this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+                //PopUpManager.removePopUp(this);
+            }
+            
+            private function clearFields():void {
+            	// reset references/bindings
+            	this.deduction = null;
+				unregisterKeyCombos();
+				boxDeduction.clearFields();
+				// reinitialize
+            	this.init(false);
+            	boxDeduction.activate();
+            }
+            
+            private function removeHelpScreens():void {
+            	try {
+            		boxDeduction.undisplayAllValidators();
+            	} catch (e:Error) { trace("travel_deduction.removeHelpScreens: " + e.message); }
+            }
+
+		]]>
+	</mx:Script>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" backgroundColor="#FFFFFF">
+		
+		<mx:Box id="accessibilitytext" width="100%">
+			<comp:infobutton id="accessibility_introtext" buttonTabIndex="1300" textReference="{model.helpTextPopUp}" />
+		</mx:Box>
+		
+		<mx:HBox width="100%">
+			
+	    	<deduction:deduction id="boxDeduction" width="100%" travel_deduction="{this.deduction}" />
+			
+			<mx:VRule height="100%" />
+			
+			<mx:VBox id="helpText" width="150" height="{boxDeduction.height}" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+				<mx:Text htmlText="{model.helpTextPopUp}" width="100%" />	
+			</mx:VBox>
+			
+		</mx:HBox>	
+	</mx:VBox>
+	
+	<mx:Canvas width="100%" styleName="WindowedNavigation">
+		<mx:HBox right="0">
+			<mx:Button id="button_cancel" styleName="secondary" height="22" tabIndex="1832"
+						click="{close()}"
+						label="{resourceManager.getString(model.resources.bundleName, button_cancel.id)}" />
+		
+			<mx:Button id="button_ok" styleName="secondary" height="22" tabIndex="1830"
+						click="{continueClicked()}" enabled="{boxDeduction.formValid}"
+						label="{resourceManager.getString(model.resources.bundleName, button_ok.id)}" />
+						
+			<mx:Button id="button_add_more" styleName="secondary" height="22" tabIndex="1831"
+						click="{continueClicked(true)}" enabled="{boxDeduction.formValid}"
+						label="{resourceManager.getString(model.resources.bundleName, button_add_more.id)}" />
+			</mx:HBox>	
+	</mx:Canvas>
+	
+</mx:TitleWindow>

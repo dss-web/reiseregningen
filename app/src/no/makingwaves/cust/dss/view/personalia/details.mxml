@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: FORM INPUT VIEW FOR PERSONAL INFORMATION -->
+
+<code:ValidationBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:personalia="no.makingwaves.cust.dss.view.personalia.*"
+			xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml"
+	 		paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
+			creationComplete="initPage()">
+
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.util.keycontroller.KeyCombo;
+			import no.makingwaves.util.keycontroller.KeyController;
+			import no.makingwaves.util.keycontroller.KeyControllerEvent;
+			import no.makingwaves.util.Util;
+			import mx.events.FlexEvent;
+			import no.makingwaves.cust.dss.vo.PostalCodeVO;
+			import mx.collections.ArrayCollection;
+			import no.makingwaves.cust.dss.vo.PersonalInfoVO;
+			
+			private const _labelWidth:Number = 145;
+			
+			private var _lastFocus:*
+			private var _introIntervaller : Number;
+						
+			private function initPage():void {
+				
+			}
+			
+			public function activate():void {
+				// add accessibility to fields
+				initAccessibility();
+				model.accessibility.addAccessibility(birthdate, resourceManager.getString(model.resources.bundleName, birthdate.id+'_label'));
+				model.accessibility.addAccessibility(firstname, resourceManager.getString(model.resources.bundleName, firstname.id+'_label'));
+				model.accessibility.addAccessibility(lastname, resourceManager.getString(model.resources.bundleName, lastname.id+'_label'));
+				model.accessibility.addAccessibility(adress, resourceManager.getString(model.resources.bundleName, adress.id+'_label'));
+				model.accessibility.addAccessibility(zip, resourceManager.getString(model.resources.bundleName, zip.id+'_label'));
+				//model.accessibility.addAccessibility(postoffice, resourceManager.getString(model.resources.bundleName, postoffice.id+'_label'));
+				model.accessibility.addAccessibility(jobtitle, resourceManager.getString(model.resources.bundleName, jobtitle.id+'_label'));
+				model.accessibility.addAccessibility(workplace, resourceManager.getString(model.resources.bundleName, workplace.id+'_label'));
+				//model.accessibility.addAccessibility(domicialname, resourceManager.getString(model.resources.bundleName, domicialname.id+'_label'));
+				model.accessibility.addAccessibility(domicialnum, resourceManager.getString(model.resources.bundleName, domicialnum.id+'_label'));
+				model.accessibility.addAccessibility(account, resourceManager.getString(model.resources.bundleName, account.id+'_label'));
+				model.accessibility.addAccessibility(department, resourceManager.getString(model.resources.bundleName, department.id+'_label'));
+				model.accessibility.addAccessibility(savelocal, resourceManager.getString(model.resources.bundleName, ''));
+				
+				// add validation to fields
+				this.addValidationField(birthdate, "StringValidator", true, 11, 11);
+				this.addValidationField(firstname);
+				this.addValidationField(lastname);
+				this.addValidationField(adress);
+				this.addValidationField(zip, "StringValidator", true, 4, 4);
+				this.addValidationField(account, "StringValidator", true, 11, 11);
+				// add custom validators
+				this.addCustomStringValidation(birthdate, false, true);
+				this.addCustomStringValidation(firstname, true);
+				this.addCustomStringValidation(lastname, true);
+				this.addCustomStringValidation(zip, false, true, this.VALIDATOR_FORMAT_TIME, 9999);
+				this.addCustomStringValidation(account, false, true);
+				// set assistance
+				setAssistance("personal_intro_help", model.PERSONAL);
+				// set init focus
+				intro.visible = true;
+				intro.enabled = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus();
+				} catch (e:Error) { trace("personalia.activate: " + e.message); }
+				// key short-cuts
+				registerKeyCombos();
+				// set default combo value
+				setDefaultDomicialValues();
+			}
+			
+			private function initAccessibility():void {
+				if (!model.screenreader) {
+					try {
+						accessibilitytext.removeChild(this.accessibility_introtext);
+					} catch (e:Error) { trace("personalia.initAccessibility: " + e.message);}
+					
+				} else {
+					//model.accessibility.addAccessibility(this.accessibility_introtext, resourceManager.getString(model.resources.bundleName, "personal_intro_help"));
+				}
+			}
+			
+			private function registerKeyCombos():void {
+				var keyController:KeyController = new KeyController(this);
+				// set keyboard shortcuts
+				keyController.setKeyWatch(13); 					// ENTER
+				keyController.addEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
+			}
+		
+			private function keyComboPressed(event:KeyControllerEvent):void {
+				var pressedCombo:KeyCombo = event.keyCombo;
+				if (!pressedCombo.ctrl && !pressedCombo.shift && !pressedCombo.alt) {
+					if (pressedCombo.keyCode == 13) {
+						this.continueClicked();
+					}
+				}
+			}
+			
+			private function setDefaultDomicialValues():void {
+				if (model.activePerson.domicialname != "") {
+					for (var i:Number = 0; i < this.domicialname.dataProvider.length; i++) {
+						if (ArrayCollection(this.domicialname.dataProvider).getItemAt(i).domicial == model.activePerson.domicialname) {
+							this.domicialname.selectedIndex = i;
+							this.domicialnum.text = ArrayCollection(this.domicialname.dataProvider).getItemAt(i).code;
+							break;
+						}												
+					}
+				}
+			}
+			
+			private function introIn(e:FocusEvent):void {
+				if (e.target) {
+					_introIntervaller = setInterval(introInit, 1000);
+				} else {
+					try { focusManager.getNextFocusManagerComponent(true).setFocus();
+					} catch (e:Error) { trace("personalia.introIn: " + e.message); }
+				}
+			}
+			
+			private function introOut(e:FocusEvent):void {
+				clearInterval(_introIntervaller);
+				intro.enabled = false;
+				intro.visible = false;
+			}
+			
+			private function introInit():void {
+				clearInterval(_introIntervaller);
+				if (!model.screenreader) {
+					try { this.birthdate.setFocus();
+					} catch (e:Error) { trace("personalia.introInit (1): " + e.message); }				
+				} else {
+					try { this.accessibility_introtext.savelocal_infobtn.setFocus();
+					} catch (e:Error) { trace("personalia.introInit (2): " + e.message); }
+				}
+			}
+			
+			public function saveData():void {
+				// clear assistance
+				setAssistance("", model.PERSONAL);
+				// collect data
+				model.activePerson.socialsecuritynumber = birthdate.text;
+				model.activePerson.firstname = firstname.text;
+				model.activePerson.lastname = lastname.text;
+				model.activePerson.adress = adress.text;
+				model.activePerson.zip = zip.text;
+				model.activePerson.postoffice = postoffice.text;
+				model.activePerson.jobtitle = jobtitle.text;
+				model.activePerson.workplace = workplace.text;
+				model.activePerson.domicialname = domicialname.selectedItem.domicial;
+				model.activePerson.account = account.text;
+				model.activePerson.department = department.text;
+				model.activePerson.domicialnum = domicialname.selectedItem.code;
+				
+				localSave();
+				setSummary();
+			} 
+			
+			private function localSave():void {
+				var saveData:SharedObject = SharedObject.getLocal("travelexpense_personalia");
+				trace("SharedObject is " + saveData.size + " bytes");
+				var personalInfo:PersonalInfoVO = model.activePerson;
+				if (!model.localSavePersonal && !model.localSaveName) {
+					// clear any locally saved data
+					personalInfo = null;
+				}
+				saveData.data.personalInfo = personalInfo;
+				try {
+					saveData.flush();
+					
+				} catch (e:Error) { trace("personalia.localSave: " + e.message); }
+			}
+			
+			private function setSummary() : void {
+				var summary : Array = new Array();
+				if (model.activePerson.firstname != "")
+					summary.push(model.activePerson.firstname + " " + model.activePerson.lastname);
+					
+				if (model.activePerson.jobtitle != "")
+					summary.push(model.activePerson.jobtitle);
+				
+				if (model.activePerson.workplace != "")
+					summary.push(model.activePerson.workplace);
+					
+				if (summary.length == 0)
+					summary.push("Personalia og jobbdetaljer er ikke ferdig utfylt.");
+
+				var summaryString:String = Util.searchAndReplace(summary.toString(), ",", "-");
+				summaryString = Util.searchAndReplace(summaryString, "-", ", ");
+				if (summaryString.length > 80) {
+					summaryString = summaryString.substr(0, 80) + "...";
+				}
+				model.summaryTextPersonal = summaryString;
+			}
+			
+			override public function validateDetailsForm():Boolean {
+				model.activePerson.valid = super.validateDetailsForm();
+				return model.validationStatusPersonal = model.activePerson.valid;
+			}
+			
+			private function collectPostOffice():void {
+				this.postoffice.text = "";
+				if (this.validateCustomField(zip)) {
+					for (var i:Number = 0; i < model.postOfficeCodes.length; i++) {
+						if (this.zip.text == PostalCodeVO(model.postOfficeCodes.getItemAt(i)).code) {
+							this.postoffice.text = PostalCodeVO(model.postOfficeCodes.getItemAt(i)).office;
+							break;						
+						}						
+					}
+				}
+			}
+			
+			private function saveLocalChanged(e:Event):void {
+				model.localSavePersonal = e.currentTarget.selected;
+				this.localSave();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HBox width="100%" visible="{this.enabled}">
+		<mx:VBox width="100%">
+			<mx:Box id="accessibilitytext" width="100%">
+				<comp:infobutton id="accessibility_introtext" buttonTabIndex="50" textReference="personal_intro_help" accessibilityLabel="{resourceManager.getString(model.resources.bundleName, 'header_personal')}"
+							 enabled="{model.screenreader}" visible="{model.screenreader}" />
+<!--			
+				<mx:TextInput id="accessibility_introtext" tabIndex="50" width="0" height="0" editable="false" styleName="accessibilityInfo"
+						  focusIn="{accessibilityFocusIn(event)}"
+						  text="{resourceManager.getString(model.resources.bundleName, 'personal_intro_help')}" />
+-->						  
+			</mx:Box>
+			<mx:TextInput id="intro" width="0" height="0" alpha="0" tabIndex="51" 
+							focusIn="introIn(event)" focusOut="introOut(event)" enabled="{this.enabled}" />
+			<mx:HBox width="100%">
+				<mx:Label id="birthdate_label" text="{resourceManager.getString(model.resources.bundleName, birthdate_label.id) + ' *'}" width="{_labelWidth}" styleName="form" />
+				<mx:TextInput id="birthdate" name="birthdate" width="{model.fieldSizeMain*.50}" maxChars="11" enabled="{this.enabled}"
+							text="{model.activePerson.socialsecuritynumber}" tabIndex="52" />
+				<mx:Text id="number_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_11numbers')}" />
+							
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label id="fullname_label" text="{resourceManager.getString(model.resources.bundleName, fullname_label.id) + ' *'}" width="{_labelWidth}" styleName="form" />
+				<mx:TextInput id="firstname" name="firstname" width="{model.fieldSizeMain*.4}" enabled="{this.enabled}"
+							text="{model.activePerson.firstname}" tabIndex="53" />
+				
+				<mx:TextInput id="lastname" name="lastname" width="{model.fieldSizeMain*.6}" enabled="{this.enabled}"
+							text="{model.activePerson.lastname}"  tabIndex="54" />
+				
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label id="adress_label" text="{resourceManager.getString(model.resources.bundleName, adress_label.id) + ' *'}" width="{_labelWidth}" styleName="form" />
+				<mx:TextInput id="adress" name="adress" width="{model.fieldSizeMain}" enabled="{this.enabled}"
+							text="{model.activePerson.adress}" tabIndex="55" />
+				
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label id="zip_label" text="{resourceManager.getString(model.resources.bundleName, zip_label.id) + ' *'}" width="{_labelWidth}" styleName="form" />
+				<mx:TextInput id="zip" name="zip" width="{model.fieldSizeMain*.25}" maxChars="4" enabled="{this.enabled}"
+							text="{model.activePerson.zip}"  tabIndex="56"
+							focusOut="{collectPostOffice()}" />
+				
+				<mx:Text id="postoffice" name="postoffice" width="{model.fieldSizeMain*.71}" enabled="{this.enabled}" paddingTop="2"
+							text="{model.activePerson.postoffice}" tabEnabled="false" />
+				
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label id="account_label" text="{resourceManager.getString(model.resources.bundleName, account_label.id) + ' *'}" width="{_labelWidth}" styleName="form" />
+				<mx:TextInput id="account" name="account" width="{model.fieldSizeMain*.50}" maxChars="11" enabled="{this.enabled}"
+							text="{model.activePerson.account}" tabIndex="57" />
+				<mx:Text id="number_help2" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_11numbers')}" />
+							
+			</mx:HBox>
+		</mx:VBox>
+		
+		<mx:VRule height="100%" />
+		
+		<mx:VBox width="100%">
+			<mx:HBox>
+				<mx:Label id="jobtitle_label" text="{resourceManager.getString(model.resources.bundleName, jobtitle_label.id)}" width="{_labelWidth}" styleName="form" />
+				<mx:TextInput id="jobtitle" name="jobtitle" width="{model.fieldSizeMain}" enabled="{this.enabled}"
+							text="{model.activePerson.jobtitle}"  tabIndex="58" />
+							 
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label id="workplace_label" text="{resourceManager.getString(model.resources.bundleName, workplace_label.id)}" width="{_labelWidth}" styleName="form" />
+				<mx:TextInput id="workplace" name="workplace" width="{model.fieldSizeMain}" enabled="{this.enabled}"
+							text="{model.activePerson.workplace}" tabIndex="59" />
+							
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label id="department_label" text="{resourceManager.getString(model.resources.bundleName, department_label.id)}" width="{_labelWidth}" styleName="form" />
+				<mx:TextInput id="department" name="department" width="{model.fieldSizeMain}" enabled="{this.enabled}"
+							 text="{model.activePerson.department}"  tabIndex="60" />
+							 
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label id="domicialname_label" text="{resourceManager.getString(model.resources.bundleName, domicialname_label.id)}" width="{_labelWidth}" styleName="form" />
+				<mx:Text id="domicialnum" enabled="{this.enabled}" paddingTop="2"
+							text="{model.activePerson.domicialnum}" />
+							
+				<mx:ComboBox id="domicialname" name="domicialname" width="{model.fieldSizeMain*.71}" enabled="{this.enabled}"
+								dataProvider="{model.domicialNumberCodes}" labelField="domicial" tabIndex="62"
+								change="{domicialnum.text = domicialname.selectedItem.code}" />
+							
+			</mx:HBox>
+		</mx:VBox>
+	</mx:HBox>
+	
+	<mx:HBox width="100%" paddingLeft="50" visible="{this.enabled}">
+		<mx:HBox>
+			<mx:CheckBox id="savelocal" tabIndex="63" selected="{model.localSavePersonal}"
+						label="{resourceManager.getString(model.resources.bundleName, savelocal.id+'_label')}" 
+						labelPlacement="right" paddingTop="20" paddingLeft="20" enabled="{this.enabled}"
+					    change="{saveLocalChanged(event)}" />
+			
+			<mx:Box paddingTop="20">
+				<comp:infobutton id="savelocal_infobtn" buttonTabIndex="64" textReference="savelocal_help" />
+			</mx:Box>
+			
+		</mx:HBox>
+		<mx:Canvas width="100%" height="100%">
+			<mx:Button id="button_continue" right="0" styleName="default" width="110" height="30" bottom="0" visible="true" enabled="{this.enabled}"
+						label="{resourceManager.getString(model.resources.bundleName, button_continue.id)}" tabIndex="65"
+						click="{continueClicked()}" />
+		</mx:Canvas>
+	</mx:HBox>
+	
+</code:ValidationBase>

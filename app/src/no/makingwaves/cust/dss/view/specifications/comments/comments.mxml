@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BasicFormBase xmlns="no.makingwaves.cust.dss.code.*" 
+			 xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+			 xmlns:mx="http://www.adobe.com/2006/mxml"
+			 creationComplete="activate()">
+	
+	<!-- <mx:Style source="assets/reiseregning.css"/> -->
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.TravelCommentVO;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var travel_comment : TravelCommentVO;
+			[Bindable]
+			public var formValid : Boolean = false;
+			
+			private var _introIntervaller : Number;
+			
+			private function init():void {
+				// add accessibility
+				model.accessibility.addAccessibility(notes_note, resourceManager.getString(model.resources.bundleName, notes_note.id+'_label'));
+				setValidationStatus();
+			}
+			
+			// FOCUS INITIALIZERS ===============================================
+			public function activate():void {
+				intro.visible = true;
+				intro.enabled = true;
+				intro.focusManager.showFocusIndicator = false;
+				try { intro.setFocus();
+				} catch (e:Error) { trace("comments.activate: " + e.message); }
+			}
+			
+			private function introIn(e:FocusEvent):void {
+				if (e.target) {
+					_introIntervaller = setInterval(introInit, 1000);
+				} else {
+					try { focusManager.getNextFocusManagerComponent(true).setFocus();
+					} catch (e:Error) { trace("comments.introIn: " + e.message); }
+				}
+			}
+			
+			private function introOut(e:FocusEvent):void {
+				clearInterval(_introIntervaller);
+				intro.enabled = false;
+				intro.visible = false;
+				init();
+			}
+			
+			private function introInit():void {
+				clearInterval(_introIntervaller);
+				try { notes_note.setFocus();
+				} catch (e:Error) { trace("comments.introInit: " + e.message); }
+			}
+			// end of focusinitializers==========================================
+			
+			public function setValidationStatus():void {
+				this.formValid = (notes_note.text == "") ? false : true;
+			}
+		]]>
+	</mx:Script>
+	
+	<!-- CONTENT ====================================================================== -->
+	<mx:VBox id="common_specification" width="100%" paddingTop="10" paddingBottom="10">
+		<mx:HBox>
+			<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="introIn(event)" focusOut="introOut(event)" tabIndex="1101" />
+			<mx:Label id="notes_note_label" text="{resourceManager.getString(model.resources.bundleName, notes_note_label.id)}" styleName="form" />
+			<mx:TextArea id="notes_note" width="{model.fieldSizeMain*2}" height="{model.fieldSizeMain}" tabIndex="1102" 
+					text="{this.travel_comment.comment}"
+					change="{this.travel_comment.comment = notes_note.text; setValidationStatus();}" />
+		</mx:HBox>
+	</mx:VBox>
+</BasicFormBase>

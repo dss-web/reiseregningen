@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- SHORT DESC: VALIDATION ERROR INFOBOX -->
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+			creationComplete="initPage()" focusEnabled="true"
+			click="removeMe()">
+	
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.code.ValidationBase;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import mx.core.UIComponent;
+			import mx.managers.PopUpManager;
+			import mx.managers.IFocusManagerComponent;
+			import mx.managers.IFocusManagerContainer;
+			
+			[Bindable]
+			public var validationText : String = "";
+			
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			public var nextFocusComponent : UIComponent;
+			public var callFromContainer : ValidationBase;
+			
+			private var _initialized:Boolean = false;
+			private var _closeOnInit:Boolean = false;
+						
+			private function initPage():void {
+				fadein.play([this]);
+				try { validationTextDisplayer.setFocus();
+				} catch (e:Error) { trace("validationDisplayer.initPage: " + e.message); }
+				
+				var shadow:DropShadowFilter = new DropShadowFilter();
+				shadow.distance = 5;
+				shadow.angle = 25;
+				shadow.alpha = .4;
+				boxShadow.filters = [shadow];
+				
+				model.accessibility.addAccessibility(validationTextDisplayer, validationText);
+			}
+			
+			private function initFocus():void {	
+				// change focus
+				IFocusManagerContainer(this).focusManager.deactivate();
+				IFocusManagerContainer(nextFocusComponent.parent).focusManager.activate();
+				focusManager.setFocus(IFocusManagerComponent(nextFocusComponent))
+				// set validating to complete
+				callFromContainer.isValidating = false;
+				
+				// validator is initialized
+				_initialized = true;
+				// should it close on open?
+				if (_closeOnInit) {
+					this.close();
+				}
+			}
+			
+			private function closeMe():void {
+				if (_initialized) {
+					PopUpManager.removePopUp(this);
+				} else {
+					// validator is trying to close before it has been initialized
+					// close on init instead
+					_closeOnInit = true;
+				}
+			}
+			
+			private function removeMe():void {
+				callFromContainer.undisplayAllValidators();
+			}
+			
+			public function hide():void {
+				fadeout.play([this]);
+			} 
+			
+			public function close():void {
+				closeMe();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Fade id="fadein" alphaFrom="0" alphaTo="1" duration="500" target="{this}" effectEnd="{initFocus()}" />
+	<mx:Fade id="fadeout" alphaFrom="1" alphaTo="0" duration="500" target="{this}" effectEnd="{closeMe()}" />
+	
+	<mx:HBox id="boxShadow" styleName="HelpBox">
+		<mx:Label id="validationTextDisplayer" text="{validationText}" selectable="false" paddingBottom="3" paddingTop="3" paddingLeft="3" paddingRight="3" />
+	</mx:HBox>
+</mx:Canvas>

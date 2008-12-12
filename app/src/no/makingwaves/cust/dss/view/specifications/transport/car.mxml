@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code:BasicFormBase
+			xmlns:code="no.makingwaves.cust.dss.code.*"
+			xmlns:view="no.makingwaves.cust.dss.view.*"
+			xmlns:common="no.makingwaves.cust.dss.view.specifications.transport.common.*"
+			xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+			creationComplete="init()">
+			
+	<mx:Script>
+		<![CDATA[
+			import no.makingwaves.cust.dss.vo.CarSpecificationVO;
+			import mx.events.ValidationResultEvent;
+			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			
+			[Bindable]
+			public var travelspecifications : TravelSpecificationVO;
+			[Bindable]
+			public var carspecifications : CarSpecificationVO;
+			
+			private function init():void {
+				carspecifications = new CarSpecificationVO();				
+				try {
+					if (travelspecifications.specification != null) {
+						carspecifications = travelspecifications.specification;
+					}
+				} catch (e:Error) { 
+					trace("car.init: " + e.message);
+					carspecifications = new CarSpecificationVO();
+				}
+				
+				// add accessibility
+                model.accessibility.addAccessibility(car_km_calenderyear_radio1, resourceManager.getString(model.resources.bundleName, 'car_km_calenderyear_label'));
+                model.accessibility.addAccessibility(car_km_calenderyear_radio2, resourceManager.getString(model.resources.bundleName, 'car_km_calenderyear_label'));
+                model.accessibility.addAccessibility(car_passengers, resourceManager.getString(model.resources.bundleName, car_passengers_label.id+'_label'));
+                model.accessibility.addAccessibility(car_forrestroad_chk, resourceManager.getString(model.resources.bundleName, car_forrestroad_chk.id+'_label'));
+                model.accessibility.addAccessibility(car_forrestroad_km, resourceManager.getString(model.resources.bundleName, car_forrestroad_km.id+'_label'));
+                model.accessibility.addAccessibility(car_addon_hanger_chk, resourceManager.getString(model.resources.bundleName, car_addon_hanger_chk.id+'_label'));
+                // add validation
+                this.addCustomStringValidation(car_forrestroad_km, false, true);
+                this.addCustomStringValidation(car_passengers, false, true);
+			}
+			
+			override public function validateDetailsForm():Boolean {
+				var validation:Boolean = super.validateDetailsForm();
+				if (validation)
+					validation = distance.validateAll();
+					
+				if (validation) {
+					if (this.car_km_calenderyear.selectedValue != carspecifications.TYPE_ABOVE_9000KM && this.car_km_calenderyear.selectedValue != carspecifications.TYPE_BELOW_9000KM) {
+						validation = false;
+						var validationText:String = resourceManager.getString(model.resources.bundleName, "car_forrestroad_km_validator");;
+						this.showValidationError(this.car_km_calenderyear_radio2, validationText);
+					}
+				}
+				return validation;
+			}
+             
+			override public function submitData(specifications:*):* {
+				//if (specifications.specification == null) { specifications.specification = new CarSpecificationVO(); }
+				carspecifications.distance = distance.getDistance();
+				carspecifications.distance_calender = Number(car_km_calenderyear.selectedValue);
+				carspecifications.distance_forestroad = (car_forrestroad_km.enabled) ? Number(car_forrestroad_km.text) : 0;
+				carspecifications.additional_trailer = Boolean(car_addon_hanger_chk.selected);
+				carspecifications.passengers = Number(car_passengers.text);
+				carspecifications.additional_workplace = (model.activePerson.domicialnum == "1902");
+				//carspecifications.cost.cost = carspecifications.distance * carspecifications.rate;
+				specifications.specification = carspecifications;
+	           	return TravelSpecificationVO(specifications);
+            }
+		]]>
+	</mx:Script>
+
+	<mx:HBox paddingTop="10" paddingBottom="10" width="100%">
+		
+		<common:distance id="distance" width="100%" paddingTop="10" paddingRight="10" travelspecifications="{travelspecifications}" />
+		
+		<mx:VBox id="distancebox" width="100%" paddingLeft="10">
+			<mx:Label id="car_km_calenderyear_label" text="{resourceManager.getString(model.resources.bundleName, car_km_calenderyear_label.id)}" styleName="form" />
+			<mx:HBox id="distance_year">
+				<mx:RadioButtonGroup id="car_km_calenderyear" 
+										selectedValue="{carspecifications.distance_calender}" />
+										
+				<mx:RadioButton id="car_km_calenderyear_radio1" tabIndex="1650"
+								label="{resourceManager.getString(model.resources.bundleName, car_km_calenderyear_radio1.id)}"
+								value="{new CarSpecificationVO().TYPE_BELOW_9000KM}" 
+								groupName="car_km_calenderyear" />
+								
+				<mx:RadioButton id="car_km_calenderyear_radio2" tabIndex="1651" 
+								label="{resourceManager.getString(model.resources.bundleName, car_km_calenderyear_radio2.id)}" 
+								value="{new CarSpecificationVO().TYPE_ABOVE_9000KM}" 
+								groupName="car_km_calenderyear" />
+								
+			</mx:HBox>
+		</mx:VBox>
+	
+	</mx:HBox>
+	
+	<mx:HRule width="100%" />
+	
+	<mx:VBox paddingTop="10" paddingBottom="10" width="100%">
+		<mx:HBox id="forrestroad">
+			<mx:CheckBox id="car_forrestroad_chk"  styleName="form" tabIndex="1652"
+							selected="{(carspecifications.distance_forestroad!=0)}"
+							label="{resourceManager.getString(model.resources.bundleName, car_forrestroad_chk.id+'_label')}"
+							labelPlacement="right" />
+			
+			<mx:TextInput id="car_forrestroad_km" width="60" paddingLeft="5" tabIndex="1653"
+							text="{carspecifications.distance_forestroad}"
+							enabled="{car_forrestroad_chk.selected}" />
+							
+			<mx:Label text="km" /> 
+		</mx:HBox>
+		
+		<mx:CheckBox id="car_addon_hanger_chk"  styleName="form" tabIndex="1654"
+						selected="{carspecifications.additional_trailer}"
+						label="{resourceManager.getString(model.resources.bundleName, car_addon_hanger_chk.id+'_label')}"
+						labelPlacement="right" />
+		
+		<mx:HBox id="passengers" paddingTop="10">
+			<mx:TextInput id="car_passengers" width="60" maxChars="1" tabIndex="1655"
+							text="{carspecifications.passengers}" />
+			<mx:Label id="car_passengers_label" text="{resourceManager.getString(model.resources.bundleName, car_passengers_label.id)}" styleName="form" />
+		</mx:HBox>
+	</mx:VBox>
+		
+	<mx:HRule height="100%" />
+
+</code:BasicFormBase>

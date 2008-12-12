@@ -1,0 +1,1214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+				xmlns:business="no.makingwaves.cust.dss.business.*"
+    			xmlns:control="no.makingwaves.cust.dss.control.*"
+    			xmlns:components="no.makingwaves.cust.dss.view.components.*"
+    			xmlns:personal="no.makingwaves.cust.dss.view.personalia.*"
+    			xmlns:travel="no.makingwaves.cust.dss.view.travel.*"
+    			xmlns:specifications="no.makingwaves.cust.dss.view.specifications.*"
+    			xmlns:settlement="no.makingwaves.cust.dss.view.settlement.*"
+    			xmlns:events="flash.events.*"
+    			frameRate="31" paddingTop="0" paddingBottom="0"
+    			applicationComplete="onCreationComplete()"
+				layout="vertical" backgroundColor="#F5F5F5" width="100%" height="100%"
+				updateComplete="com.webapper.autoscroll.AutoScroll.autoScroll(event);"
+		        focusIn="com.webapper.autoscroll.AutoScroll.autoScroll(event);" 
+		        scroll="{listenToScrollbar()}"
+		        modalTransparency="0.5"  
+				modalTransparencyBlur="0"  
+				modalTransparencyColor="0x525250"
+				modalTransparencyDuration="100">
+
+	<mx:Style source="assets/reiseregning.css"/>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.EffectEvent;
+			import mx.events.StateChangeEvent;
+			import mx.collections.SortField;
+			import mx.collections.Sort;
+			import mx.collections.ArrayCollection;
+			import mx.managers.IFocusManagerComponent;
+			import mx.managers.PopUpManager;
+            import mx.core.UIComponent;
+			import mx.core.Container;
+			import mx.core.IFlexDisplayObject;
+            import mx.effects.easing.Exponential;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import no.makingwaves.cust.dss.model.ModelLocator;
+			import no.makingwaves.util.keycontroller.KeyCombo;
+			import no.makingwaves.util.keycontroller.KeyController;
+			import no.makingwaves.util.keycontroller.KeyControllerEvent;
+			import no.makingwaves.cust.dss.view.components.save_form;
+			import no.makingwaves.cust.dss.view.components.saved_forms;
+			import no.makingwaves.cust.dss.view.components.custom_alert;
+			import no.makingwaves.cust.dss.view.components.custom_dialog;
+			import no.makingwaves.cust.dss.vo.TravelExpenseVO;
+			import no.makingwaves.cust.dss.vo.PersonalInfoVO;
+			import no.makingwaves.cust.dss.vo.TravelVO;
+			import no.makingwaves.cust.dss.events.GetTravelXmlEvent;
+			import no.makingwaves.cust.dss.events.LocalSaveEvent;
+			import no.makingwaves.cust.dss.events.OpenTravelXmlEvent;
+			import no.makingwaves.cust.dss.code.AccessibilityDistributer;
+			import no.makingwaves.cust.dss.code.Initializer;
+			import com.webapper.autoscroll.AutoScroll;
+							
+			[Bindable]
+			public var model : ModelLocator = ModelLocator.getInstance();
+			
+			private var alertWindow:IFlexDisplayObject;
+			private var addWindow:IFlexDisplayObject;
+			private var lastFocus:*;
+			private var newarr:*;
+			
+			private var resizeHeight1 : Number;
+			private var resizeHeight2 : Number;
+			
+			private var importFileReference : FileReference;
+			
+			/**
+			  * Called when application initialization is complete
+			  * Starts initializer and prepares application to startup	
+			  */
+			private function onCreationComplete():void {
+				// start initializing application
+				model.accessibility = new AccessibilityDistributer(this);
+				
+				model.initializer = new Initializer(this);
+				model.initializer.run();
+				
+				model.screenreader = flash.accessibility.Accessibility.active;
+				model.runTransitions = !model.screenreader;
+			}
+			
+			/**
+			  * Called when the 'base' state starts, which is when the Initializer has completed 
+			  * its initializations. Inits accessibility settings, inits navigation and displays app.
+			  */
+			private function applicationReady():void {
+				// add accessibility	
+				model.accessibility.addAccessibility(this.header, resourceManager.getString(model.resources.bundleName, 'site_header'));
+				model.accessibility.addAccessibility(this.helpTextPersonal, resourceManager.getString(model.resources.bundleName, helpTextPersonal.text));
+				this.navigation.init();
+				
+				var t:Timer = new Timer(500,1);
+				t.addEventListener(TimerEvent.TIMER_COMPLETE, displayApplication);
+				t.start();
+			}
+			
+			/**
+			  * Animates the application into display	
+			  */
+			private function displayApplication(e:TimerEvent):void {
+				// fade app in
+				try {
+					this.fx_resize.heightTo = 0;
+					this.fx_resize.duration = 2000;
+					this.fx_resize.play([this.intromask]);
+					this.fx_resize.addEventListener(EffectEvent.EFFECT_END, applicationDisplayed);
+										
+				} catch(e:Error) { trace("displayApplication: " + e.message); }
+			}
+			
+			private function applicationDisplayed(e:EffectEvent):void {
+				appholder.verticalScrollPolicy = "auto";
+				try {
+					this.appholder.removeChild(this.intromask);
+					this.fx_resize.removeEventListener(EffectEvent.EFFECT_END, applicationDisplayed);
+				} catch(e:Error) { trace("remove intromask: " + e.message); }
+			}
+			
+			/**
+			  * Initializes a form and collects any locally saved personal info	
+			  */
+			public function initForms():void {
+				if (model.localSaveName == "" && (model.xmlImportId == "" || model.xmlImportId == null)) {
+					// if this is a new form, check wether local personal data is saved
+					try {
+						// try to collect locally saved personal info
+						var travelForm:SharedObject = SharedObject.getLocal("travelexpense_personalia");
+						var personalInfo:PersonalInfoVO = PersonalInfoVO(travelForm.data.personalInfo);
+						if (personalInfo != null) {
+							model.activePerson = personalInfo;
+							model.localSavePersonal = true;						
+						}					
+					} catch(e:Error) { trace("initForms: " + e.message); }
+				}
+					
+				//  enable and display first form
+				personal_details_base.enabled = true;
+			    personal_summary_base.enabled = true;
+			    travel_details_base.enabled = true;
+			    travel_summary_base.enabled = true;
+			    specifications_details_base.enabled = true;
+			    specifications_summary_base.enabled = true;
+			    settlement_details_base.enabled = true;
+			    settlement_summary_base.enabled = true;
+			    
+			    model.validationStatusPersonal = model.isPersonalInfoValid();	//model.activePerson.valid;
+				model.validationStatusTravel = model.isTravelInfoValid(); 		//model.activeTravel.valid;
+				model.validationStatusSpecs = model.isTravelInfoValid();
+				model.validationStatusSettlement = model.isSettlementValid();
+					
+			    // open first form view
+			    model.stateDistributer.openView(model.stateDistributer.PERSONAL, false);
+				// initalize key combos
+				registerKeyCombos();
+				
+				// set initial summaryTexts
+				model.summaryTextPersonal = resourceManager.getString(model.resources.bundleName, "summary_personal_default");
+				if (model.activeTravel.valid) {
+					this.travel_details_base.setSummary();
+				} else {
+					model.summaryTextTravel = resourceManager.getString(model.resources.bundleName, "summary_travel_default");
+				}
+				model.summaryTextSpecifications = resourceManager.getString(model.resources.bundleName, "summary_specifications_default");
+				model.summaryTextSettlements = resourceManager.getString(model.resources.bundleName, "summary_settlement_default");
+				
+				// add listener to save locally on state change
+				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, stateChanged);
+				
+				// register travel expense form as open, for navigation purposes
+				model.travelExpenseOpen = true;
+				
+				model.calculator.calculate();
+				
+				// set sorting settings
+				setCollectionSorting();
+				
+			}
+			
+			private function listenToScrollbar():void {
+				//trace("listenToScrollbar");
+				if (this.verticalScrollBar) {
+					//if (!this.verticalScrollBar.hasEventListener(MouseEvent.MOUSE_DOWN))
+					this.verticalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, mouseScrollController);
+					this.verticalScrollBar.addEventListener(MouseEvent.MOUSE_UP, mouseScrollController);
+					this.verticalScrollBar.addEventListener(MouseEvent.MOUSE_UP, mouseScrollController, true);
+				}
+			}
+			
+			private function mouseScrollController(e:MouseEvent):void {
+				trace("mouseScrollController: " + e.buttonDown);
+				AutoScroll.isMouseScrolling = e.buttonDown;
+			}
+			
+			/* local save: obsolite function
+			public function openSavedForm():void {
+				var addWindow:IFlexDisplayObject;
+				addWindow = PopUpManager.createPopUp(this, saved_forms, true);
+				saved_forms(addWindow).okFunctionRef = openForms;
+			}
+			*/
+			
+			/* local save: obsolite function
+			public function openForms():void {
+				try {
+					var travelForm:SharedObject = SharedObject.getLocal(model.localSaveName);
+					var travelExpense:TravelExpenseVO = TravelExpenseVO(travelForm.data.travelExpense);
+					model.activePerson = travelExpense.personalinfo;
+					model.activeTravel = travelExpense.travel;
+					model.travelSpecsList = travelExpense.specificationList;
+					model.travelAccomodationList = travelExpense.accomodationList;
+					model.travelAdvanceList = travelExpense.travelAdvanceList;
+					model.travelCommentList = travelExpense.travelCommentList;
+					model.travelDeductionList = travelExpense.travelDeductionList;
+					model.travelOutlayList = travelExpense.travelOutlayList;
+					
+					model.validationStatusPersonal = model.activePerson.valid;
+					model.validationStatusTravel = model.activeTravel.valid;
+					
+					model.calculator.calculate();
+					
+				} catch (e:Error) {
+					// ignore
+					trace("Error collecting locally saved data. " + e.message);
+				}
+								
+				initForms();
+			}
+			*/
+			
+			/**
+			  * Called when a new form is to be created	
+			  */
+			public function newForm():void {
+				if (model.travelExpenseOpen) {
+					// if a travel expense is open, ask wether to discard current form to ask new
+					var titleText:String = resourceManager.getString(model.resources.bundleName, "newform_dialog_title");
+					var alertText:String = resourceManager.getString(model.resources.bundleName, "newform_dialog_question");
+					// show alert box
+					var alertWindow:mx.core.IFlexDisplayObject;
+					alertWindow = PopUpManager.createPopUp(this, custom_dialog, true);
+					custom_dialog(alertWindow).alertText = alertText;
+					custom_dialog(alertWindow).title = titleText;
+					custom_dialog(alertWindow).okFunctionRef = initNewForm;
+					//custom_dialog(alertWindow).cancelFunctionRef = useractionAbortTypeChange;
+				} else {
+					initNewForm();
+				}
+				
+			}
+			
+			/**
+			  * Initializes a new form 	
+			  */
+			public function initNewForm():void {
+				try {
+					model.stateDistributer.openView("base", true);//setCurrentState("", false);
+					model.initialize();
+					
+				} catch (e:Error) {
+					trace("Error opening new travel expense form. " + e.message);
+					
+				} finally {
+					initForms();
+				}
+			}
+			
+			/**
+			  * Displays a dialog if a travel expense form is open, before importing a saved form	
+			  */
+			public function importForms():void {
+				if (model.travelExpenseOpen) {
+					// if a travel expense is open, ask wether to discard current form to ask new
+					var titleText:String = resourceManager.getString(model.resources.bundleName, "newform_dialog_title");
+					var alertText:String = resourceManager.getString(model.resources.bundleName, "newform_dialog_question");
+					// show alert box
+					var alertWindow:mx.core.IFlexDisplayObject;
+					alertWindow = PopUpManager.createPopUp(this, custom_dialog, true);
+					custom_dialog(alertWindow).alertText = alertText;
+					custom_dialog(alertWindow).title = titleText;
+					custom_dialog(alertWindow).okFunctionRef = initImportForms;
+				} else {
+					initImportForms();
+				}
+			}
+			
+			/**
+			  * Starts the process of importing a saved form	
+			  */
+			public function initImportForms():void {
+				//this.setCurrentState("base", model.runTransitions);
+				model.stateDistributer.openView("base");
+				var travelExpenseFilter:FileFilter = new FileFilter("Reiseregning Xml File (*.xml)", "*.xml");
+				importFileReference = new FileReference();
+				importFileReference.addEventListener(Event.SELECT, selectHandler);
+				importFileReference.addEventListener(Event.COMPLETE, completeHandler);
+				importFileReference.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, completeDataHandler );
+				try {
+				    var success:Boolean = importFileReference.browse(new Array(travelExpenseFilter));
+				   
+				} catch (error:Error) {
+				    trace("Unable to browse for files.");
+				}
+				
+				function selectHandler(event:Event):void {
+					try {
+						var uploadUrlRequest:URLRequest = new URLRequest();
+						uploadUrlRequest.url = getResourceUrl("ws_xml_uploader");
+				        importFileReference.upload(uploadUrlRequest);
+				
+				    } catch (error:Error) {
+				        trace("Unable to download file.");
+				    }
+				}
+				
+				function completeHandler(event:Event):void {
+				    trace("xml file uploaded");
+				}
+				
+				function completeDataHandler(e:DataEvent):void {
+				    trace("uploaded data");//<result><storedid>5135bd717bd54855a6492f67bb3c53870</storedid></result>
+				    var eventData:String = e.data;
+				    var startId:String = "<storedid>"
+				    var endId:String = "</storedid>"
+				    if (eventData.indexOf(startId) != -1) {
+				    	// stored id returned -> get it
+				    	model.xmlImportId = eventData.substring(eventData.indexOf(startId)+startId.length, eventData.indexOf(endId)); 
+				    	// call and collect xml data
+				    	var event:CairngormEvent = new CairngormEvent( OpenTravelXmlEvent.OPEN_TRAVEL_PDF );
+						CairngormEventDispatcher.getInstance().dispatchEvent( event );				    	
+				    }
+				    
+				}
+			}
+			
+			private function getResourceUrl(id:String):String {
+				var resourceList:ArrayCollection = model.resourceList;
+				for (var i:Number = 0; i < resourceList.length; i++) {
+					if (resourceList.getItemAt(i).id == id) {
+						return resourceList.getItemAt(i).url;
+					}
+				}
+				return "";
+			}
+
+			/**
+			  * Sets sorting rules for different form input in the application	
+			  */
+			private function setCollectionSorting():void {
+				var sortFromTo:Sort = new Sort();
+				var sortFieldFromTo:SortField = new SortField();
+				sortFieldFromTo.compareFunction = dateFromToSortCompareFunction;
+				sortFieldFromTo.descending = true;
+				sortFromTo.fields = [sortFieldFromTo];
+				
+				var sortDate:Sort = new Sort();
+				var sortFieldDate  :SortField = new SortField();
+				sortFieldDate.compareFunction = dateSortCompareFunction;
+				sortFieldDate.descending = true;
+				sortDate.fields = [sortFieldDate];		
+				
+				var sort_fromTo:Sort = new Sort();
+				var sortField_fromTo:SortField = new SortField();
+				sortField_fromTo.compareFunction = date_fromToSortCompareFunction;
+				sortField_fromTo.descending = true;
+				sort_fromTo.fields = [sortField_fromTo];		
+								
+				model.travelSpecsList.sort = sort_fromTo;
+				model.travelAdvanceList.sort = sortDate;
+				model.travelDeductionList.sort = sortDate;
+				model.travelOutlayList.sort = sortDate;
+				model.travelAccomodationList.sort = sortFromTo;
+				
+				model.travelSpecsList.refresh();
+				model.travelAdvanceList.refresh();
+				model.travelDeductionList.refresh();
+				model.travelOutlayList.refresh();
+				model.travelAccomodationList.refresh();
+			}
+			
+			/**
+			  * Sorting function	
+			  */
+			private function dateSortCompareFunction(obj1:Object, obj2:Object):int {
+				if (obj1.date > obj2.date) {
+					return -1;
+				} else if (obj1.date < obj2.date) {
+					return 1;
+				}
+				return 0;
+			}
+			
+			/**
+			  * Sorting function	
+			  */
+			private function dateFromToSortCompareFunction(obj1:Object, obj2:Object):int {
+				if (obj1.fromdate > obj2.fromdate) {
+					return -1;
+				} else if (obj1.fromdate < obj2.fromdate) {
+					return 1;
+				}
+				return 0;
+			}
+			
+			/**
+			  * Sorting function	
+			  */
+			private function date_fromToSortCompareFunction(obj1:Object, obj2:Object):int {
+				if (obj1.from_date > obj2.from_date) {
+					return -1;
+				} else if (obj1.from_date < obj2.from_date) {
+					return 1;
+				} else if (obj1.from_date == obj2.from_date) {
+					if (obj1.from_time as Number > obj2.from_time as Number) {
+						return -1;
+					} else if (obj1.from_time as Number < obj2.from_time as Number) {
+						return 1;
+					}
+				}
+				return 0;
+			}
+			
+			/**
+			  * Called to start a save form process	
+			  */
+			public function saveForm():void {
+				var event:CairngormEvent = new CairngormEvent( GetTravelXmlEvent.GET_TRAVEL_XML );
+				CairngormEventDispatcher.getInstance().dispatchEvent( event );
+				
+				/* local save is obsolute
+				if (model.localSaveName == "") {
+					// savename not defined - open dialog to create savename
+					var addWindow:IFlexDisplayObject;
+					addWindow = PopUpManager.createPopUp(this, save_form, true);
+				} else {
+					// savename exists - go ahead and save it
+					var event:CairngormEvent = new CairngormEvent( LocalSaveEvent.SAVE_LOCAL );
+					CairngormEventDispatcher.getInstance().dispatchEvent( event );
+				}
+				*/
+			}
+			
+			public function saveFormAs():void {
+				var addWindow:IFlexDisplayObject;
+				addWindow = PopUpManager.createPopUp(this, save_form, true);
+			}
+						
+			/**
+			  * Initializing key combo shortcuts	
+			  */
+			private function registerKeyCombos():void {
+				var keyController:KeyController = new KeyController(this);
+				// set keyboard shortcuts
+				//keyController.setKeyWatch(49,true); 					// Ctrl + 1
+				//keyController.setKeyWatch(50,true); 					// Ctrl + 2
+				//keyController.setKeyWatch(51,true); 					// Ctrl + 3
+				//keyController.setKeyWatch(52,true); 					// Ctrl + 4
+				//keyController.setKeyWatch(53,true); 					// Ctrl + 5
+				keyController.setKeyWatch(107, true); 	 					// + (for zoom in)
+				keyController.setKeyWatch(187, true); 	 					// + (for zoom in)
+				keyController.setKeyWatch(109, true); 	 					// - (for zoom out)
+				keyController.setKeyWatch(189, true); 	 					// - (for zoom out)
+				//keyController.setKeyWatch(187, false, false, true); 	// Shift + ? (for field help)
+				//keyController.setKeyWatch(83, false, false, true); 	// Shift + S (for language choice)
+				//keyController.setKeyWatch(72, false, false, true); 	// Shift + H (for help)
+				//keyController.setKeyWatch(76, false, false, true); 	// Shift + L (for sound on/off)
+				//keyController.setKeyWatch(84, false, false, true); 	// Shift + T (for checking if field is filled out)
+				keyController.setKeyWatch(109, true, false, true);		// Ctrl + Shift + '-'
+				//keyController.setKeyWatch(117, true);					// Ctrl + F6 (For hjelp)
+								
+				keyController.addEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
+			}
+		
+			/**
+			  * Eventhandler for keys pressed	
+			  */
+			private function keyComboPressed(event:KeyControllerEvent):void {
+				var pressedCombo:KeyCombo = event.keyCombo;
+				
+				// Ctrl + any key
+				if (pressedCombo.ctrl && !pressedCombo.shift && !pressedCombo.alt) {
+					
+					if (pressedCombo.keyCode == 49) {			// Ctrl + 1
+						model.stateDistributer.openView(model.stateDistributer.PERSONAL);	
+						
+					} else if (pressedCombo.keyCode == 50) {	// Ctrl + 2
+						model.stateDistributer.openView(model.stateDistributer.TRAVEL);	
+						
+					} else if (pressedCombo.keyCode == 51) {	// Ctrl + 3
+						model.stateDistributer.openView(model.stateDistributer.SPESIFICATIONS);
+						
+					} else if (pressedCombo.keyCode == 52) {	// Ctrl + 4
+						model.stateDistributer.openView(model.stateDistributer.SETTLEMENTS);
+					
+					} else if (pressedCombo.keyCode == 107 || pressedCombo.keyCode == 187) {			// +
+						// zoom in
+						doZoom(this, "+");
+						
+					} else if (pressedCombo.keyCode == 109 || pressedCombo.keyCode == 189) {	// -
+						// zoom out
+						doZoom(this, "-");
+					
+					} else if (pressedCombo.keyCode == 117) {			// Ctrl + F6
+						//if (alertWindow == null) {
+							// help needed -> alert user with help text
+							try {
+								var focusComp:IFocusManagerComponent = focusManager.getFocus();
+								var focusHelper:String = UIComponent(focusComp).id + "_help";
+								var titleText:String = resourceManager.getString(model.resources.bundleName, "fieldhelp_heading");
+								var alertText:String = resourceManager.getString(model.resources.bundleName, focusHelper);
+								// show alert box
+								if (alertText != "") {
+									if (!model.screenreader) {
+										alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
+										custom_alert(alertWindow).alertText = alertText;
+										custom_alert(alertWindow).title = titleText;
+									} else {
+										if (ExternalInterface.available) {
+											ExternalInterface.call("openDialog", titleText, alertText);
+										}
+									}
+								}
+								
+							} catch (e:Error) { trace("Reiseregningen.keyComboPressed: " + e.message); }
+					} 
+					
+				// Shift + any key
+				} else if (!pressedCombo.ctrl && pressedCombo.shift && !pressedCombo.alt) {
+					if (pressedCombo.keyCode == 187) {			// Shift + ?
+					
+					} else if (pressedCombo.keyCode == 83) {	// Shift + S
+						// set focus to language canvas
+												
+					} else if (pressedCombo.keyCode == 72) {	// Shift + H
+						//model.sound.playSound('snd_intro_help');
+					
+					} else if (pressedCombo.keyCode == 76) {	// Shift + L
+											
+					} else if (pressedCombo.keyCode == 84) {	// Shift + T
+					
+					}
+					
+				// any keys
+				} else if (pressedCombo.ctrl && pressedCombo.shift && !pressedCombo.alt) {
+					if (pressedCombo.keyCode == 109 || pressedCombo.keyCode == 189) {	// -
+						this.deleteAllSharedObjects();
+					}
+					
+				} else {
+					
+				}
+			}
+			
+			/**
+			  * Zooming controller method	
+			  */
+			public function doZoom(zoomContainer:Container, zoomDir:String="+"):void {
+				var currentZoom:Number = zoomContainer.scaleX * 100;
+				var newZoom:Number = currentZoom;
+				if (zoomDir == "+" && currentZoom < 150) {
+					newZoom = currentZoom + 10;
+				} else if (zoomDir == "-" && currentZoom > 100) {
+					newZoom = currentZoom - 10;
+				} else {
+					newZoom = Number(zoomDir);
+				}
+				zoomContainer.scaleX = newZoom / 100;
+				zoomContainer.scaleY = newZoom / 100;
+			}
+			
+			/**
+			  * Sets framerate to minimum and removes all transitions in the application.
+			  * To be called if application is runned on citrix or similar	
+			  */
+			public function runAtCitrix():void {
+				this.stage.frameRate = 4;
+				model.runTransitions = false;
+			}
+			
+			private function accessibilityHelp():void {
+				var helpText:String = resourceManager.getString(model.resources.bundleName, 'app_intro')
+				//model.accessibility.showAccessibilityHelp(btn_accessbility_help, helpText);
+			}
+			
+			public function stateChanged(e:StateChangeEvent):void {
+				// check wether to save locally
+				/*
+				if (model.localSaveName != "") {
+					var event:CairngormEvent = new CairngormEvent( LocalSaveEvent.SAVE_LOCAL );
+					CairngormEventDispatcher.getInstance().dispatchEvent( event );
+				}
+				*/
+			}
+			
+			/**
+			  * Removes all saved shared objects	
+			  */
+			private function deleteAllSharedObjects():void {
+				trace("delete all shared objects...");
+				var travelForm:SharedObject = SharedObject.getLocal("travelexpense_savedforms");
+				var savedFormsList:ArrayCollection = travelForm.data.savedFormsList;
+				// clear all saved forms
+				for (var i:Number = 0; i < savedFormsList.length; i++) {
+					try {
+						var sharedForm:SharedObject = SharedObject.getLocal(savedFormsList[i].data);
+						sharedForm.clear();
+					} catch (e:Error) { trace("deleteAllSharedObjects (1): " + e.message); }
+				}
+				// clear saved forms nameholder
+				try {
+					travelForm.clear();
+				} catch (e:Error) { trace("deleteAllSharedObjects (2): " + e.message); }
+				// clear personal info saver
+				var personal:SharedObject = SharedObject.getLocal("travelexpense_personalia");
+				try {
+					personal.clear();
+				} catch (e:Error) { trace("deleteAllSharedObjects (3): " + e.message); }
+			}
+			
+			private function navigationEffectComplete(e:EffectEvent):void {
+				this.setCurrentState(model.stateDistributer.getActiveState());
+			}
+			
+		]]>
+	</mx:Script>	
+						
+	<mx:Style source="assets/reiseregning.css"/>
+	
+	<!-- ========================================================================== -->
+
+        <!-- the ServiceLocator where we specify the remote services -->
+        <business:Services id="services" />
+
+        <!-- the FrontController, containing Commands specific to this appliation -->
+        <control:Controller id="controller" />
+
+    <!-- ========================================================================== -->    
+	
+	<mx:transitions>
+		<mx:Transition fromState="*" toState="*">
+    		<mx:Parallel id="t1" targets="{[boxPersonal, boxTravel, boxSpecifications, boxSettlements]}" effectEnd="{navigationEffectComplete(event)}">
+    			<mx:Blur blurXFrom="1" blurXTo="0" blurYFrom="1" blurYTo="0" duration="1000" easingFunction="Exponential.easeInOut" />
+    			<mx:Resize duration="1000" easingFunction="Exponential.easeInOut"/>
+    			<mx:Move duration="1000" easingFunction="Exponential.easeInOut"/>
+			</mx:Parallel> 
+   		</mx:Transition>
+    </mx:transitions>
+	
+	<mx:Fade id="fx_fade" alphaFrom="1" alphaTo="0" duration="500" easingFunction="Exponential.easeOut" />
+	<mx:Fade id="fx_fadeIn" alphaFrom="0" alphaTo="1" duration="1000" easingFunction="Exponential.easeIn" />
+	<mx:Resize id="fx_resize" duration="1000" />
+
+    <mx:states>
+    
+    	<!-- FUNCTIONAL STATES -->
+    	<mx:State id="base" name="base" enterState="{applicationReady()}">
+    		<mx:AddChild relativeTo="{header}">
+    			<components:applicationNavigation id="navigation" applicationRef="{this}" />
+    		</mx:AddChild>   
+    		
+    		<mx:AddChild relativeTo="{topButtonBar}">
+    			<components:settingsNavigation id="settings" width="100%" applicationRef="{this}" />
+    		</mx:AddChild> 	
+    		
+    		<mx:AddChild relativeTo="{boxPersonal}">
+    			<personal:summary id="personal_summary_base" width="100%" tabIndex="100"  enabled="false" />
+    		</mx:AddChild>
+    		<mx:AddChild relativeTo="{boxPersonal}">
+    			<personal:details id="personal_details_base" width="100%" enabled="false" />
+    		</mx:AddChild>
+    		
+    		<mx:AddChild relativeTo="{boxTravel}">
+    			<travel:summary id="travel_summary_base" width="100%" tabIndex="200"  enabled="false" />
+    		</mx:AddChild>
+    		<mx:AddChild relativeTo="{boxTravel}">
+    			<travel:details id="travel_details_base" width="100%" enabled="false" />
+    		</mx:AddChild>
+    		    	
+    		<mx:AddChild relativeTo="{boxSpecifications}">
+    			<specifications:summary id="specifications_summary_base" tabIndex="300" width="100%" enabled="false" />
+    		</mx:AddChild>	
+    		<mx:AddChild relativeTo="{boxSpecifications}">
+    			<specifications:details id="specifications_details_base" tabIndex="250" width="100%" enabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" />
+    		</mx:AddChild>
+    		
+    		<mx:AddChild relativeTo="{boxSettlements}">
+    			<settlement:summary id="settlement_summary_base" tabIndex="400" width="100%" enabled="false" />
+    		</mx:AddChild>
+    		<mx:AddChild relativeTo="{boxSettlements}">
+    			<settlement:details id="settlement_details_base" tabIndex="350" width="100%" enabled="false" />
+    		</mx:AddChild>
+    		
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="false" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="false" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="false" />
+    		<mx:SetStyle target="{text1}" name="top" value="42"/>
+    		<mx:SetStyle target="{text1}" name="verticalCenter"/>
+    		<mx:SetStyle target="{text1}" name="right" value="21"/>
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="personal" name="personal" enterState="{personal_details_base.activate()}" exitState="{personal_details_base.saveData()}">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{personal_details_base}" name="enabled" value="true" />
+    		<mx:SetProperty target="{personal_details_base}" name="alpha" value="1" />
+    		
+    		<mx:SetProperty target="{personal_summary_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_summary_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{personal_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{travel_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{specifications_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{settlement_summary_base}" name="alpha" value="1"/>
+            <mx:SetProperty target="{overallTravelBoxHeader}" name="alpha" value="0.5"/>
+            <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="travel" name="travel" enterState="{travel_details_base.activate()}"  exitState="{travel_details_base.saveData()}">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{travel_details_base}" name="enabled" value="true" />
+            
+            <mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{specifications_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{settlement_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{travel_summary_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_summary_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{travel_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{personal_summary_base}" name="alpha" value="1"/>
+            <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="specifications" name="specifications" enterState="{specifications_details_base.activate()}"  exitState="{specifications_details_base.saveData()}">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{personal_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{travel_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{settlement_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{specifications_summary_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_summary_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{specifications_summary_base}" name="alpha" value="1"/>
+
+    		<mx:SetProperty target="{specifications_details_base}" name="enabled" value="true" />
+    		<mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+    		<mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+    		
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="settlements" name="settlements" enterState="{settlement_details_base.activate()}"  exitState="{settlement_details_base.saveData()}">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{personal_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{travel_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{settlement_summary_base}" name="alpha" value="1"/>
+            
+            <mx:SetProperty target="{settlement_summary_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_summary_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{specifications_summary_base}" name="alpha" value="1"/>
+
+    		<mx:SetProperty target="{settlement_details_base}" name="enabled" value="true" />
+    		<mx:SetProperty target="{overallTravelBoxHeader}" name="alpha" value="0.5"/>
+    		<mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+    		
+    	</mx:State>
+    	
+    	<!-- ANIMATION STATES -->
+    	<mx:State basedOn="base" id="personal_to_travel" name="personal_to_travel">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<!--mx:SetProperty target="{personal_summary_base}" name="visible" value="true"/>
+                       
+            <mx:SetProperty target="{travel_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            
+            <mx:enterState>
+            	<![CDATA[
+            		// fade
+            		this.fx_fade.play([personal_details_base]);
+            		this.fx_fadeIn.play([personal_summary_base]);
+            		this.fx_fade.play([travel_summary_base]);
+            		this.fx_fadeIn.play([travel_details_base]);
+            	]]>
+            </mx:enterState>
+            
+    	</mx:State>    	
+    	<mx:State basedOn="base" id="travel_to_personal" name="travel_to_personal">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<!--mx:SetProperty target="{personal_summary_base}" name="visible" value="true"/>
+            
+    		<mx:SetProperty target="{travel_summary_base}" name="visible" value="true"/-->
+                        
+            <mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            
+            <mx:enterState>
+            	<![CDATA[
+            		// fade
+            		this.fx_fadeIn.play([personal_details_base]);
+            		this.fx_fade.play([personal_summary_base]);
+            		this.fx_fadeIn.play([travel_summary_base]);
+            		this.fx_fade.play([travel_details_base]);
+            	]]>
+            </mx:enterState>
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="personal_to_specifications" name="personal_to_specifications">
+    	   	<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<!--mx:SetProperty target="{personal_summary_base}" name="visible" value="true"/-->
+                        
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            
+            <!--mx:SetProperty target="{specifications_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+                        
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fade.play([personal_details_base]);
+            		this.fx_fadeIn.play([personal_summary_base]);
+            		this.fx_fade.play([specifications_summary_base]);
+            		this.fx_fadeIn.play([specifications_details_base]);
+            	]]>
+            </mx:enterState>
+            
+    	</mx:State>    	
+    	<mx:State basedOn="base" id="specifications_to_personal" name="specifications_to_personal">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<!--mx:SetProperty target="{personal_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            
+            <!--mx:SetProperty target="{specifications_summary_base}" name="visible" value="true"/-->
+                        
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fadeIn.play([personal_details_base]);
+            		this.fx_fade.play([personal_summary_base]);
+            		this.fx_fadeIn.play([specifications_summary_base]);
+            		this.fx_fade.play([specifications_details_base]);
+            	]]>
+            </mx:enterState>
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="personal_to_settlements" name="personal_to_settlements">
+    	    <mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{personal_summary_base}" name="visible" value="true"/>
+                        
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            
+            <mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            
+            <mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/>
+            <mx:SetProperty target="{overallTravelBoxHeader}" name="alpha" value="0.5"/>
+                        
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fade.play([personal_details_base]);
+            		this.fx_fadeIn.play([personal_summary_base]);
+            		this.fx_fade.play([settlement_summary_base]);
+            		this.fx_fadeIn.play([settlement_details_base]);
+            	]]>
+            </mx:enterState>
+            
+    	</mx:State>    	
+    	<mx:State basedOn="base" id="settlements_to_personal" name="settlements_to_personal">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<!--mx:SetProperty target="{personal_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            
+            <mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{overallTravelBoxHeader}" name="alpha" value="0.5"/>
+            
+            <!--mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/-->
+                        
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fadeIn.play([personal_details_base]);
+            		this.fx_fade.play([personal_summary_base]);
+            		this.fx_fadeIn.play([settlement_summary_base]);
+            		this.fx_fade.play([settlement_details_base]);
+            	]]>
+            </mx:enterState>
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="travel_to_specifications" name="travel_to_specifications">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<!--mx:SetProperty target="{specifications_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            
+            <!--mx:SetProperty target="{travel_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fade.play([travel_details_base]);
+            		this.fx_fadeIn.play([travel_summary_base]);
+            		this.fx_fade.play([specifications_summary_base]);
+            		this.fx_fadeIn.play([specifications_details_base]);
+            	]]>
+            </mx:enterState>
+            
+    	</mx:State>
+    	<mx:State basedOn="base" id="specifications_to_travel" name="specifications_to_travel">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<!--mx:SetProperty target="{specifications_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
+            
+            <!--mx:SetProperty target="{travel_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fadeIn.play([travel_details_base]);
+            		this.fx_fade.play([travel_summary_base]);
+            		this.fx_fadeIn.play([specifications_summary_base]);
+            		this.fx_fade.play([specifications_details_base]);
+            	]]>
+            </mx:enterState>
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="travel_to_settlements" name="travel_to_settlements">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            
+            <!--mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/>
+             
+            <mx:SetProperty target="{travel_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fade.play([travel_details_base]);
+            		this.fx_fadeIn.play([travel_summary_base]);
+            		this.fx_fade.play([settlement_summary_base]);
+            		this.fx_fadeIn.play([settlement_details_base]);
+            	]]>
+            </mx:enterState>
+            
+    	</mx:State>
+    	<mx:State basedOn="base" id="settlements_to_travel" name="settlements_to_travel">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
+            
+            <!--mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/>
+            
+            <mx:SetProperty target="{travel_summary_base}" name="visible" value="true"/-->
+            
+            <mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fadeIn.play([travel_details_base]);
+            		this.fx_fade.play([travel_summary_base]);
+            		this.fx_fadeIn.play([settlement_summary_base]);
+            		this.fx_fade.play([settlement_details_base]);
+            	]]>
+            </mx:enterState>
+            
+    	</mx:State>
+    	
+    	<mx:State basedOn="base" id="specifications_to_settlements" name="specifications_to_settlements">
+			<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            
+            <!--mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/>
+            
+            <mx:SetProperty target="{specifications_summary_base}" name="visible" value="true"/-->
+            
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fade.play([specifications_details_base]);
+            		this.fx_fadeIn.play([specifications_summary_base]);
+            		this.fx_fade.play([settlement_summary_base]);
+            		this.fx_fadeIn.play([settlement_details_base]);
+            	]]>
+            </mx:enterState>
+    		  
+    	</mx:State>
+    	<mx:State basedOn="base" id="settlements_to_specifications" name="settlements_to_specifications">
+    		<mx:SetProperty target="{mainPersonal}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainTravel}" name="visible" value="true" />
+    		<mx:SetProperty target="{mainSettlements}" name="visible" value="true" />
+    		
+    		<mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
+            
+            <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
+            <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
+            <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            
+            <!--mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/>
+            
+            <mx:SetProperty target="{specifications_summary_base}" name="visible" value="true"/-->
+            
+            <mx:enterState>
+            	<![CDATA[
+            		this.fx_fadeIn.play([specifications_details_base]);
+            		this.fx_fade.play([specifications_summary_base]);
+            		this.fx_fadeIn.play([settlement_summary_base]);
+            		this.fx_fade.play([settlement_details_base]);
+            	]]>
+            </mx:enterState>
+    		  
+    	</mx:State>
+    </mx:states>
+  	
+  	<mx:VBox width="1024" height="100%">
+  		<mx:VBox id="appholder" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	  	
+	    <mx:Canvas id="intromask" width="100%" height="1200" styleName="ApplicationBox" >
+		   	<mx:Text text="Laster inn..." horizontalCenter="0" top="50" />
+		</mx:Canvas>
+		
+		<mx:VBox styleName="ApplicationBox" width="100%" height="100%">
+	    	
+	    	<mx:VBox backgroundColor="#FFFFFF" width="100%">
+	    		<mx:HBox id="topButtonBar" styleName="topbar" width="100%" />
+	    	
+		    	<mx:Canvas id="logobar" width="100%" backgroundColor="#FFFFFF">
+		    		<mx:Image source="assets/media/images/logo.jpg" top="15" left="15"/>
+		    		<mx:VRule right="220" height="60" verticalCenter="0" strokeColor="#CBCBCB"/>
+		    		<mx:Text text="reiseregningen.no" styleName="H1" right="15" verticalCenter="0" id="text1"/>		
+		    	</mx:Canvas>
+		    	
+		    	<mx:HBox id="header" width="100%" styleName="menuline" tabIndex="2" />
+	    	</mx:VBox>
+	    	
+	    	<mx:VBox width="980" paddingLeft="15" paddingRight="15" paddingTop="10" paddingBottom="10">
+	    	
+		    	<mx:HBox width="950" id="mainPersonal" visible="false">
+		    		<mx:VBox styleName="FramedBox" width="740">
+		    		
+			    		<mx:Box id="boxPersonalHeader" width="100%" styleName="headerBox">
+				    		<mx:Text id="personal_header" text="{resourceManager.getString(model.resources.bundleName, 'header_personal')}"  />
+				    	</mx:Box>
+				    	
+				    	<mx:Canvas id="boxPersonal" styleName="formsBox" width="100%" />
+				    </mx:VBox>
+			    	
+			    	<mx:VBox id="helpText01" width="200" styleName="introbox" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+			    			 visible="{(helpTextPersonal.text != '') ? true : false}">
+		    			<mx:Text id="helpTextPersonal" htmlText="{model.helpTextPersonalinfo}" width="170" />
+		    		</mx:VBox>
+		    	</mx:HBox>
+		    	   		
+	    	
+		    	<mx:HBox width="950" id="mainTravel" visible="false">
+		    		<mx:VBox styleName="FramedBox" width="740">
+		    			
+		    			<mx:Box id="overallTravelBoxHeader" width="100%" styleName="headerBox">
+		    				<mx:Text id="travel_header" text="{resourceManager.getString(model.resources.bundleName, 'header_travel')}" />
+		    			</mx:Box>
+		    			
+			    		<mx:VBox id="overallTravelBox" width="100%">
+				    		
+				    		<mx:Canvas id="boxTravel" styleName="formsBox" width="100%" />
+				    		<mx:HRule width="100%" />
+				    		<mx:Canvas id="boxSpecifications" styleName="formsBox" width="100%" />
+				    		
+				    	</mx:VBox>
+		    		</mx:VBox>
+		    		<mx:VBox id="helpText02" width="200" styleName="introbox" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+			    			 visible="{(helpTextTravel.text != '') ? true : false}">
+		    			<mx:Text id="helpTextTravel" htmlText="{model.helpTextTravel}" width="170" />
+		    		</mx:VBox>
+			    </mx:HBox>    	
+		    	
+		    	<mx:HBox width="950" id="mainSettlements" visible="false">
+		    		<mx:VBox styleName="FramedBox" width="740">
+			    		<mx:Box id="boxSettlementsHeader" width="100%" styleName="headerBox">
+			    			<mx:Text id="settlement_header" text="{resourceManager.getString(model.resources.bundleName, 'header_settlement')}" />		    			
+			    		</mx:Box>
+			    		<mx:Canvas id="boxSettlements" styleName="formsBox" width="100%" />
+			    		
+				    </mx:VBox>
+			    	<mx:VBox id="helpText03" width="200" styleName="introbox" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+			    			 visible="{(helpTextSettlement.text != '') ? true : false}">
+		    			<mx:Text id="helpTextSettlement" text="{model.helpTextSettlement}" width="170" />
+		    		</mx:VBox>
+			    </mx:HBox>
+		    	
+		    </mx:VBox>
+		    
+		    
+	    </mx:VBox>
+		    
+	    </mx:VBox>
+	</mx:VBox>   
+</mx:Application>

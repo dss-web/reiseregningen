@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cairngorm:ServiceLocator
+	xmlns:cairngorm="com.adobe.cairngorm.business.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:WebService />
+	
+	<mx:HTTPService id="getLocales" 
+					resultFormat="e4x" 
+					showBusyCursor="true" />
+	
+	<mx:HTTPService id="resources"
+		            url="resources/config.xml"
+					resultFormat="e4x"
+					showBusyCursor="true" />
+	
+	<mx:HTTPService id="coderates" 
+					resultFormat="e4x" 
+					showBusyCursor="true" />
+					
+	<mx:HTTPService id="general" 
+					resultFormat="e4x" 
+					showBusyCursor="true" />
+	
+</cairngorm:ServiceLocator>
