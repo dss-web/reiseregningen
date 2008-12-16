@@ -4,7 +4,10 @@
 	<media>
 		<texts>
 			<!-- HEADERS AND COMMON TEXTS -->
-			<text id="site_header" value="REISEREGNINGEN PÅ WEB" />
+			<text id="site_header" value="Reiseregningen på web" />
+			<text id="site_intro" value="Velkommen til reiseregningen på web.
+Hvis du har popup-blokkering påslått risikerer du å miste det du har registrert dersom du ikke holder Ctrl-knappen nede mens du klikker Lagre eller Utskrift.
+Sjekk om du har popup-blokkering aktivert ved å forsøke å lagre før du registrerer data; hvis du får en advarsel om blokkering må du si ja til å fjerne blokkering for dette nettstedet - eller alltid holde Ctrl-knappen nede når du skal lagre eller skrive ut." />
 			<text id="header_personal" value="Personlig info og jobbdetaljer" />
 			<text id="header_travel" value="Reisen" />
 			<text id="header_settlement" value="Oppgjør" />

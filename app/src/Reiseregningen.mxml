@@ -725,6 +725,8 @@
             <mx:SetProperty target="{settlement_summary_base}" name="alpha" value="1"/>
             <mx:SetProperty target="{overallTravelBoxHeader}" name="alpha" value="0.5"/>
             <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
     	</mx:State>
     	
@@ -752,6 +754,8 @@
             <mx:SetProperty target="{personal_summary_base}" name="alpha" value="1"/>
             <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
             <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
     	</mx:State>
     	
@@ -779,6 +783,8 @@
     		<mx:SetProperty target="{specifications_details_base}" name="enabled" value="true" />
     		<mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
     		<mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+    		<mx:RemoveChild target="{vbox1}"/>
+    		<mx:RemoveChild target="{introductionPage}"/>
     		
     	</mx:State>
     	
@@ -806,6 +812,8 @@
     		<mx:SetProperty target="{settlement_details_base}" name="enabled" value="true" />
     		<mx:SetProperty target="{overallTravelBoxHeader}" name="alpha" value="0.5"/>
     		<mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+    		<mx:RemoveChild target="{vbox1}"/>
+    		<mx:RemoveChild target="{introductionPage}"/>
     		
     	</mx:State>
     	
@@ -825,6 +833,8 @@
             <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <mx:enterState>
             	<![CDATA[
@@ -852,6 +862,8 @@
             <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <mx:enterState>
             	<![CDATA[
@@ -879,6 +891,8 @@
             <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
                         
             <mx:enterState>
             	<![CDATA[
@@ -905,6 +919,8 @@
             <mx:SetProperty target="{settlement_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{settlement_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <mx:enterState>
             	<![CDATA[
@@ -931,6 +947,8 @@
             
             <mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/>
             <mx:SetProperty target="{overallTravelBoxHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
                         
             <mx:enterState>
             	<![CDATA[
@@ -955,6 +973,8 @@
             <mx:SetProperty target="{specifications_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{specifications_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{overallTravelBoxHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <!--mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/-->
                         
@@ -984,6 +1004,8 @@
             <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
             <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <mx:enterState>
             	<![CDATA[
@@ -1011,6 +1033,8 @@
             <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxSettlementsHeader}" name="alpha" value="0.5"/>
             <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <mx:enterState>
             	<![CDATA[
@@ -1037,6 +1061,8 @@
             <mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <mx:enterState>
             	<![CDATA[
@@ -1063,6 +1089,8 @@
             <mx:SetProperty target="{personal_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{personal_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <mx:enterState>
             	<![CDATA[
@@ -1086,6 +1114,8 @@
             <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <!--mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/>
             
@@ -1112,6 +1142,8 @@
             <mx:SetProperty target="{travel_details_base}" name="visible" value="false"/>
             <mx:SetProperty target="{travel_details_base}" name="includeInLayout" value="false"/>
             <mx:SetProperty target="{boxPersonalHeader}" name="alpha" value="0.5"/>
+            <mx:RemoveChild target="{vbox1}"/>
+            <mx:RemoveChild target="{introductionPage}"/>
             
             <!--mx:SetProperty target="{settlement_summary_base}" name="visible" value="true"/>
             
@@ -1151,8 +1183,18 @@
 	    	</mx:VBox>
 	    	
 	    	<mx:VBox width="980" paddingLeft="15" paddingRight="15" paddingTop="10" paddingBottom="10">
-	    	
-		    	<mx:HBox width="950" id="mainPersonal" visible="false">
+	    		<mx:VBox id="introductionPage" width="950">
+	    			<mx:VBox styleName="FramedBox" width="100%" id="vbox1">
+		    			<mx:Box id="boxIntroHeader" width="100%" styleName="headerBox">
+			    			<mx:Text id="site_header" width="100%" text="{resourceManager.getString(model.resources.bundleName, 'site_header')}" />
+			    		</mx:Box>
+			    		<mx:Box id="boxIntroContent" width="100%" styleName="formsBox">
+			    			<mx:Text id="site_intro" width="70%" text="{resourceManager.getString(model.resources.bundleName, 'site_intro')}" />
+			    		</mx:Box>
+	    			</mx:VBox>
+	    		</mx:VBox>
+	    		
+		    	<mx:HBox id="mainPersonal" width="950" visible="false">
 		    		<mx:VBox styleName="FramedBox" width="740">
 		    		
 			    		<mx:Box id="boxPersonalHeader" width="100%" styleName="headerBox">
