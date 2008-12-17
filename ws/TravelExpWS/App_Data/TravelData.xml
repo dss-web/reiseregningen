@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TravelExpenseVO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <personalinfo>
+    <socialsecuritynumber>10117549394</socialsecuritynumber>
+    <firstname>First</firstname>
+    <lastname>Developer</lastname>
+    <adress>Developer Road 2009</adress>
+    <zip>1234</zip>
+    <postoffice>OSLO</postoffice>
+    <jobtitle>Developer</jobtitle>
+    <account>26060606060</account>
+    <workplace>Making Waves</workplace>
+    <department>Front End</department>
+    <domicialname>Oslo</domicialname>
+    <domicialnum>0301</domicialnum>
+  </personalinfo>
+  <travel>
+    <location>testreuse</location>
+    <travel_type>2</travel_type>
+    <travel_cause>1</travel_cause>
+    <travel_cause_other />
+    <travel_date_out>2008-11-03T11:00:00Z</travel_date_out>
+    <travel_time_out>0800</travel_time_out>
+    <travel_date_in>2008-11-07T11:00:00Z</travel_date_in>
+    <travel_time_in>1400</travel_time_in>
+    <travelNumber />
+  </travel>
+  <travelAllowances>
+    <adm_allowance>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </adm_allowance>
+    <accomodation>true</accomodation>
+    <domestic>false</domestic>
+    <allowance>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </allowance>
+    <allowance_international>
+      <RateVO>
+        <num>5</num>
+        <rate>730</rate>
+        <amount>3650</amount>
+      </RateVO>
+    </allowance_international>
+    <nighttariff_domestic>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </nighttariff_domestic>
+    <nighttariff_domestic_hotel>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </nighttariff_domestic_hotel>
+    <nighttariff_international>
+      <RateVO>
+        <num>2</num>
+        <rate>1100</rate>
+        <amount>2200</amount>
+      </RateVO>
+      <RateVO>
+        <num>2</num>
+        <rate>1100</rate>
+        <amount>2200</amount>
+      </RateVO>
+    </nighttariff_international>
+    <allowance_28days>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </allowance_28days>
+    <nighttariff_28days>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </nighttariff_28days>
+    <car_distance1>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </car_distance1>
+    <car_distance2>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </car_distance2>
+    <car_passengers>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </car_passengers>
+    <car_otherrates>
+      <num>0</num>
+      <rate>0</rate>
+      <amount>0</amount>
+    </car_otherrates>
+    <netamount>11314.4</netamount>
+  </travelAllowances>
+  <specificationList>
+    <TravelSpecificationVO>
+      <transportation_type>Buss/Bane/Trikk</transportation_type>
+      <from_destination>hjem</from_destination>
+      <from_date>2008-11-03T07:00:00Z</from_date>
+      <from_country>Norge</from_country>
+      <from_city />
+      <to_destination>gardermoen</to_destination>
+      <to_date>2008-11-03T07:45:00Z</to_date>
+      <to_country>Norge</to_country>
+      <to_city />
+      <is_travel_start>false</is_travel_start>
+      <is_travel_continious>false</is_travel_continious>
+      <is_travel_end>false</is_travel_end>
+      <specification_aggregate>
+        <which_specification_used>0</which_specification_used>
+      </specification_aggregate>
+      <cost>
+        <cost>210</cost>
+        <cost_currency>NOK</cost_currency>
+        <cost_currency_rate>1</cost_currency_rate>
+        <local_cost />
+      </cost>
+      <from_timezone>1</from_timezone>
+      <to_timezone>1</to_timezone>
+    </TravelSpecificationVO>
+    <TravelSpecificationVO>
+      <transportation_type>Fly</transportation_type>
+      <from_destination>gardermoen</from_destination>
+      <from_date>2008-11-03T09:00:00Z</from_date>
+      <from_country>Norge</from_country>
+      <from_city />
+      <to_destination>heathrow</to_destination>
+      <to_date>2008-11-03T10:20:00Z</to_date>
+      <to_country>GBR</to_country>
+      <to_city>London</to_city>
+      <is_travel_start>false</is_travel_start>
+      <is_travel_continious>false</is_travel_continious>
+      <is_travel_end>false</is_travel_end>
+      <specification_aggregate>
+        <which_specification_used>0</which_specification_used>
+      </specification_aggregate>
+      <cost>
+        <cost>1400</cost>
+        <cost_currency>NOK</cost_currency>
+        <cost_currency_rate>1</cost_currency_rate>
+        <local_cost />
+      </cost>
+      <from_timezone>1</from_timezone>
+      <to_timezone>0</to_timezone>
+    </TravelSpecificationVO>
+    <TravelSpecificationVO>
+      <transportation_type>Taxi</transportation_type>
+      <from_destination>heathrow</from_destination>
+      <from_date>2008-11-03T10:45:00Z</from_date>
+      <from_country>GBR</from_country>
+      <from_city>London</from_city>
+      <to_destination>hotellet</to_destination>
+      <to_date>2008-11-03T11:15:00Z</to_date>
+      <to_country>GBR</to_country>
+      <to_city>London</to_city>
+      <is_travel_start>false</is_travel_start>
+      <is_travel_continious>false</is_travel_continious>
+      <is_travel_end>false</is_travel_end>
+      <specification_aggregate>
+        <which_specification_used>0</which_specification_used>
+      </specification_aggregate>
+      <cost>
+        <cost>20</cost>
+        <cost_currency>GBP</cost_currency>
+        <cost_currency_rate>9.987</cost_currency_rate>
+        <local_cost />
+      </cost>
+      <from_timezone>1</from_timezone>
+      <to_timezone>0</to_timezone>
+    </TravelSpecificationVO>
+    <TravelSpecificationVO>
+      <transportation_type>Taxi</transportation_type>
+      <from_destination>hotellet</from_destination>
+      <from_date>2008-11-07T08:00:00Z</from_date>
+      <from_country>GBR</from_country>
+      <from_city>London</from_city>
+      <to_destination>heathrow</to_destination>
+      <to_date>2008-11-07T08:45:00Z</to_date>
+      <to_country>GBR</to_country>
+      <to_city>London</to_city>
+      <is_travel_start>false</is_travel_start>
+      <is_travel_continious>false</is_travel_continious>
+      <is_travel_end>false</is_travel_end>
+      <specification_aggregate>
+        <which_specification_used>0</which_specification_used>
+      </specification_aggregate>
+      <cost>
+        <cost>23</cost>
+        <cost_currency>GBP</cost_currency>
+        <cost_currency_rate>9.768</cost_currency_rate>
+        <local_cost />
+      </cost>
+      <from_timezone>0</from_timezone>
+      <to_timezone>0</to_timezone>
+    </TravelSpecificationVO>
+    <TravelSpecificationVO>
+      <transportation_type>Fly</transportation_type>
+      <from_destination>heathrow</from_destination>
+      <from_date>2008-11-07T11:00:00Z</from_date>
+      <from_country>GBR</from_country>
+      <from_city>London</from_city>
+      <to_destination>gardermoen</to_destination>
+      <to_date>2008-11-07T12:00:00Z</to_date>
+      <to_country>Norge</to_country>
+      <to_city>-</to_city>
+      <is_travel_start>false</is_travel_start>
+      <is_travel_continious>false</is_travel_continious>
+      <is_travel_end>false</is_travel_end>
+      <specification_aggregate>
+        <which_specification_used>0</which_specification_used>
+      </specification_aggregate>
+      <cost>
+        <cost>1000</cost>
+        <cost_currency>NOK</cost_currency>
+        <cost_currency_rate>1</cost_currency_rate>
+        <local_cost />
+      </cost>
+      <from_timezone>0</from_timezone>
+      <to_timezone>1</to_timezone>
+    </TravelSpecificationVO>
+    <TravelSpecificationVO>
+      <transportation_type>Buss/Bane/Trikk</transportation_type>
+      <from_destination>gardermoen</from_destination>
+      <from_date>2008-11-07T12:20:00Z</from_date>
+      <from_country>Norge</from_country>
+      <from_city>-</from_city>
+      <to_destination>hjem</to_destination>
+      <to_date>2008-11-07T13:00:00Z</to_date>
+      <to_country>Norge</to_country>
+      <to_city>-</to_city>
+      <is_travel_start>false</is_travel_start>
+      <is_travel_continious>false</is_travel_continious>
+      <is_travel_end>false</is_travel_end>
+      <specification_aggregate>
+        <which_specification_used>0</which_specification_used>
+      </specification_aggregate>
+      <cost>
+        <cost>230</cost>
+        <cost_currency>NOK</cost_currency>
+        <cost_currency_rate>1</cost_currency_rate>
+        <local_cost />
+      </cost>
+      <from_timezone>1</from_timezone>
+      <to_timezone>1</to_timezone>
+    </TravelSpecificationVO>
+  </specificationList>
+  <accomodationList>
+    <TravelAccomodationVO>
+      <type>3</type>
+      <name>Hotel One</name>
+      <adress />
+      <country>GBR</country>
+      <city>London</city>
+      <fromdate>2008-11-03T11:00:00Z</fromdate>
+      <todate>2008-11-05T11:00:00Z</todate>
+      <breakfast_inluded>0</breakfast_inluded>
+      <cost>
+        <cost>2200</cost>
+        <cost_currency>NOK</cost_currency>
+        <cost_currency_rate>1</cost_currency_rate>
+        <local_cost />
+      </cost>
+      <actual_cost>
+        <cost>2200</cost>
+        <cost_currency>NOK</cost_currency>
+        <cost_currency_rate>1</cost_currency_rate>
+        <local_cost />
+      </actual_cost>
+    </TravelAccomodationVO>
+    <TravelAccomodationVO>
+      <type>3</type>
+      <name>Hotel Two</name>
+      <adress />
+      <country>GBR</country>
+      <city>London</city>
+      <fromdate>2008-11-05T11:00:00Z</fromdate>
+      <todate>2008-11-07T11:00:00Z</todate>
+      <breakfast_inluded>0</breakfast_inluded>
+      <cost>
+        <cost>2200</cost>
+        <cost_currency>NOK</cost_currency>
+        <cost_currency_rate>1</cost_currency_rate>
+        <local_cost />
+      </cost>
+      <actual_cost>
+        <cost>1800</cost>
+        <cost_currency>NOK</cost_currency>
+        <cost_currency_rate>1</cost_currency_rate>
+        <local_cost />
+      </actual_cost>
+    </TravelAccomodationVO>
+  </accomodationList>
+  <travelAdvanceList />
+  <travelOutlayList />
+  <travelDeductionList />
+  <travelCommentList />
+</TravelExpenseVO>
