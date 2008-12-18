@@ -1,32 +1,59 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Reiseregningen på web</title>
-<script src="swfobject.js" language="javascript"></script>
-<style type="text/css">
-<!--
-body {
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-}
--->
-</style></head>
-<body bgcolor="#ffffff">
-	<div id="flashcontent">
-	  <a href="http://www.adobe.com/go/getflashplayer">Du må installere Flash Player 9 for å bruke Reiseregningen på web.</a>
-	</div>
-	<script type="text/javascript">
-	   var random = Math.round(Math.random() * 999999);
-	   var url = "Reiseregningen.swf?random="+random;
-	   var so = new SWFObject(url, "reiseregning", "100%", "100%", "9", "#ffffff");
-	   so.useExpressInstall('expressinstall.swf');
-	   so.write("flashcontent");
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
 
-		function openDialog(title, msg) {
-			alert(msg, title);
-		}
-	</script>
+<HTML>
+<HEAD>
+<META NAME="description" CONTENT="Reiseregnigen">
+<META NAME="keywords" CONTENT="reiseregning">
+<script type="text/javascript" src="swfobject.js"></script>
+<TITLE>Reiseregningen.no</TITLE>
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial;
+		font-size: 11px;
+		color: #000000;
+		background-color: #ffffff;
+		margin: 0px;
+		text-align:center;
+		width: 100%;
+		height: 100%;
+
+	}
+
+	.content {
+		margin: 30% auto;
+		vertical-align: middle;
+		text-align: center;
+	}
+
+	-->
+	</style>
+
+
+</head>
+<body bgcolor="#000000">
+
+<div id="flashcontent">
+  	<div class="content">
+Du mÃ¥ installere Flash Player 9 for Ã¥ bruke Reiseregningen pÃ¥ web.<p><a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash&promoid=BIOW"><img src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" border=0></a></p><p>(klikk pÃ¥ bildet)</p></div>
+</div>
+
+<script type="text/javascript">
+	var random = Math.round(Math.random() * 999999);
+	var url = "Reiseregningen.swf?rand="+random;
+	var so = new SWFObject(url, "reiseregningen", "100%", "100%", "9", "#000000");
+    so.useExpressInstall('expressinstall.swf');
+	so.addParam("scale", "noscale");
+    so.addParam("salign", "tl");
+	so.addParam("allowFullScreen","true");
+	so.addParam("allowScriptAccess", "always");
+	so.addParam("wmode", "window");
+
+    so.write('flashcontent');
+
+</script>
+
+
 </body>
-</html>
+</HTML>
+

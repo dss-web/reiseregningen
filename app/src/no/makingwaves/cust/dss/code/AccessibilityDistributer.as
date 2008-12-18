@@ -3,11 +3,10 @@ package no.makingwaves.cust.dss.code
 	import flash.accessibility.Accessibility;
 	import flash.accessibility.AccessibilityProperties;
 	import flash.events.EventDispatcher;
-	import flash.geom.Point;
+	import flash.system.Capabilities;
 	
 	import mx.core.Container;
 	import mx.core.UIComponent;
-	import mx.managers.PopUpManager;
 	
 	//import no.makingwaves.cust.dss.view.accessibility.instanthelper;
 	
@@ -20,12 +19,14 @@ package no.makingwaves.cust.dss.code
 		}
 		
 		public function addAccessibility(comp:UIComponent, text:String="", forceSimple:Boolean=false, noAutoLabeling:Boolean=true):void {
-			comp.accessibilityProperties = new AccessibilityProperties();
-            comp.accessibilityProperties.name = text;
-            comp.accessibilityProperties.forceSimple = forceSimple; 
-            comp.accessibilityProperties.noAutoLabeling = noAutoLabeling;	
-            
-			flash.accessibility.Accessibility.updateProperties();
+			if (Capabilities.hasAccessibility) {
+				comp.accessibilityProperties = new AccessibilityProperties();
+	            comp.accessibilityProperties.name = text;
+	            comp.accessibilityProperties.forceSimple = forceSimple; 
+	            comp.accessibilityProperties.noAutoLabeling = noAutoLabeling;	
+	            
+				flash.accessibility.Accessibility.updateProperties();
+			}
 		}
 		
 		/* function obsolite

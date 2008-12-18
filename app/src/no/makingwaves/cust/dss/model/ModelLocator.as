@@ -174,7 +174,7 @@ package no.makingwaves.cust.dss.model
 		
 		public var localSavePersonal : Boolean = false;
 		
-		public var saveWithPersonalInfo : Boolean = false;
+		public var saveWithPersonalInfo : Boolean = true;
 		
 		public var positionParameter : Number = (800 / 3);
 		
