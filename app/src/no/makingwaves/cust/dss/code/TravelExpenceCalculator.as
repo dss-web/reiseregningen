@@ -274,8 +274,12 @@ package no.makingwaves.cust.dss.code
 						intRate = new TravelRateInternationalVO();
 						var travelInfo:DateRanger = ModelLocator.getInstance().travelLength;
 						var localRate:TravelRateRuleVO;
-						if (travelInfo.total_min > 12) {
-							localRate = getRate("allowance_04"); 
+						if (travelInfo.total_hours >= 24) {
+							localRate = getRate("allowance_04b"); 
+							
+						} else if (travelInfo.total_hours > 12) {
+							localRate = getRate("allowance_04a");
+							 
 						} else {
 							localRate = getRate("allowance_03");
 						}
@@ -351,112 +355,17 @@ package no.makingwaves.cust.dss.code
 			return amount;
 		}
 		
-		/* BACKUP of calculateInternationalAllowance from 08.10.2008 /*
-		private function calculateInternationalAllowance(rateRule:TravelRateRuleVO, date:Date=null):Number {
-			var amount:Number = 0.0;
-			var days:Number = 1;
-			var dailyAllowance:Number;
-			var intRate:TravelRateInternationalVO;
-			var prevIntRate:TravelRateInternationalVO;
-			var specificationList:ArrayCollection = ModelLocator.getInstance().travelSpecsList;
-			var startDistance:TravelSpecificationVO;
-			var endDistance:TravelSpecificationVO;
-			var nextDistance:TravelSpecificationVO;
-			var allowancesInternational:ArrayCollection = new ArrayCollection();
-			// update travelallowance
-			ModelLocator.getInstance().travelAllowance.domestic = false;
-			// search through all specifications to find allowance parameters
-			for (var i:Number = 0; i < specificationList.length; i++) {
-				var traveldistance:TravelSpecificationVO = TravelSpecificationVO(specificationList.getItemAt(i));
-				if (traveldistance.is_travel_start && startDistance == null) {
-					startDistance = traveldistance;
-				} 
-				if (startDistance != null && traveldistance.is_travel_end) {
-					endDistance = traveldistance;
-					
-				} 
-				if (startDistance != null && endDistance != null && nextDistance == null) {
-					if (i == specificationList.length-1) {
-						nextDistance = traveldistance;
-					} else {		
-						nextDistance = TravelSpecificationVO(specificationList.getItemAt(i+1));;
-					}					
-				} 
-				
-				if (nextDistance != null) {
-					// a complete distance has been found - start calculating cost for this distance
-					
-					// find correct rate for this distance
-					intRate = this.getInternationalRate(endDistance.to_country, endDistance.to_city);
-					if (intRate != null) {
-						prevIntRate = intRate;						
-					} else if (intRate == null && prevIntRate != null) {
-						intRate = prevIntRate;
-					} else if (intRate == null && prevIntRate == null) {
-						// travel distance is not filled in properly or is not a international travel
-						intRate = new TravelRateInternationalVO();
-					}
-					dailyAllowance = Number(((intRate.allowance * rateRule.percent) / 100).toFixed(2));					
-					
-					// find how long period of time this travel distance took
-					var distanceRange:DateRanger = new DateRanger();
-					var endDate:Date = (nextDistance.from_date != null) ? nextDistance.from_date : nextDistance.to_date;
-					distanceRange.getDateRange(startDistance.from_date, endDate);
-					// if travel is over more than a day
-					days = distanceRange.days;
-					if (distanceRange.total_hours > 24) {
-						// for travels over 24 hours, 6 hours or more into a new 24-hour period counts as one 24-hour.
-						if (distanceRange.hours >= 6) {	
-							days++;
-						}
-					}
-					
-					// calculate allowance for this distance
-					if (date == null) {
-						var allowance:RateVO = new RateVO();
-						allowance.rate = dailyAllowance;
-						if (days > 0) {
-							amount += Number((dailyAllowance * days).toFixed(2));
-							// add to model reference array
-							allowance.num = days;
-							allowance.amount = Number((dailyAllowance * days).toFixed(2));
-							allowancesInternational.addItem(allowance);
-						} else {
-							// calculate international day trip, no accomodation
-							amount += Number(dailyAllowance.toFixed(2));
-							allowance.num = distanceRange.total_hours;
-							allowance.amount = Number((dailyAllowance * 1).toFixed(2));
-							ModelLocator.getInstance().travelAllowance.allowance = allowance;
-						}
-						
-					} else {
-						// if date is defined, only daily allowance for this date should be returned
-						if (date >= startDistance.from_date && date <= endDate) {
-							return dailyAllowance;
-						}
-					}
-					
-					// reset distance to search for another
-					startDistance = null;
-					endDistance = null;
-					nextDistance = null;
-				}
-			}
-
-			// update allowance model
-			ModelLocator.getInstance().travelAllowance.allowance_international = allowancesInternational;
-			
-			return amount;
-		}
-		*/
-		
 		private function getAllowanceRate(travelInfo:TravelVO, travelDateInfo:DateRanger):TravelRateRuleVO {
 			var rateName:String = "allowance";
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				// DOMESTIC TRAVEL
-				if (travelDateInfo.total_hours >= 12) {
+				if (travelDateInfo.total_hours >= 24) {
+					// travel longer than 12 hours ( with accomodation
+					rateName += "_04b";
+					
+				} else if (travelDateInfo.total_hours >= 12) {
 					// travel longer than 12 hours
-					rateName += "_04";
+					rateName += "_04a";
 					
 				} else if (travelDateInfo.total_hours >= 9 && travelDateInfo.total_hours < 12) {
 					// travel periode between 9 and 12 hours

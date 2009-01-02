@@ -24,7 +24,8 @@
 	<travelraterule id="allowance_01" cost="140.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på inntil 5 timer. Legitimert sats" />
 	<travelraterule id="allowance_02" cost="160.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 5 timer inntil 9 timer." />
 	<travelraterule id="allowance_03" cost="250.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 9 timer inntil 12 timer." />
-	<travelraterule id="allowance_04" cost="530.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise med overnatting, med reiselengde over 15 km på fra og med 12 timer." />
+	<travelraterule id="allowance_04a" cost="380.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved over 15 km på fra og med 12 timer." />
+	<travelraterule id="allowance_04b" cost="530.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise med overnatting, med reiselengde over 15 km på fra og med 12 timer." />
 
 	<travelraterule id="allowance_05" cost="" percent="66.66" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 6 og inntil 12 timer." />
 	<travelraterule id="allowance_06" cost="" percent="100" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 12 timer." />
