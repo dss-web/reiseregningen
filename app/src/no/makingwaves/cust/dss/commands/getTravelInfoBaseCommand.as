@@ -57,13 +57,13 @@ package no.makingwaves.cust.dss.commands
 			
 			var personalInfo:webservices.travelexpense.pdf.PersonalInfoVO = new webservices.travelexpense.pdf.PersonalInfoVO();
 			var modelInfo:no.makingwaves.cust.dss.vo.PersonalInfoVO = ModelLocator.getInstance().activePerson;
-			personalInfo.socialsecuritynumber = "";//(includeData) ? modelInfo.socialsecuritynumber : "";
+			personalInfo.socialsecuritynumber = (includeData) ? modelInfo.socialsecuritynumber : "";
 			personalInfo.firstname = (includeData) ? modelInfo.firstname : "";
 			personalInfo.lastname = (includeData) ? modelInfo.lastname : "";
 			personalInfo.adress = (includeData) ? modelInfo.adress : "";
 			personalInfo.zip = (includeData) ? modelInfo.zip : "";
 			personalInfo.postoffice = (includeData) ? modelInfo.postoffice : "";
-			personalInfo.account = "";//(includeData) ? modelInfo.account : "";
+			personalInfo.account = (includeData) ? modelInfo.account : "";
 			personalInfo.workplace = (includeData) ? modelInfo.workplace : "";
 			personalInfo.department = (includeData) ? modelInfo.department : "";
 			personalInfo.jobtitle = (includeData) ? modelInfo.jobtitle : "";
