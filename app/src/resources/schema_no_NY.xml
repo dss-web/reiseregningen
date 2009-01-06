@@ -11,7 +11,7 @@
 			<text id="header_settlement" value="Oppgjer"/>
 			<text id="button_continue" value="Framhald"/>
 			<text id="button_see_edit" value="Endre detaljar"/>
-			<text id="button_ok"/>
+			<text id="button_ok" value="OK"/>
 			<text id="button_yes" value="Ja"/>
 			<text id="button_no" value="Nei"/>
 			<text id="button_cancel" value="Avbryt"/>
