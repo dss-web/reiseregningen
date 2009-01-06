@@ -80,6 +80,16 @@
 				
 				model.screenreader = flash.accessibility.Accessibility.active;
 				model.runTransitions = !model.screenreader;
+				
+				buildContextMenu();
+			}
+			
+			private function buildContextMenu() {
+				var cMenu:ContextMenu = new ContextMenu();
+				cMenu.hideBuiltInItems();
+				var cMenuItemVersion:ContextMenuItem = new ContextMenuItem("Reiseregningen.no - versjon " + model.VERSION);
+				cMenu.customItems.push(cMenuItemVersion);
+				this.contextMenu = cMenu; 
 			}
 			
 			/**
@@ -1232,7 +1242,7 @@
 		    	
 		    </mx:VBox>
 		    
-		    
+		    <mx:Text text="{'Running on ' + flash.system.Capabilities.os}" paddingLeft="50" width="100%" />
 	    </mx:VBox>
 		    
 	    </mx:VBox>

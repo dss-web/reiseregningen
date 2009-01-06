@@ -66,6 +66,10 @@ package no.makingwaves.cust.dss.model
 			localSavePersonal = false;
 		}
 		
+		// VERSION ================================================================
+		
+		public const VERSION : String = "1.0.1";
+		
 		// STATICS ================================================================
 		
 		public const DETAILS : Number = 0;
