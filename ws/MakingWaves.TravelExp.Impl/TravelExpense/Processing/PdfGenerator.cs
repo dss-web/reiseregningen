@@ -169,12 +169,21 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
             }
             if (travelExpense.accomodationList != null)
             {
+                int count = 1;
+
                 foreach (TravelAccomodationVO acc in travelExpense.accomodationList)
                 {
                     int fieldNr = 258 + 6 * counter;
                     if (acc.fromdate.HasValue)
                         FillField(fieldNr.ToString(), acc.fromdate.Value.ToString("dd'.'MM'.'yy"));
-                    FillField((fieldNr + 1).ToString(), acc.country+", "+ acc.name); //.specito.specification);
+                    FillField((fieldNr + 1).ToString(), acc.country +  (acc.country.Length > 0 ? "," : "") + acc.name); //.specito.specification);
+
+                    // Fill in Overnattning. Take first hotell in list.
+                    if(count++ == 1)
+                        FillField("324", acc.name + (acc.adress.Length > 0 &&  acc.name.Length > 0 ? "," + acc.adress : ""));
+
+
+
                     if (acc.cost != null)
                     {
                         if (acc.actual_cost.cost_currency_rate != 1)
@@ -470,6 +479,8 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
                 }
                 FillField("325", wholeComment);
             }
+
+            
         }
 
         /// <summary>
