@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+	@updated:	07.01.2009
+	@by:		Sven Aanesen, Making Waves
+	@comment:	inserted comments field for version control
+-->
 <currency_codes>
 	<code id="AED" description="United Arab Emirates, Dirhams" factor="1" />
 	<code id="AFN" description="Afghanistan, Afghanis" factor="1" />

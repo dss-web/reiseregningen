@@ -1,4 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+	@updated:	07.01.2009
+	@by:		Sven Aanesen, Making Waves
+	@comment:	inserted comments field for version control
+-->
 <international_rates>
 	<rate code="AFG" night="780" allowance="470" textid="AFG" desc="Afganistan" />
 	<rate code="AFG" night="780" allowance="470" textid="AFG_kabul" desc="Afganistan; Kabul" />

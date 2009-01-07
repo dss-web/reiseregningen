@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+	@updated:	07.01.2009
+	@by:		Sven Aanesen, Making Waves
+	@comment:	inserted comments field for version control
+-->
 <!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Cathrin (making Waves) -->
 <localization>
 	<type>no_BO</type>

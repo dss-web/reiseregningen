@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+	@updated:	07.01.2009
+	@by:		Sven Aanesen, Making Waves
+	@comment:	inserted comments field for version control
+-->
 <domicialnumbers>
 	<domicial code="0101" domicialname="Halden" />
 	<domicial code="0104" domicialname="Moss" />
