@@ -355,12 +355,12 @@ package no.makingwaves.cust.dss.code
 			return amount;
 		}
 		
-		private function getAllowanceRate(travelInfo:TravelVO, travelDateInfo:DateRanger):TravelRateRuleVO {
+		private function getAllowanceRate(travelInfo:TravelVO, travelDateInfo:DateRanger, forDeduction:Boolean=false):TravelRateRuleVO {
 			var rateName:String = "allowance";
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				// DOMESTIC TRAVEL
-				if (travelDateInfo.total_hours >= 24) {
-					// travel longer than 12 hours ( with accomodation
+				if (travelDateInfo.total_hours >= 24 || (travelDateInfo.total_hours > 0 && forDeduction)) {
+					// travel longer than 12 hours ( with accomodation ) OR if over 12 hours when getting allowance for deductions
 					rateName += "_04b";
 					
 				} else if (travelDateInfo.total_hours >= 12) {
@@ -769,7 +769,7 @@ package no.makingwaves.cust.dss.code
 			// init vars and find different rates
 			var amount:Number = 0.0;
 			//var days:Number = 1;
-			//var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
+			var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
 			var travelInfo:TravelVO = ModelLocator.getInstance().activeTravel;
 			
 			var rateName:String = "redraw";
@@ -777,10 +777,17 @@ package no.makingwaves.cust.dss.code
 			var lunchRate:TravelRateRuleVO;
 			var dinnerRate:TravelRateRuleVO;
 			var extraRate:TravelRateRuleVO;
+			var dailyAllowance:Number = 0;
+			var dailyRealAllowance:Number = 0;
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				breakfastRate = this.getRate(rateName + "_01");
 				lunchRate = this.getRate(rateName + "_02");
 				dinnerRate = this.getRate(rateName + "_03");
+				// calc daily allowance for domestic travel
+				var rateRealRule:TravelRateRuleVO = this.getAllowanceRate(travelInfo, travelDateInfo);
+				var rateDeductionRule:TravelRateRuleVO = this.getAllowanceRate(travelInfo, travelDateInfo, true);
+				dailyRealAllowance = Number(rateRealRule.cost.toFixed(2));
+				dailyAllowance = Number(rateDeductionRule.cost.toFixed(2));
 			} else {
 				breakfastRate = this.getRate(rateName + "_04");
 				lunchRate = this.getRate(rateName + "_05");
@@ -792,17 +799,17 @@ package no.makingwaves.cust.dss.code
 				var deductionList:ArrayCollection = ModelLocator.getInstance().travelDeductionList;
 				for (var i:Number = 0; i < deductionList.length; i++) {
 					var deduction:TravelDeductionVO = TravelDeductionVO(deductionList.getItemAt(i));
-					amount += this.calculateDeduction(deduction, breakfastRate, lunchRate, dinnerRate, extraRate);
+					amount += this.calculateDeduction(deduction, breakfastRate, lunchRate, dinnerRate, extraRate, dailyAllowance, dailyRealAllowance);
 				}
 			} else {
-				amount += this.calculateDeduction(only_deduction, breakfastRate, lunchRate, dinnerRate, extraRate);
+				amount += this.calculateDeduction(only_deduction, breakfastRate, lunchRate, dinnerRate, extraRate, dailyAllowance, dailyRealAllowance);
 			}
 			return amount;
 		}
 		
-		public function calculateDeduction(deduction:TravelDeductionVO, breakfastRate:TravelRateRuleVO, lunchRate:TravelRateRuleVO, dinnerRate:TravelRateRuleVO, extraRate:TravelRateRuleVO):Number {
+		public function calculateDeduction(deduction:TravelDeductionVO, breakfastRate:TravelRateRuleVO, lunchRate:TravelRateRuleVO, dinnerRate:TravelRateRuleVO, extraRate:TravelRateRuleVO, allowance:Number=0, realAllowance:Number=0):Number {
 			var amount:Number = 0.0;
-			var dailyAllowance:Number = this.getDailyAllowance(deduction.date);
+			var dailyAllowance:Number = (allowance != 0) ? allowance : this.getDailyAllowance(deduction.date);
 			if (deduction.breakfast) {
 				if (breakfastRate.cost != 0) {
 					amount -= Number(breakfastRate.cost);
@@ -826,6 +833,11 @@ package no.makingwaves.cust.dss.code
 			}
 			if (deduction.breakfast && deduction.lunch && deduction.dinner) {
 				amount += extraRate.cost;
+			}
+			
+			// if deduction gets larger than the real allowance for this day - reduce deduction
+			if (Math.abs(amount) > realAllowance && realAllowance != 0) {
+				amount = -realAllowance;
 			}
 			
 			// update deduction VO
