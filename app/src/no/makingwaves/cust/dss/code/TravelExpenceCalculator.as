@@ -142,7 +142,7 @@ package no.makingwaves.cust.dss.code
 			var num24hours:Number = travelPeriode.total_24hours;
 			if (num24hours > 0 && travelPeriode.hours >= 6) { num24hours++; }
 			
-			if (travelPeriode.total_min != 0) {
+			if (travelPeriode.total_min != 0 && specificationList.length > 0) {
 				// set start date and first periode
 				var msPerDay:int = 1000 * 60 * 60 * 24;
 				var msPerHour:int = 1000 * 60 * 60;
@@ -268,7 +268,9 @@ package no.makingwaves.cust.dss.code
 						}
 					}
 					// get the rate
-					intRate = this.getInternationalRate(maxTimeframeObject.country, maxTimeframeObject.city);
+					try {
+						intRate = this.getInternationalRate(maxTimeframeObject.country, maxTimeframeObject.city);
+					} catch (e:Error) { intRate = null; }
 					if (intRate == null) {
 						// active 'rate' is in home country - find domestic rate 
 						intRate = new TravelRateInternationalVO();
