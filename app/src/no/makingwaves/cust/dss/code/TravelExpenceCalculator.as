@@ -578,41 +578,47 @@ package no.makingwaves.cust.dss.code
 				if (type == "car") {
 					var detailsCar:CarSpecificationVO = CarSpecificationVO(travelSpec.specification);
 					if (detailsCar.distance_calender == detailsCar.TYPE_ABOVE_9000KM) {
+						var newAllowance2:Number = detailsCar.distance * distanceAbove9000.cost;
 						car_distance2.num += detailsCar.distance;
 						car_distance2.rate = distanceAbove9000.cost;
-						car_distance2.amount += (car_distance2.num * car_distance2.rate);
+						car_distance2.amount += newAllowance2;
 
 					} else if (detailsCar.distance_calender == detailsCar.TYPE_BELOW_9000KM) {
+						var newAllowance1:Number = detailsCar.distance * distanceBelow9000.cost;
 						car_distance1.num += detailsCar.distance;
 						car_distance1.rate = distanceBelow9000.cost;
-						car_distance1.amount += (car_distance1.num * car_distance1.rate);
+						car_distance1.amount += newAllowance1;
 					
 					}
 					
 					// more rates
 					if (detailsCar.additional_workplace) {
 						var workplaceRate:TravelRateRuleVO = getRate("transport_car_extra_01");
+						var workAllowance:Number = detailsCar.distance * workplaceRate.cost;
 						car_otherrates.num += detailsCar.distance;
-						car_otherrates.amount += (car_otherrates.num * workplaceRate.cost);
+						car_otherrates.amount += workAllowance;
 
 					}
 					if (detailsCar.passengers > 0) {
 						var passengerRate:TravelRateRuleVO = getRate("transport_car_extra_02");
+						var passAllowance:Number = detailsCar.distance * car_passengers.rate;
 						car_passengers.num += detailsCar.distance;
 						car_passengers.rate = passengerRate.cost;
-						car_passengers.amount += (car_passengers.num * car_passengers.rate);
+						car_passengers.amount += passAllowance;
 					
 					}
 					if (detailsCar.additional_trailer) {
 						var trailerRate:TravelRateRuleVO = getRate("transport_car_extra_03");
+						var otherAllowance:Number = detailsCar.distance * trailerRate.cost;
 						car_otherrates.num += detailsCar.distance;
-						car_otherrates.amount += (car_otherrates.num * trailerRate.cost);
+						car_otherrates.amount += otherAllowance;
 
 					}
 					if (detailsCar.distance_forestroad > 0) {
 						var forrestRate:TravelRateRuleVO = getRate("transport_car_extra_04");
+						var otherAllowance2:Number = detailsCar.distance_forestroad * forrestRate.cost;
 						car_otherrates.num += detailsCar.distance_forestroad;
-						car_otherrates.amount += (car_otherrates.num * forrestRate.cost);
+						car_otherrates.amount += otherAllowance2;
 
 					}
 				}

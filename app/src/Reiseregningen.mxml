@@ -1242,7 +1242,7 @@
 		    	
 		    </mx:VBox>
 		    
-		    <mx:Text text="{'Running on ' + flash.system.Capabilities.os}" paddingLeft="50" width="100%" />
+		    <mx:Text text="{'Running on ' + flash.system.Capabilities.os}" alpha="0" paddingLeft="50" width="100%" />
 	    </mx:VBox>
 		    
 	    </mx:VBox>
