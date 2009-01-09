@@ -228,10 +228,10 @@ package no.makingwaves.cust.dss.commands
 						otherNewSpecification.other_type = otherModelSpecification.other_type;
 						otherNewSpecification.passengers = otherModelSpecification.passengers;
 						otherNewSpecification.rate = otherModelSpecification.rate;
-						otherNewSpecification.cost = new webservices.travelexpense.pdf.CostVO();
+						otherNewSpecification.cost = newSpecification.cost; /*new webservices.travelexpense.pdf.CostVO();
 						otherNewSpecification.cost.cost = otherModelSpecification.cost.cost; 
 						otherNewSpecification.cost.cost_currency = otherModelSpecification.cost.cost_currency;
-						otherNewSpecification.cost.cost_currency_rate = otherModelSpecification.cost.cost_currency_rate;
+						otherNewSpecification.cost.cost_currency_rate = otherModelSpecification.cost.cost_currency_rate;*/
 						
 						newSpecification.specification_aggregate = new webservices.travelexpense.pdf.AnySpecificationAggregateVO();
 						newSpecification.specification_aggregate.which_specification_used = 5;

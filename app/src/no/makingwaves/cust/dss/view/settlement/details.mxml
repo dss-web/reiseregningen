@@ -158,12 +158,22 @@
 				}				
 
 				// check wether accomodations are complete registered
-				var nightsOfTravel:Number = model.travelLength.total_24hours;
+				// get actual travel dates and set hours to the same for all dates
+				var departureDate:Date = new Date(model.activeTravel.travel_date_out);
+				var arrivalDate:Date = new Date(model.activeTravel.travel_date_in);
+				departureDate.setHours(12,00,00,00);
+				arrivalDate.setHours(12,00,00,00);
+				
+				var nightsOfTravel:DateRanger = new DateRanger();
+				nightsOfTravel.getDateRange(departureDate, arrivalDate);
+				
 				var nightsOfAccomodation:Number = 0;
 				var numOfBreakfasts:Number = 0;
 				for (var a:Number = 0; a < model.travelAccomodationList.length; a++) {
 					var travelacc:TravelAccomodationVO = TravelAccomodationVO(model.travelAccomodationList.getItemAt(a));
 					var accRange:DateRanger = new DateRanger();
+					travelacc.fromdate.setHours(12,00,00,00);
+					travelacc.todate.setHours(12,00,00,00);
 					accRange.getDateRange(travelacc.fromdate, travelacc.todate);
 					nightsOfAccomodation += accRange.total_24hours;
 					// check wether breakfast is included
@@ -172,7 +182,7 @@
 					}
 				}
 				var accError:String = "";
-				if (nightsOfTravel != nightsOfAccomodation) {
+				if (nightsOfTravel.total_24hours != nightsOfAccomodation) {
 					// accomodations are not completed
 					accError = resourceManager.getString(model.resources.bundleName, 'settlement_error_accomodations');
 				}
@@ -214,7 +224,7 @@
 					custom_alert(alertWindow).alertText = errorMessage;
 					custom_alert(alertWindow).title = errorHeader;
 				} else {
-					formIsValid = false;
+					formIsValid = true;
 				}
 			}
 			
