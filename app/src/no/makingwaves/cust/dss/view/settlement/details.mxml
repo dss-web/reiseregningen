@@ -50,6 +50,9 @@
 			[Bindable]
 			private var costTotal:String;
 			
+			[Bindable]
+			private var formIsValid:Boolean;
+			
 			private var _lastFocus:*
 			private var _introIntervaller : Number;
 			
@@ -193,6 +196,7 @@
 				// alert user of any missing specifications?
 				//if (specError != "" || accError != "" || deductionError != "") {
 				if (specError != "" || accError != "") {
+					formIsValid = false;
 					var errorHeader:String = resourceManager.getString(model.resources.bundleName, 'settlement_error_header');
 					var errorMessage:String = resourceManager.getString(model.resources.bundleName, 'settlement_error_intro');
 					if (specError != "")
@@ -209,6 +213,8 @@
 					alertWindow = PopUpManager.createPopUp(this, custom_alert, true);
 					custom_alert(alertWindow).alertText = errorMessage;
 					custom_alert(alertWindow).title = errorHeader;
+				} else {
+					formIsValid = false;
 				}
 			}
 			
@@ -346,7 +352,7 @@
 				   label="{resourceManager.getString(model.resources.bundleName, 'button_save_form')}"/>
 				   
 		<mx:Button id="pdf" tabIndex="399" visible="true" right="350" styleName="secondary"  width="160" height="30"
-				   click="{openPdf()}"  
+				   click="{openPdf()}" enabled="{formIsValid}"
 			       toolTip="{resourceManager.getString(model.resources.bundleName, 'popupblockerhelp')}"
 			       label="{resourceManager.getString(model.resources.bundleName, 'button_print_form')}">
 			<mx:icon>@Embed(source='assets/media/images/icons/btn_print.png')</mx:icon>

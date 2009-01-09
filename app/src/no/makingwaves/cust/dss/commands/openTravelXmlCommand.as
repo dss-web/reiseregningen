@@ -170,7 +170,11 @@ package no.makingwaves.cust.dss.commands
 				newSpecification.cost.cost_currency_rate = savedSpecification.cost.cost_currency_rate;
 				// find correct sub-specification
 				if (savedSpecification.specification_aggregate != null) {
-					if (savedSpecification.specification_aggregate.car_specification) {
+					var CAR:Number = 2;
+					var MOTORBOAT:Number = 3;
+					var MOTORCYCLE:Number = 4;
+					var OTHER:Number = 5;
+					if (savedSpecification.specification_aggregate.which_specification_used == CAR) {
 						var carSavedSpecification:webservices.travelexpense.pdf.CarSpecificationVO = webservices.travelexpense.pdf.CarSpecificationVO(savedSpecification.specification_aggregate.car_specification);
 						var carNewSpecification:no.makingwaves.cust.dss.vo.CarSpecificationVO = new no.makingwaves.cust.dss.vo.CarSpecificationVO();
 						carNewSpecification.type = carSavedSpecification.type;
@@ -189,7 +193,7 @@ package no.makingwaves.cust.dss.commands
 						newSpecification.specification = new no.makingwaves.cust.dss.vo.CarSpecificationVO();
 						newSpecification.specification = carNewSpecification;
 						
-					} else if (savedSpecification.specification_aggregate.motorboat_specification) {
+					} else if (savedSpecification.specification_aggregate.which_specification_used == MOTORBOAT) {
 						var boatSavedSpecification:webservices.travelexpense.pdf.MotorboatSpecificationVO = webservices.travelexpense.pdf.MotorboatSpecificationVO(savedSpecification.specification_aggregate.motorboat_specification);
 						var boatNewSpecification:no.makingwaves.cust.dss.vo.MotorboatSpecificationVO = new no.makingwaves.cust.dss.vo.MotorboatSpecificationVO();
 						boatNewSpecification.type = boatSavedSpecification.type;
@@ -205,7 +209,7 @@ package no.makingwaves.cust.dss.commands
 						newSpecification.specification = new no.makingwaves.cust.dss.vo.MotorboatSpecificationVO();
 						newSpecification.specification = boatNewSpecification;
 						
-					} else if (savedSpecification.specification_aggregate.motorcycle_specification) {
+					} else if (savedSpecification.specification_aggregate.which_specification_used == MOTORCYCLE) {
 						var cycleModelSpecification:webservices.travelexpense.pdf.MotorcycleSpecificationVO = webservices.travelexpense.pdf.MotorcycleSpecificationVO(savedSpecification.specification_aggregate.motorcycle_specification);
 						var cycleNewSpecification:no.makingwaves.cust.dss.vo.MotorcycleSpecificationVO = new no.makingwaves.cust.dss.vo.MotorcycleSpecificationVO();
 						cycleNewSpecification.type = cycleModelSpecification.type;
@@ -221,7 +225,7 @@ package no.makingwaves.cust.dss.commands
 						newSpecification.specification = new no.makingwaves.cust.dss.vo.MotorcycleSpecificationVO();
 						newSpecification.specification = cycleNewSpecification;
 						
-					} else if (savedSpecification.specification_aggregate.other_specification) {
+					} else if (savedSpecification.specification_aggregate.which_specification_used == OTHER) {
 						var otherSavedSpecification:webservices.travelexpense.pdf.OtherSpecificationVO = webservices.travelexpense.pdf.OtherSpecificationVO(savedSpecification.specification_aggregate.other_specification);
 						var otherNewSpecification:no.makingwaves.cust.dss.vo.OtherSpecificationVO = new no.makingwaves.cust.dss.vo.OtherSpecificationVO();
 						otherNewSpecification.type = otherSavedSpecification.type;
@@ -235,7 +239,7 @@ package no.makingwaves.cust.dss.commands
 						otherNewSpecification.cost.cost_currency_rate = otherSavedSpecification.cost.cost_currency_rate;
 						
 						newSpecification.specification = new no.makingwaves.cust.dss.vo.OtherSpecificationVO();
-						newSpecification.specification = cycleNewSpecification;
+						newSpecification.specification = otherNewSpecification;
 					}
 				} else {
 					//var ticketModelSpecification:no.makingwaves.cust.dss.vo.TicketSpecificationVO = no.makingwaves.cust.dss.vo.TicketSpecificationVO(modelSpecification.specification);
