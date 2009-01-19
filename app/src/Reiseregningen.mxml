@@ -1178,14 +1178,14 @@
 	    	
 	    	<mx:VBox width="980" paddingLeft="15" paddingRight="15" paddingTop="10" paddingBottom="10">
 	    		<mx:VBox id="introductionPage" width="950">
-	    			<!--mx:VBox styleName="FramedBox" width="100%" id="vbox1">
+	    			<mx:VBox styleName="FramedBox" width="100%" id="vbox1">
 		    			<mx:Box id="boxIntroHeader" width="100%" styleName="headerBox">
-			    			<mx:Text id="site_header" width="100%" text="{resourceManager.getString(model.resources.bundleName, 'site_header')}" />
+			    			<mx:Text id="site_header" width="100%" htmlText="{resourceManager.getString(model.resources.bundleName, 'site_header')}" />
 			    		</mx:Box>
 			    		<mx:Box id="boxIntroContent" width="100%" styleName="formsBox">
 			    			<mx:Text id="site_intro" width="70%" text="{resourceManager.getString(model.resources.bundleName, 'site_intro')}" />
 			    		</mx:Box>
-	    			</mx:VBox-->
+	    			</mx:VBox>
 	    		</mx:VBox>
 	    		
 		    	<mx:HBox id="mainPersonal" width="950" visible="false">

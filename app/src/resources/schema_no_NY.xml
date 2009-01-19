@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	07.01.2009
+	@updated:	14.01.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	inserted comments field for version control
+	@comment:	Lagt inn dummy tekst på 'site_intro'
 -->
 <!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Cathrin (making Waves) -->
 <localization>
 	<type>no_BO</type>
 	<media>
 		<texts>
-			<text id="site_header" value="Reiserekninga på web" />
-			<text id="site_intro" value="" />
+			<text id="site_header" value="reiseregningen.no" />
+			<text id="site_intro" value="Her kan det legges inn forsidetekst" />
 			<text id="header_personal" value="Personleg informasjon og jobbdetaljar"/>
 			<text id="header_travel" value="Reisa"/>
 			<text id="header_settlement" value="Oppgjer"/>

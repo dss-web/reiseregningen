@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	07.01.2009
+	@updated:	14.01.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	inserted comments field for version control
+	@comment:	fjernet kodelinje i bunn av xmlfilen
 -->
 <domicialnumbers>
 	<domicial code="0101" domicialname="Halden" />
@@ -434,5 +434,5 @@
 	<domicial code="2025" domicialname="Deatnu Tana" />
 	<domicial code="2027" domicialname="Unjárga Nesseby" />
 	<domicial code="2028" domicialname="Båtsfjord" />
-	<domicial code="2030" domicialname="Sør-Varanger=&onLoad=[type Function]" />
+	<domicial code="2030" domicialname="Sør-Varanger" />
 </domicialnumbers>
