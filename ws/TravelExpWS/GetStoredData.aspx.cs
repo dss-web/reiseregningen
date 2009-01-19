@@ -46,7 +46,8 @@ public partial class GetStoredData : System.Web.UI.Page
             //Response.AddHeader("Content-Disposition", "file;filename=" + "MyTravel.xml");
             Response.OutputStream.Write(res.Data, 0, res.Data.Length);
             Response.Flush();
-            Response.Close();
+            //Response.Close();            
+            Response.End();
             log.Info("Written StoredDataEntry with id="+id+" with ContentType="+res.ContentType);
         }
         catch (EndUserException exc)

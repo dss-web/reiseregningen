@@ -77,7 +77,7 @@ public class TravelExpense : System.Web.Services.WebService
             MakingWaves.TravelExp.Impl.TravelExpense.TravelExpenseService service =
                 new MakingWaves.TravelExp.Impl.TravelExpense.TravelExpenseService();
             MakingWaves.TravelExp.Impl.TravelExpense.DataStructures.TravelReportDocumentVO resPdf = service.getTravelPdf(travel);
-            string pdfId = StoredDataRepository.Instance.AddNewEntry(new StoredDataEntry("application/pdf", resPdf.PdfFileBytes));
+            string pdfId = StoredDataRepository.Instance.AddNewEntry(new StoredDataEntry("application/pdf", resPdf.PdfFileBytes));            
             log.Debug("getTravelPdfAsStoredId: returning " + pdfId);
             log.Debug("===================  END - getTravelPdfAsStoredId  =============");
             log.Debug("================================================================");
@@ -99,7 +99,7 @@ public class TravelExpense : System.Web.Services.WebService
         MakingWaves.TravelExp.Impl.TravelExpense.TravelExpenseService service =
             new MakingWaves.TravelExp.Impl.TravelExpense.TravelExpenseService();
         byte[] xmlBin = service.getTravelXml(travel);
-        StoredDataEntry entry = new StoredDataEntry("application/download", xmlBin);
+        StoredDataEntry entry = new StoredDataEntry("application/download", xmlBin);        
         entry.ForceDownload = true;
         entry.SaveAsFileName = "TravelData.xml";
         string id = StoredDataRepository.Instance.AddNewEntry(entry);
