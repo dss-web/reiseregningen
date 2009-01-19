@@ -6,8 +6,9 @@
 	<resource id="currencyCodes" url="resources/currency_codes.xml" />
 	<resource id="postalCodes" url="resources/postoffice_codes.xml" />
 	<resource id="domicialNumberCodes" url="resources/domicialnumbers.xml" />
-	<resource id="webservices" url="http://[insert_url_to_webservice_here]/TravelExpWS/TravelExpense.asmx" />
-	<resource id="cross-domain-policy" url="http://[insert_url_to_webservice_here]/crossdomain.xml" />
-	<resource id="ws_connection" url="http://[insert_url_to_webservice_here]/TravelExpWS/GetStoredData.aspx" />
-	<resource id="ws_xml_uploader" url="http://[insert_url_to_webservice_here]/TravelExpWS/Uploader.ashx" />
+	
+	<resource id="webservices" url="http://reisetest.makingwaves.no/TravelExpWS/TravelExpense.asmx" />
+	<resource id="cross-domain-policy" url="http://reisetest.makingwaves.no/crossdomain.xml" />
+	<resource id="ws_connection" url="http://reisetest.makingwaves.no/TravelExpWS/GetStoredData.aspx" />
+	<resource id="ws_xml_uploader" url="http://reisetest.makingwaves.no/TravelExpWS/Uploader.ashx" />
 </resources>

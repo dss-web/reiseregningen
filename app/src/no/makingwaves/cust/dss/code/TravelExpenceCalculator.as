@@ -839,9 +839,11 @@ package no.makingwaves.cust.dss.code
 					amount -= Number(((dailyAllowance * dinnerRate.percent)/100).toFixed(2));
 				}
 			}
+			/* additional allowance when all meals are coverd - temp removed
 			if (deduction.breakfast && deduction.lunch && deduction.dinner) {
 				amount += extraRate.cost;
 			}
+			*/
 			
 			// if deduction gets larger than the real allowance for this day - reduce deduction
 			if (Math.abs(amount) > realAllowance && realAllowance != 0) {
