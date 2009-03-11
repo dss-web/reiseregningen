@@ -4,7 +4,7 @@
 			xmlns:view="no.makingwaves.cust.dss.view.*"
 			xmlns:common="no.makingwaves.cust.dss.view.specifications.transport.common.*"
 			xmlns:mx="http://www.adobe.com/2006/mxml"
-			creationComplete="init()">
+			creationComplete="init()" addedToStage="reset()">
 			
 	<mx:Script>
 		<![CDATA[
@@ -20,6 +20,14 @@
 			public var motorcyclespecifications : MotorcycleSpecificationVO;
 						
 			private function init():void {
+				reset();
+				
+				// add accessibility
+                model.accessibility.addAccessibility(motorcycle_type_radio1, resourceManager.getString(model.resources.bundleName, 'motorcycle_type_label'));
+                model.accessibility.addAccessibility(motorcycle_type_radio2, resourceManager.getString(model.resources.bundleName, 'motorcycle_type_label'));
+			}
+			
+			private function reset():void {
 				motorcyclespecifications = new MotorcycleSpecificationVO();
 				try {
 					if (travelspecifications.specification != null) {
@@ -29,9 +37,6 @@
 					trace("motorcycle.init: " + e.message);
 					motorcyclespecifications = new MotorcycleSpecificationVO();
 				}
-				// add accessibility
-                model.accessibility.addAccessibility(motorcycle_type_radio1, resourceManager.getString(model.resources.bundleName, 'motorcycle_type_label'));
-                model.accessibility.addAccessibility(motorcycle_type_radio2, resourceManager.getString(model.resources.bundleName, 'motorcycle_type_label'));
 			}
 			
 			override public function validateDetailsForm():Boolean {

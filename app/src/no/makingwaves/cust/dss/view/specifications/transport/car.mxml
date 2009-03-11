@@ -4,7 +4,7 @@
 			xmlns:view="no.makingwaves.cust.dss.view.*"
 			xmlns:common="no.makingwaves.cust.dss.view.specifications.transport.common.*"
 			xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
-			creationComplete="init()">
+			creationComplete="init()" addedToStage="reset()">
 			
 	<mx:Script>
 		<![CDATA[
@@ -19,15 +19,7 @@
 			public var carspecifications : CarSpecificationVO;
 			
 			private function init():void {
-				carspecifications = new CarSpecificationVO();				
-				try {
-					if (travelspecifications.specification != null) {
-						carspecifications = travelspecifications.specification;
-					}
-				} catch (e:Error) { 
-					trace("car.init: " + e.message);
-					carspecifications = new CarSpecificationVO();
-				}
+				reset();
 				
 				// add accessibility
                 model.accessibility.addAccessibility(car_km_calenderyear_radio1, resourceManager.getString(model.resources.bundleName, 'car_km_calenderyear_label'));
@@ -39,6 +31,18 @@
                 // add validation
                 this.addCustomStringValidation(car_forrestroad_km, false, true);
                 this.addCustomStringValidation(car_passengers, false, true);
+			}
+			
+			private function reset():void {
+				carspecifications = new CarSpecificationVO();				
+				try {
+					if (travelspecifications.specification != null) {
+						carspecifications = travelspecifications.specification;
+					}
+				} catch (e:Error) { 
+					trace("car.init: " + e.message);
+					carspecifications = new CarSpecificationVO();
+				}
 			}
 			
 			override public function validateDetailsForm():Boolean {

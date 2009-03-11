@@ -4,7 +4,7 @@
 			xmlns:view="no.makingwaves.cust.dss.view.*"
 			xmlns:common="no.makingwaves.cust.dss.view.specifications.transport.common.*"
 			xmlns:mx="http://www.adobe.com/2006/mxml"
-			creationComplete="init()">
+			creationComplete="init()" addedToStage="reset()">
 			
 	<mx:Script>
 		<![CDATA[
@@ -20,6 +20,15 @@
 			public var otherspecifications :  OtherSpecificationVO;;
 			
 			private function init():void {
+				reset();
+				
+				// add accessibility
+                model.accessibility.addAccessibility(othertransporttype_radio1, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
+                model.accessibility.addAccessibility(othertransporttype_radio2, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
+                model.accessibility.addAccessibility(othertransporttype_radio3, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
+			}
+			
+			private function reset():void {
 				otherspecifications = new OtherSpecificationVO();
 				try {
 					if (travelspecifications.specification != null) {
@@ -29,10 +38,6 @@
 					trace("other.init: " + e.message);
 					otherspecifications = new OtherSpecificationVO();
 				}
-				// add accessibility
-                model.accessibility.addAccessibility(othertransporttype_radio1, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
-                model.accessibility.addAccessibility(othertransporttype_radio2, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
-                model.accessibility.addAccessibility(othertransporttype_radio3, resourceManager.getString(model.resources.bundleName, 'othertransporttype_label'));
 			}
 			
 			override public function autoFillIn(editMode:Boolean=false):void {}

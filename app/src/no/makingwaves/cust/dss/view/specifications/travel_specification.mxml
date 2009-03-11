@@ -291,6 +291,7 @@
             
             private function clearFields():void {
             	// reset references/bindings
+            	travelspecifications = null;
             	travelspecifications = new TravelSpecificationVO();
             	
             	cmb_traveltype.selectedIndex = 0;
