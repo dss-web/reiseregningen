@@ -53,6 +53,9 @@ package no.makingwaves.cust.dss.code
 			var days:Number = 1;
 			var dailyAllowance:Number;
 			
+			// update travelallowance accomodation setting
+			ModelLocator.getInstance().travelAllowance.accomodation = (travelDateInfo.total_hours > 24);
+			
 			// domestic or international travel
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				// DOMESTIC TRAVEL
@@ -98,6 +101,7 @@ package no.makingwaves.cust.dss.code
 				amount += calculateInternationalAllowance(rateRule);
 				
 			}
+			
 			
 			/* removed until further notice
 			// search and add amounts for admin. allowances
@@ -668,10 +672,6 @@ package no.makingwaves.cust.dss.code
 				daysCount += distanceRange.days;
 				
 			}
-			
-			// update travelallowance
-			if (amount > 0)				
-				ModelLocator.getInstance().travelAllowance.accomodation = true;
 			
 			return amount;
 		}
