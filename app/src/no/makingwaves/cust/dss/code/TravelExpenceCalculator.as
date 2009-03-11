@@ -188,6 +188,9 @@ package no.makingwaves.cust.dss.code
 					var locationList:ArrayCollection = new ArrayCollection();
 					var specStartDate:Date = new Date();
 					var specStopDate:Date = new Date();
+					var activeCity:String = "";
+					var specFromCity:String = "";
+					var specToCity:String = "";
 					for (var t:int = 0; t < timeFrameSpecs.length; t++) {
 						var spec:TravelSpecificationVO = timeFrameSpecs.getItemAt(t) as TravelSpecificationVO;
 						var testTravelEnd:Boolean = true;
@@ -200,7 +203,10 @@ package no.makingwaves.cust.dss.code
 							activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 							
 						} else {
-							if (activeLocation.country != spec.from_country || activeLocation.city != spec.from_city) {
+							activeCity = activeLocation.city;
+							specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
+							specToCity = (spec.to_city == "-") ? "" : spec.to_city;
+							if (activeLocation.country != spec.from_country || (activeCity != specFromCity)) {
 								specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
 								activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;;
 								locationList.addItem(activeLocation);
@@ -210,11 +216,11 @@ package no.makingwaves.cust.dss.code
 								activeLocation = null;
 								activeLocation = new Object();
 								activeLocation.country = spec.from_country;
-								activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;;
+								activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
 								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 								
-							} else if (activeLocation.country != spec.to_country || activeLocation.city != spec.to_city) {
+							} else if (activeLocation.country != spec.to_country || activeCity != specToCity) {
 								specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
 								activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;
 								locationList.addItem(activeLocation);
@@ -231,7 +237,10 @@ package no.makingwaves.cust.dss.code
 								
 							}
 						}
-						if ((activeLocation != null && testTravelEnd && (spec.from_country != spec.to_country || spec.from_city != spec.to_city)) ||
+						
+						specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
+						specToCity = (spec.to_city == "-") ? "" : spec.to_city;
+						if ((activeLocation != null && testTravelEnd && (spec.from_country != spec.to_country || specFromCity != specToCity)) ||
 						    (activeLocation != null && t == (timeFrameSpecs.length-1))) {
 							// current country rate has reached its end - register it
 							specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
@@ -265,6 +274,7 @@ package no.makingwaves.cust.dss.code
 						for (var l:int=0; l < locationList.length; l++) {
 							var ranger:DateRanger = new DateRanger();
 							ranger.getDateRange(locationList.getItemAt(l).startDate, locationList.getItemAt(l).stopDate);
+							trace(locationList.getItemAt(l).country + ", (" + locationList.getItemAt(l).city + "): " + ranger.total_min + " minutes");
 							if (ranger.total_min > maxTimeframe) {
 								maxTimeframe = ranger.total_min;
 								maxTimeframeObject = locationList.getItemAt(l);
