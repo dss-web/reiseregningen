@@ -1,8 +1,12 @@
 package no.makingwaves.cust.dss.code
 {
 	import mx.collections.ArrayCollection;
+	import mx.core.IFlexDisplayObject;
+	import mx.managers.PopUpManager;
+	import mx.resources.ResourceManager;
 	
 	import no.makingwaves.cust.dss.model.ModelLocator;
+	import no.makingwaves.cust.dss.view.components.custom_alert;
 	import no.makingwaves.cust.dss.vo.CarSpecificationVO;
 	import no.makingwaves.cust.dss.vo.MotorboatSpecificationVO;
 	import no.makingwaves.cust.dss.vo.MotorcycleSpecificationVO;
@@ -103,27 +107,27 @@ package no.makingwaves.cust.dss.code
 			}
 			
 			
-			/* removed until further notice
 			// search and add amounts for admin. allowances
-			var adminNum:Number = 0;
-			var deductionList:ArrayCollection = ModelLocator.getInstance().travelDeductionList;
-			for (var i:Number = 0; i < deductionList.length; i++) {
-				var deduction:TravelDeductionVO = TravelDeductionVO(deductionList.getItemAt(i));
-				if (deduction.breakfast && deduction.lunch && deduction.dinner) {
-					// all meals are deducted - admin allowance is added
-					adminNum++;
+			if (travelDateInfo.total_hours > 24) {
+				var adminNum:Number = 0;
+				var deductionList:ArrayCollection = ModelLocator.getInstance().travelDeductionList;
+				for (var i:Number = 0; i < deductionList.length; i++) {
+					var deduction:TravelDeductionVO = TravelDeductionVO(deductionList.getItemAt(i));
+					if (deduction.breakfast && deduction.lunch && deduction.dinner) {
+						// all meals are deducted - admin allowance is added
+						adminNum++;
+					}
+				}
+				if (adminNum > 0) {
+					var admin_allowance:RateVO = new RateVO();
+					admin_allowance.num = adminNum;
+					admin_allowance.rate = this.getRate("redraw_extra").cost;
+					admin_allowance.amount = admin_allowance.num * admin_allowance.rate;
+					ModelLocator.getInstance().travelAllowance.adm_allowance = admin_allowance;
+					
+					amount += admin_allowance.amount;
 				}
 			}
-			if (adminNum > 0) {
-				var admin_allowance:RateVO = new RateVO();
-				admin_allowance.num = adminNum;
-				admin_allowance.rate = this.getRate("redraw_extra").cost;
-				admin_allowance.amount = admin_allowance.num * admin_allowance.rate;
-				ModelLocator.getInstance().travelAllowance.adm_allowance = admin_allowance;
-				
-				amount += admin_allowance.amount;
-			}
-			*/
 			
 			return amount;
 		}
@@ -675,7 +679,7 @@ package no.makingwaves.cust.dss.code
 			// calculate accomodations
 			for (var i:Number = 0; i < accomodationList.length; i++) {
 				var accomodation:TravelAccomodationVO = TravelAccomodationVO(accomodationList.getItemAt(i));
-				amount += calculateAccomodation(TravelAccomodationVO(accomodationList.getItemAt(i)), daysCount);
+				amount += calculateAccomodation(TravelAccomodationVO(accomodationList.getItemAt(i)), daysCount, false);
 				// update accomodation days so far
 				var distanceRange:DateRanger = new DateRanger();
 				distanceRange.getDateRange(accomodation.fromdate, accomodation.todate);
@@ -686,7 +690,7 @@ package no.makingwaves.cust.dss.code
 			return amount;
 		}
 		
-		public function calculateAccomodation(accomodation:TravelAccomodationVO, earlierNightsNum:Number=0):Number {
+		public function calculateAccomodation(accomodation:TravelAccomodationVO, earlierNightsNum:Number=0, alertUser:Boolean=true):Number {
 			var amount:Number = 0.0;
 			var days:Number = 1;
 			var dailyAllowance:Number;
@@ -698,26 +702,8 @@ package no.makingwaves.cust.dss.code
 			if (accomodation.type != accomodation.TYPE_HOTEL) {
 				rateRule = this.getRate("accomodation_unauthorized");
 				// accomodation unauthorized - travel by rate
-				if (travelInfo.travel_type == travelInfo.DOMESTIC) {
-					// domestic accomodation rules apply
-					dailyAllowance = rateRule.cost;
-					/*if (accomodation.type == accomodation.TYPE_UNATHORIZED_HOTEL) {
-						nighttariff_domestic_hotel.rate = dailyAllowance;
-					} else {
-						nighttariff_domestic.rate = dailyAllowance;
-					}*/					
-					
-				} else {
-					// international accomodation rules apply
-					var intRate:TravelRateInternationalVO = this.getInternationalRate(accomodation.country, accomodation.city);
-					if (intRate != null) {
-						// accomodation took place outside Norway
-						dailyAllowance = intRate.night;
-					} else {
-						// accomodation took place in Norway - domestic rule apply
-						dailyAllowance = rateRule.cost;
-					}
-				}
+				// domestic accomodation rules apply because all international travel is covered 'by bill'
+				dailyAllowance = rateRule.cost;
 				
 				// find how long period of time this accomodation lasted
 				var distanceRange:DateRanger = new DateRanger();
@@ -733,14 +719,10 @@ package no.makingwaves.cust.dss.code
 					amount += Number((dailyAllowance * distanceRange.days).toFixed(2));
 					
 					// update allowance model
-					if (travelInfo.travel_type == travelInfo.DOMESTIC) {
-						if (accomodation.type == accomodation.TYPE_UNATHORIZED_HOTEL) {
-							ModelLocator.getInstance().travelAllowance.nighttariff_domestic_hotel = nighttariff;
-						} else {
-							ModelLocator.getInstance().travelAllowance.nighttariff_domestic = nighttariff;
-						}
+					if (accomodation.type == accomodation.TYPE_UNATHORIZED_HOTEL) {
+						ModelLocator.getInstance().travelAllowance.nighttariff_domestic_hotel = nighttariff;
 					} else {
-						ModelLocator.getInstance().travelAllowance.nighttariff_international.addItem(nighttariff);
+						ModelLocator.getInstance().travelAllowance.nighttariff_domestic = nighttariff;
 					}
 				
 				} else {
@@ -757,24 +739,53 @@ package no.makingwaves.cust.dss.code
 					}
 				}
 				
-				// calculate redraws for included breakfast
-				/*
-				if (accomodation.breakfast_inluded > 0) {
-					var breakfastRatePst:Number = TravelRateRuleVO(this.getRate("redraw_04")).percent;
-					var dailyRedraw:Number = (dailyAllowance * breakfastRatePst) / 100;
-					amount -= Number((dailyRedraw * accomodation.breakfast_inluded).toFixed(2));
-				}
-				*/
-				
 				// main specification update
 				accomodation.cost.cost = amount;
 				accomodation.cost.cost_currency_rate = 1;
 				accomodation.cost.update();
 				
 			} else {
-				// accomodation authorized - travel by bill
+				// accomodation authorized - 'travel by bill'
 				accomodation.actual_cost.update();
-				amount += Number(accomodation.actual_cost.getCost());
+				var actualCost:Number = Number(accomodation.actual_cost.getCost());
+				
+				var distanceRange:DateRanger = new DateRanger();
+				distanceRange.getDateRange(accomodation.fromdate, accomodation.todate);
+				// distanceRange.days;
+				
+				var costCovered:Number = actualCost;
+				var maxCover:Number = 0;
+				if (travelInfo.travel_type == travelInfo.DOMESTIC) {
+					// get max cover for domestic accomodation
+					maxCover = this.getRate("accomodation_maxcover").cost;
+					
+				} else {
+					// get max cover for international travel
+					var intRate:TravelRateInternationalVO = this.getInternationalRate(accomodation.country, accomodation.city);
+					if (intRate != null) {
+						maxCover = intRate.night;
+					} else {
+						maxCover = this.getRate("accomodation_maxcover").cost;
+					}
+				}
+				if ((actualCost/distanceRange.days) > maxCover) {
+					costCovered = maxCover * distanceRange.days;
+					// Alert the user about this
+					if (alertUser) { 
+						var model:ModelLocator = ModelLocator.getInstance();
+						var alertWindow:mx.core.IFlexDisplayObject;
+						alertWindow = PopUpManager.createPopUp(model.applicationReference, custom_alert, true);
+						
+						var alertTitle:String = ResourceManager.getInstance().getString(model.resources.bundleName, "error_info");
+						var alertText:String = ResourceManager.getInstance().getString(model.resources.bundleName, "alert_maxcost_accomodation");
+						alertText = Util.searchAndReplace(alertText, "%1", (maxCover + ",-"));
+						custom_alert(alertWindow).title = alertTitle;
+						custom_alert(alertWindow).alertText = alertText;
+					}
+					accomodation.actual_cost.cost = costCovered;
+				}
+				
+				amount += costCovered;
 			}
 			
 			

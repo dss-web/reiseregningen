@@ -58,8 +58,25 @@
                 // init cost fields
                 cost_specification.init(travelaccomodations.actual_cost);
                 // check for editMode to change from default state
-                if (_editMode)
+                if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
+                	// if international travel only the HOTEL choice should be availible
+                	for (var i:Number = 0; i < accomodationlist.length; i++) {
+	            		if (accomodationlist.getItemAt(i).data == 1) {
+	            			cmb_accomodationtype.selectedIndex = i;
+	            			break;           			
+	            		}
+	            	}
+	            	setAccomodationState(cmb_accomodationtype.selectedItem);
+	            	cmb_accomodationtype.enabled = false;
+	            	
+	            	// remove info button
+	            	accomodationtype_help.enabled = false;
+	            	accomodationtype_help.visible = false;
+	            	accomodationtype_help.includeInLayout = false;
+	            	
+                } else if (_editMode) {
                 	autoFillIn();
+                }
                 	
              
                 // short-cuts
