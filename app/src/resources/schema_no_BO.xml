@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	14.01.2009
+	@updated:	12.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	Lagt inn dummy tekst på 'site_intro'
+	@comment:	Lagt inn nytt tekstelement 'alert_maxcost_accomodation' med foreløpig tekst for å varsle bruker om at innlagt kostnad overgår maksgrensen.
 -->
 <localization>
 	<type>no_BO</type>
@@ -73,7 +73,7 @@
 
 			<text id="popupblockerhelp" value="Hold Ctrl-tasten inne mens du klikker på knappen dersom du har PopUp-blocker aktivert." />
 
-			<!-- ERROR MESSAGES -->
+			<!-- ERROR MESSAGES AND ALERTS -->
 			<text id="error_date_format" value="Dato må skrives inn i formatet %1." />
 			<text id="error_date_toolow" value="Dato må være satt til senere enn %1." />
 			<text id="error_date_toohigh" value="Dato må være satt til tidligere enn %1." />
@@ -88,6 +88,8 @@
 			<text id="error_critical" value="Applikasjonskritisk feil!" />
 			<text id="error_warning" value="Advarsel" />
 			<text id="error_info" value="Informasjon" />
+			
+			<text id="alert_maxcost_accomodation" value="Kostnaden du registrerte overgår maksimalsatsen på %1 per natt og vil bli automatisk redusert tilsvarende denne satsen." />
 
 			<text id="link_SPH3.3" value="SPH §3.3 http://www.sph.dep.no/templates/Kapittel.aspx?id=2002" />
 			<text id="link_SPH4" value="SPH §4 http://www.sph.dep.no/templates/Kapittel.aspx?id=2003" />

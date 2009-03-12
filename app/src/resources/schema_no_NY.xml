@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	14.01.2009
+	@updated:	12.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	Lagt inn dummy tekst på 'site_intro'
+	@comment:	Lagt inn nytt tekstelement 'alert_maxcost_accomodation' med foreløpig tekst. Se bokmålsversjon.
 -->
 <!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Cathrin (making Waves) -->
 <localization>
@@ -72,7 +72,8 @@
 			<text id="error_strings" value="%1 kan berre bestå av tekst"/>
 			<text id="error_critical" value="Applikasjonskritisk feil!"/>
 			<text id="error_warning" value="Åtvaring"/>
-			<text id="error_info" value="Informasjon"/>
+			<text id="error_info" value="Informasjon"/>			
+			<text id="alert_maxcost_accomodation" value=" - oversettelse mangler -" />
 			<text id="link_SPH3.3" value="SPH §3.3 http://www.sph.dep.no/templates/Kapittel.aspx?id=2002"/>
 			<text id="link_SPH4" value="SPH §4 http://www.sph.dep.no/templates/Kapittel.aspx?id=2003"/>
 			<text id="link_SPH6" value="SPH §6 http://www.sph.dep.no/templates/Kapittel.aspx?id=2005"/>
