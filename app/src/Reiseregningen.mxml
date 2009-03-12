@@ -78,6 +78,8 @@
 				model.initializer = new Initializer(this);
 				model.initializer.run();
 				
+				model.applicationReference = this;
+				
 				model.screenreader = flash.accessibility.Accessibility.active;
 				model.runTransitions = !model.screenreader;
 				
@@ -105,6 +107,12 @@
 				var t:Timer = new Timer(500,1);
 				t.addEventListener(TimerEvent.TIMER_COMPLETE, displayApplication);
 				t.start();
+				
+				// mark application as Beta test version if version is marked with it
+				if (model.VERSION.toLowerCase().indexOf("test") != -1) {
+					this.textheadline.text = model.VERSION.substring(model.VERSION.toLowerCase().indexOf("test"), model.VERSION.length)
+										   + "         " + this.textheadline.text;
+				}
 			}
 			
 			/**
@@ -705,9 +713,9 @@
     		<mx:SetProperty target="{mainPersonal}" name="visible" value="false" />
     		<mx:SetProperty target="{mainTravel}" name="visible" value="false" />
     		<mx:SetProperty target="{mainSettlements}" name="visible" value="false" />
-    		<mx:SetStyle target="{text1}" name="top" value="42"/>
-    		<mx:SetStyle target="{text1}" name="verticalCenter"/>
-    		<mx:SetStyle target="{text1}" name="right" value="21"/>
+    		<mx:SetStyle target="{textheadline}" name="top" value="42"/>
+    		<mx:SetStyle target="{textheadline}" name="verticalCenter"/>
+    		<mx:SetStyle target="{textheadline}" name="right" value="21"/>
     	</mx:State>
     	
     	<mx:State basedOn="base" id="personal" name="personal" enterState="{personal_details_base.activate()}" exitState="{personal_details_base.saveData()}">
@@ -1170,7 +1178,7 @@
 		    	<mx:Canvas id="logobar" width="100%" backgroundColor="#FFFFFF">
 		    		<mx:Image source="assets/media/images/logo.jpg" top="15" left="15"/>
 		    		<mx:VRule right="220" height="60" verticalCenter="0" strokeColor="#CBCBCB"/>
-		    		<mx:Text text="reiseregningen.no" styleName="H1" right="15" verticalCenter="0" id="text1"/>		
+		    		<mx:Text text="reiseregningen.no" styleName="H1" right="15" verticalCenter="0" id="textheadline"/>		
 		    	</mx:Canvas>
 		    	
 		    	<mx:HBox id="header" width="100%" styleName="menuline" tabIndex="2" />
