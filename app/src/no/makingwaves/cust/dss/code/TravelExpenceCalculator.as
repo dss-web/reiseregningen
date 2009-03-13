@@ -619,8 +619,8 @@ package no.makingwaves.cust.dss.code
 					}
 					if (detailsCar.passengers > 0) {
 						var passengerRate:TravelRateRuleVO = getRate("transport_car_extra_02");
-						var passAllowance:Number = detailsCar.distance * car_passengers.rate;
-						car_passengers.num += detailsCar.distance;
+						var passAllowance:Number = (detailsCar.distance * detailsCar.passengers) * passengerRate.cost;
+						car_passengers.num += (detailsCar.distance * detailsCar.passengers);
 						car_passengers.rate = passengerRate.cost;
 						car_passengers.amount += passAllowance;
 					
