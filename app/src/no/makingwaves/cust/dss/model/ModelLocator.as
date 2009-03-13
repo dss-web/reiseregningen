@@ -68,7 +68,8 @@ package no.makingwaves.cust.dss.model
 		
 		// VERSION ================================================================
 		
-		public const VERSION : String = "1.1 - Beta 1";
+		//public const VERSION : String = "1.1";
+		public const VERSION : String = "1.1 - TESTVERSJON 12.03.09";
 		
 		// STATICS ================================================================
 		
@@ -92,6 +93,8 @@ package no.makingwaves.cust.dss.model
 		
 		public var activeTravel : TravelVO = new TravelVO();
 		
+		
+		public var applicationReference : Reiseregningen;
 		
 		//public var activeSpecificationNum : TravelSpecificationVO;
 		
