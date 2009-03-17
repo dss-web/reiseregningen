@@ -373,6 +373,32 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
             FillFieldAmounts("77", "78", "113", ta.nighttariff_28days);
             AddSum(ref sum, ta.nighttariff_28days.amount);
 
+            // fill in "Annet" - added by KM 2009-03-17
+            if ((ta.allowance_other != null) && (ta.allowance_other.Length>0))
+            {
+                // check if there are the same 'rate' in all fields and sum 
+                double numSum = 0;
+                double rateSame = ta.allowance_other[0].rate; // will be checked later if the same
+                bool isRateSame = true;
+                double amountSum = 0;
+                foreach (RateVO rateVO in ta.allowance_other)
+                {
+                    if (rateVO.rate != rateSame)
+                        isRateSame = false;
+                    numSum += rateVO.num;
+                    amountSum += rateVO.amount;
+                }
+                FillField("80", numSum);
+                if (isRateSame)
+                {
+                    FillField("81", rateSame);
+                }
+                FillField("114", amountSum);
+
+                AddSum(ref sum, amountSum);
+            }
+
+
             FillField("115", sum, NODEC);
 
             double sumBrutto = sum;
@@ -712,7 +738,5 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
             FillField(id, StringUtils.DoubleToStringPoint(value, nodecimals));
         }
 
-    
-
-}
+    }
 }

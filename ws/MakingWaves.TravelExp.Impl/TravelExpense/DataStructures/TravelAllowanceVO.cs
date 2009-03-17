@@ -18,6 +18,9 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.DataStructures
 		public RateVO allowance = new RateVO();
 
         public RateVO[] allowance_international;
+
+        // Added by KM 2009-03-17
+        public RateVO[] allowance_other;
 		
 		public RateVO nighttariff_domestic = new RateVO();
 		
