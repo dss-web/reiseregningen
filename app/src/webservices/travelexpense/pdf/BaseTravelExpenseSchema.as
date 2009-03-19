@@ -6,7 +6,7 @@ package webservices.travelexpense.pdf
 		 public var schemas:Array = new Array();
 		 public var targetNamespaces:Array = new Array();
 		 public function BaseTravelExpenseSchema():void
-{		
+		{
 			 var xsdXML0:XML = <s:schema xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="http://makingwaves.no/travelExp/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://makingwaves.no/travelExp/">
     <s:element name="GetVersion">
         <s:complexType/>
@@ -74,6 +74,7 @@ package webservices.travelexpense.pdf
             <s:element name="domestic" type="s:boolean"/>
             <s:element minOccurs="0" name="allowance" type="tns:RateVO"/>
             <s:element minOccurs="0" name="allowance_international" type="tns:ArrayOfRateVO"/>
+            <s:element minOccurs="0" name="allowance_other" type="tns:ArrayOfRateVO"/>
             <s:element minOccurs="0" name="nighttariff_domestic" type="tns:RateVO"/>
             <s:element minOccurs="0" name="nighttariff_domestic_hotel" type="tns:RateVO"/>
             <s:element minOccurs="0" name="nighttariff_international" type="tns:ArrayOfRateVO"/>

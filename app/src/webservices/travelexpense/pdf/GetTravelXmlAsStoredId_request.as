@@ -4,21 +4,22 @@
  * Any change made to this file will be overwritten when the code is re-generated.
  */
 
-package webservices.travelexpense.pdf{
-    import mx.utils.ObjectProxy;
-    import flash.utils.ByteArray;
-    import mx.rpc.soap.types.*;
-    /**
-     * Wrapper class for a operation required type
-     */
+package webservices.travelexpense.pdf
+{
+	import mx.utils.ObjectProxy;
+	import flash.utils.ByteArray;
+	import mx.rpc.soap.types.*;
+	/**
+	 * Wrapper class for a operation required type
+	 */
     
-    public class GetTravelXmlAsStoredId_request
-    {
-        /**
-         * Constructor, initializes the type class
-         */
-public function GetTravelXmlAsStoredId_request() {}
-                
-                   public var travel:webservices.travelexpense.pdf.TravelExpenseVO;
-           	}
-      	 }
+	public class GetTravelXmlAsStoredId_request
+	{
+		/**
+		 * Constructor, initializes the type class
+		 */
+		public function GetTravelXmlAsStoredId_request() {}
+            
+		public var travel:webservices.travelexpense.pdf.TravelExpenseVO;
+	}
+}

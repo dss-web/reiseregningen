@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	12.03.2009
+	@updated:	17.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	updated 'allowance_04b' and 'accomodation_maxcover'
-			added 'allowance_international'
+	@comment:	17.03.09:	Oppdaterte satser for §9 kostgodtgjørelse dagsreiser
+			12.03.09:	oppdaterte 'allowance_04b' og 'accomodation_maxcover'
+					la til ny sats; 'allowance_international'
 -->
 <travelraterules>
 	<travelraterule id="transport_car_01" cost="3.50" description="Sats for egen bil, kjørt inntil 9000 km i kalenderåret" />
@@ -27,10 +28,10 @@
 	
 	<travelraterule id="transport_passenger_extra_01" cost="0.75" description="Tilleggssats pr km pr passasjer i eget kjøretøy" />
 
-	<travelraterule id="allowance_01" cost="140.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på inntil 5 timer. Legitimert sats" />
-	<travelraterule id="allowance_02" cost="160.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 5 timer inntil 9 timer." />
-	<travelraterule id="allowance_03" cost="250.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 9 timer inntil 12 timer." />
-	<travelraterule id="allowance_04a" cost="380.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved over 15 km på fra og med 12 timer." />
+	<travelraterule id="allowance_01" cost="150.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på inntil 5 timer. Legitimert sats" />
+	<travelraterule id="allowance_02" cost="170.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 5 timer inntil 9 timer." />
+	<travelraterule id="allowance_03" cost="260.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 9 timer inntil 12 timer." />
+	<travelraterule id="allowance_04a" cost="425.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved over 15 km på fra og med 12 timer." />
 	<travelraterule id="allowance_04b" cost="560.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise med overnatting, med reiselengde over 15 km på fra og med 12 timer." />
 
 	<travelraterule id="allowance_05" cost="" percent="66.66" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 6 og inntil 12 timer." />

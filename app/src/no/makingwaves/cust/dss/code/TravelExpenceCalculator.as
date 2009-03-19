@@ -57,45 +57,49 @@ package no.makingwaves.cust.dss.code
 			var days:Number = 1;
 			var dailyAllowance:Number;
 			
+			ModelLocator.getInstance().travelAllowance.allowance_other.removeAll();
 			// update travelallowance accomodation setting
 			ModelLocator.getInstance().travelAllowance.accomodation = (travelDateInfo.total_hours > 24);
 			
 			// domestic or international travel
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				// DOMESTIC TRAVEL
-				rateRule = this.getAllowanceRate(travelInfo, travelDateInfo);
-				dailyAllowance = Number(rateRule.cost.toFixed(2));
-				// if travel is over more than a day
-				if (travelDateInfo.total_hours > 24) {
-					days = travelDateInfo.days;
-					// for travels over 24 hours, 6 hours or more into a new 24-hour period counts as one 24-hour.
-					if (travelDateInfo.hours >= 6) {
-						days++;
+				// only travels over 5 hours will get a calculated allowance - any travel below 5 hours must specify manually
+				if (travelDateInfo.total_hours > 5) {
+					rateRule = this.getAllowanceRate(travelInfo, travelDateInfo);
+					dailyAllowance = Number(rateRule.cost.toFixed(2));
+					// if travel is over more than a day
+					if (travelDateInfo.total_hours > 24) {
+						days = travelDateInfo.days;
+						// for travels over 24 hours, 6 hours or more into a new 24-hour period counts as one 24-hour.
+						if (travelDateInfo.hours >= 6) {
+							days++;
+						}
+					}								
+					// sum up total allowance for this domestic travel
+					var allowance_28days:Number = 0;
+					if (days <= 28) {
+						amount += Number((dailyAllowance * days).toFixed(2));
+					} else {
+						amount += Number((dailyAllowance * 28).toFixed(2));
+						allowance_28days = Number(((dailyAllowance*0.75) * (days-28)).toFixed(2));
+						amount += allowance_28days;
 					}
-				}								
-				// sum up total allowance for this domestic travel
-				var allowance_28days:Number = 0;
-				if (days <= 28) {
-					amount += Number((dailyAllowance * days).toFixed(2));
-				} else {
-					amount += Number((dailyAllowance * 28).toFixed(2));
-					allowance_28days = Number(((dailyAllowance*0.75) * (days-28)).toFixed(2));
-					amount += allowance_28days;
-				}
-				
-				// update travelallowance
-				ModelLocator.getInstance().travelAllowance.domestic = true;
-				var allowance:RateVO = new RateVO();
-				allowance.num = (days <= 28) ? travelDateInfo.total_hours : (28*24); //days;
-				allowance.rate = dailyAllowance;
-				allowance.amount = amount;
-				ModelLocator.getInstance().travelAllowance.allowance = allowance;
-				if (allowance_28days > 0) {
-					var allowance28:RateVO = new RateVO();
-					allowance28.num = travelDateInfo.total_hours - (28*24);//days - 28;
-					allowance28.rate = dailyAllowance * 0.75;
-					allowance28.amount = allowance28.num * allowance28.rate;
-					ModelLocator.getInstance().travelAllowance.allowance_28days = allowance28;
+					
+					// update travelallowance
+					ModelLocator.getInstance().travelAllowance.domestic = true;
+					var allowance:RateVO = new RateVO();
+					allowance.num = (days <= 28) ? travelDateInfo.total_hours : (28*24); //days;
+					allowance.rate = dailyAllowance;
+					allowance.amount = amount;
+					ModelLocator.getInstance().travelAllowance.allowance = allowance;
+					if (allowance_28days > 0) {
+						var allowance28:RateVO = new RateVO();
+						allowance28.num = travelDateInfo.total_hours - (28*24);//days - 28;
+						allowance28.rate = dailyAllowance * 0.75;
+						allowance28.amount = allowance28.num * allowance28.rate;
+						ModelLocator.getInstance().travelAllowance.allowance_28days = allowance28;
+					}
 				}
 								
 			} else {
@@ -104,6 +108,22 @@ package no.makingwaves.cust.dss.code
 				// search and find destinations and period of time on this/these destinations
 				amount += calculateInternationalAllowance(rateRule);
 				
+				// new rule from 01.03.2009, additonal compensation for travelling abroad
+				if (travelDateInfo.total_hours > 12) {
+					if (travelDateInfo.total_hours > 24) 
+						days = travelDateInfo.days;
+						
+					// add additional allowance for international travels
+					var compensationRule:TravelRateRuleVO = this.getRate("allowance_international");
+					
+					var compensation:RateVO = new RateVO();
+					compensation.num = days;
+					compensation.rate = compensationRule.cost;
+					compensation.amount = days * compensationRule.cost;
+					ModelLocator.getInstance().travelAllowance.allowance_other.addItem(compensation);
+					
+					amount += compensation.amount;					
+				}
 			}
 			
 			
@@ -769,20 +789,19 @@ package no.makingwaves.cust.dss.code
 					}
 				}
 				if ((actualCost/distanceRange.days) > maxCover) {
-					costCovered = maxCover * distanceRange.days;
+					//costCovered = maxCover * distanceRange.days;
 					// Alert the user about this
 					if (alertUser) { 
 						var model:ModelLocator = ModelLocator.getInstance();
 						var alertWindow:mx.core.IFlexDisplayObject;
 						alertWindow = PopUpManager.createPopUp(model.applicationReference, custom_alert, true);
 						
-						var alertTitle:String = ResourceManager.getInstance().getString(model.resources.bundleName, "error_info");
+						var alertTitle:String = ResourceManager.getInstance().getString(model.resources.bundleName, "error_warning");
 						var alertText:String = ResourceManager.getInstance().getString(model.resources.bundleName, "alert_maxcost_accomodation");
-						alertText = Util.searchAndReplace(alertText, "%1", (maxCover + ",-"));
 						custom_alert(alertWindow).title = alertTitle;
 						custom_alert(alertWindow).alertText = alertText;
 					}
-					accomodation.actual_cost.cost = costCovered;
+					//accomodation.actual_cost.cost = costCovered;
 				}
 				
 				amount += costCovered;

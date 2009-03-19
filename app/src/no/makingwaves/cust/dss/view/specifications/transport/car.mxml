@@ -67,7 +67,7 @@
 				carspecifications.distance_forestroad = (car_forrestroad_km.enabled) ? Number(car_forrestroad_km.text) : 0;
 				carspecifications.additional_trailer = Boolean(car_addon_hanger_chk.selected);
 				carspecifications.passengers = Number(car_passengers.text);
-				carspecifications.additional_workplace = (model.activePerson.domicialnum == "1902");
+				carspecifications.additional_workplace = Boolean(car_addon_workplace_chk.selected); //(model.activePerson.domicialnum == "1902");
 				//carspecifications.cost.cost = carspecifications.distance * carspecifications.rate;
 				specifications.specification = carspecifications;
 	           	return TravelSpecificationVO(specifications);
@@ -120,9 +120,14 @@
 						selected="{carspecifications.additional_trailer}"
 						label="{resourceManager.getString(model.resources.bundleName, car_addon_hanger_chk.id+'_label')}"
 						labelPlacement="right" />
+						
+		<mx:CheckBox id="car_addon_workplace_chk"  styleName="form" tabIndex="1655"
+						selected="{carspecifications.additional_workplace}"
+						label="{resourceManager.getString(model.resources.bundleName, car_addon_workplace_chk.id+'_label')}"
+						labelPlacement="right" />						
 		
 		<mx:HBox id="passengers" paddingTop="10">
-			<mx:TextInput id="car_passengers" width="60" maxChars="1" tabIndex="1655"
+			<mx:TextInput id="car_passengers" width="60" maxChars="1" tabIndex="1656"
 							text="{carspecifications.passengers}" />
 			<mx:Label id="car_passengers_label" text="{resourceManager.getString(model.resources.bundleName, car_passengers_label.id)}" styleName="form" />
 		</mx:HBox>

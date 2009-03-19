@@ -22,6 +22,8 @@ package no.makingwaves.cust.dss.vo
 		
 		public var allowance_international : ArrayCollection = new ArrayCollection();
 		
+		public var allowance_other : ArrayCollection = new ArrayCollection();
+		
 		public var nighttariff_domestic : RateVO = new RateVO();
 		
 		public var nighttariff_domestic_hotel : RateVO = new RateVO();

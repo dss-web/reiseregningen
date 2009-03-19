@@ -1,10 +1,10 @@
-
 /**
  * BaseTravelExpenseService.as
  * This file was auto-generated from WSDL by the Apache Axis2 generator modified by Adobe
  * Any change made to this file will be overwritten when the code is re-generated.
  */
-package webservices.travelexpense.pdf{
+package webservices.travelexpense.pdf
+{
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayCollection;
@@ -35,7 +35,7 @@ package webservices.travelexpense.pdf{
 		private var BaseTravelExpensePort:WSDLPort;
 		private var currentOperation:WSDLOperation;
 		private var internal_schema:BaseTravelExpenseSchema;
-		
+	
 		/**
 		 * Constructor for the base service, initializes all of the WSDL's properties
 		 * @param [Optional] The LCDS destination (if available) to use to contact the server
@@ -89,16 +89,14 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
        		} 
        		
 			var requestMessage:WSDLMessage;
-	        var responseMessage:WSDLMessage;
-//define the WSDLOperation: new WSDLOperation(methodName)
-            var GetVersion:WSDLOperation = new WSDLOperation("GetVersion");
+			var responseMessage:WSDLMessage;
+			//define the WSDLOperation: new WSDLOperation(methodName)
+            var getVersion:WSDLOperation = new WSDLOperation("GetVersion");
 				//input message for the operation
     	        requestMessage = new WSDLMessage("GetVersion");
                 requestMessage.encoding = new WSDLEncoding();
                 requestMessage.encoding.namespaceURI="http://makingwaves.no/travelExp/";
 			requestMessage.encoding.useStyle="literal";
-	            requestMessage.isWrapped = true;
-	            requestMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","GetVersion");
                 
                 responseMessage = new WSDLMessage("GetVersionResponse");
             				responseMessage.addPart(new WSDLMessagePart(new QName("http://makingwaves.no/travelExp/","GetVersionResult"),null,new QName("http://www.w3.org/2001/XMLSchema","string")));
@@ -107,12 +105,14 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
                 responseMessage.encoding.useStyle="literal";				
 				
 	            responseMessage.isWrapped = true;
-	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","GetVersion");GetVersion.inputMessage = requestMessage;
-	        GetVersion.outputMessage = responseMessage;
-            GetVersion.schemaManager = this.schemaMgr;
-            GetVersion.soapAction = "http://makingwaves.no/travelExp/GetVersion";
-            GetVersion.style = "document";
-            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(GetVersion);//define the WSDLOperation: new WSDLOperation(methodName)
+	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","GetVersionResponse");
+			getVersion.inputMessage = requestMessage;
+	        getVersion.outputMessage = responseMessage;
+            getVersion.schemaManager = this.schemaMgr;
+            getVersion.soapAction = "http://makingwaves.no/travelExp/GetVersion";
+            getVersion.style = "document";
+            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getVersion);
+			//define the WSDLOperation: new WSDLOperation(methodName)
             var getTravelPdf:WSDLOperation = new WSDLOperation("getTravelPdf");
 				//input message for the operation
     	        requestMessage = new WSDLMessage("getTravelPdf");
@@ -130,12 +130,14 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
                 responseMessage.encoding.useStyle="literal";				
 				
 	            responseMessage.isWrapped = true;
-	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelPdf");getTravelPdf.inputMessage = requestMessage;
+	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelPdfResponse");
+			getTravelPdf.inputMessage = requestMessage;
 	        getTravelPdf.outputMessage = responseMessage;
             getTravelPdf.schemaManager = this.schemaMgr;
             getTravelPdf.soapAction = "http://makingwaves.no/travelExp/getTravelPdf";
             getTravelPdf.style = "document";
-            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelPdf);//define the WSDLOperation: new WSDLOperation(methodName)
+            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelPdf);
+			//define the WSDLOperation: new WSDLOperation(methodName)
             var getTravelPdfAsStoredId:WSDLOperation = new WSDLOperation("getTravelPdfAsStoredId");
 				//input message for the operation
     	        requestMessage = new WSDLMessage("getTravelPdfAsStoredId");
@@ -153,12 +155,14 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
                 responseMessage.encoding.useStyle="literal";				
 				
 	            responseMessage.isWrapped = true;
-	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelPdfAsStoredId");getTravelPdfAsStoredId.inputMessage = requestMessage;
+	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelPdfAsStoredIdResponse");
+			getTravelPdfAsStoredId.inputMessage = requestMessage;
 	        getTravelPdfAsStoredId.outputMessage = responseMessage;
             getTravelPdfAsStoredId.schemaManager = this.schemaMgr;
             getTravelPdfAsStoredId.soapAction = "http://makingwaves.no/travelExp/getTravelPdfAsStoredId";
             getTravelPdfAsStoredId.style = "document";
-            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelPdfAsStoredId);//define the WSDLOperation: new WSDLOperation(methodName)
+            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelPdfAsStoredId);
+			//define the WSDLOperation: new WSDLOperation(methodName)
             var getTravelXmlAsStoredId:WSDLOperation = new WSDLOperation("getTravelXmlAsStoredId");
 				//input message for the operation
     	        requestMessage = new WSDLMessage("getTravelXmlAsStoredId");
@@ -176,12 +180,14 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
                 responseMessage.encoding.useStyle="literal";				
 				
 	            responseMessage.isWrapped = true;
-	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelXmlAsStoredId");getTravelXmlAsStoredId.inputMessage = requestMessage;
+	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelXmlAsStoredIdResponse");
+			getTravelXmlAsStoredId.inputMessage = requestMessage;
 	        getTravelXmlAsStoredId.outputMessage = responseMessage;
             getTravelXmlAsStoredId.schemaManager = this.schemaMgr;
             getTravelXmlAsStoredId.soapAction = "http://makingwaves.no/travelExp/getTravelXmlAsStoredId";
             getTravelXmlAsStoredId.style = "document";
-            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelXmlAsStoredId);//define the WSDLOperation: new WSDLOperation(methodName)
+            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelXmlAsStoredId);
+			//define the WSDLOperation: new WSDLOperation(methodName)
             var removeDataStoredId:WSDLOperation = new WSDLOperation("removeDataStoredId");
 				//input message for the operation
     	        requestMessage = new WSDLMessage("removeDataStoredId");
@@ -199,12 +205,14 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
                 responseMessage.encoding.useStyle="literal";				
 				
 	            responseMessage.isWrapped = true;
-	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","removeDataStoredId");removeDataStoredId.inputMessage = requestMessage;
+	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","removeDataStoredIdResponse");
+			removeDataStoredId.inputMessage = requestMessage;
 	        removeDataStoredId.outputMessage = responseMessage;
             removeDataStoredId.schemaManager = this.schemaMgr;
             removeDataStoredId.soapAction = "http://makingwaves.no/travelExp/removeDataStoredId";
             removeDataStoredId.style = "document";
-            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(removeDataStoredId);//define the WSDLOperation: new WSDLOperation(methodName)
+            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(removeDataStoredId);
+			//define the WSDLOperation: new WSDLOperation(methodName)
             var getTravelObjectFromXml:WSDLOperation = new WSDLOperation("getTravelObjectFromXml");
 				//input message for the operation
     	        requestMessage = new WSDLMessage("getTravelObjectFromXml");
@@ -222,12 +230,14 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
                 responseMessage.encoding.useStyle="literal";				
 				
 	            responseMessage.isWrapped = true;
-	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelObjectFromXml");getTravelObjectFromXml.inputMessage = requestMessage;
+	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelObjectFromXmlResponse");
+			getTravelObjectFromXml.inputMessage = requestMessage;
 	        getTravelObjectFromXml.outputMessage = responseMessage;
             getTravelObjectFromXml.schemaManager = this.schemaMgr;
             getTravelObjectFromXml.soapAction = "http://makingwaves.no/travelExp/getTravelObjectFromXml";
             getTravelObjectFromXml.style = "document";
-            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelObjectFromXml);//define the WSDLOperation: new WSDLOperation(methodName)
+            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelObjectFromXml);
+			//define the WSDLOperation: new WSDLOperation(methodName)
             var getTravelObjectFromXmlAsStoredId:WSDLOperation = new WSDLOperation("getTravelObjectFromXmlAsStoredId");
 				//input message for the operation
     	        requestMessage = new WSDLMessage("getTravelObjectFromXmlAsStoredId");
@@ -245,20 +255,20 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
                 responseMessage.encoding.useStyle="literal";				
 				
 	            responseMessage.isWrapped = true;
-	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelObjectFromXmlAsStoredId");getTravelObjectFromXmlAsStoredId.inputMessage = requestMessage;
+	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","getTravelObjectFromXmlAsStoredIdResponse");
+			getTravelObjectFromXmlAsStoredId.inputMessage = requestMessage;
 	        getTravelObjectFromXmlAsStoredId.outputMessage = responseMessage;
             getTravelObjectFromXmlAsStoredId.schemaManager = this.schemaMgr;
             getTravelObjectFromXmlAsStoredId.soapAction = "http://makingwaves.no/travelExp/getTravelObjectFromXmlAsStoredId";
             getTravelObjectFromXmlAsStoredId.style = "document";
-            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelObjectFromXmlAsStoredId);//define the WSDLOperation: new WSDLOperation(methodName)
-            var RunTestAndGetId:WSDLOperation = new WSDLOperation("RunTestAndGetId");
+            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(getTravelObjectFromXmlAsStoredId);
+			//define the WSDLOperation: new WSDLOperation(methodName)
+            var runTestAndGetId:WSDLOperation = new WSDLOperation("RunTestAndGetId");
 				//input message for the operation
     	        requestMessage = new WSDLMessage("RunTestAndGetId");
                 requestMessage.encoding = new WSDLEncoding();
                 requestMessage.encoding.namespaceURI="http://makingwaves.no/travelExp/";
 			requestMessage.encoding.useStyle="literal";
-	            requestMessage.isWrapped = true;
-	            requestMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","RunTestAndGetId");
                 
                 responseMessage = new WSDLMessage("RunTestAndGetIdResponse");
             				responseMessage.addPart(new WSDLMessagePart(new QName("http://makingwaves.no/travelExp/","RunTestAndGetIdResult"),null,new QName("http://www.w3.org/2001/XMLSchema","string")));
@@ -267,12 +277,13 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
                 responseMessage.encoding.useStyle="literal";				
 				
 	            responseMessage.isWrapped = true;
-	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","RunTestAndGetId");RunTestAndGetId.inputMessage = requestMessage;
-	        RunTestAndGetId.outputMessage = responseMessage;
-            RunTestAndGetId.schemaManager = this.schemaMgr;
-            RunTestAndGetId.soapAction = "http://makingwaves.no/travelExp/RunTestAndGetId";
-            RunTestAndGetId.style = "document";
-            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(RunTestAndGetId);
+	            responseMessage.wrappedQName = new QName("http://makingwaves.no/travelExp/","RunTestAndGetIdResponse");
+			runTestAndGetId.inputMessage = requestMessage;
+	        runTestAndGetId.outputMessage = responseMessage;
+            runTestAndGetId.schemaManager = this.schemaMgr;
+            runTestAndGetId.soapAction = "http://makingwaves.no/travelExp/RunTestAndGetId";
+            runTestAndGetId.style = "document";
+            BaseTravelExpenseService.getPort("BaseTravelExpensePort").binding.portType.addOperation(runTestAndGetId);
 							SchemaTypeRegistry.getInstance().registerClass(new QName("http://makingwaves.no/travelExp/","TravelCommentVO"),webservices.travelexpense.pdf.TravelCommentVO);
 							SchemaTypeRegistry.getInstance().registerClass(new QName("http://makingwaves.no/travelExp/","TravelSpecificationVO"),webservices.travelexpense.pdf.TravelSpecificationVO);
 							SchemaTypeRegistry.getInstance().registerClass(new QName("http://makingwaves.no/travelExp/","RateVO"),webservices.travelexpense.pdf.RateVO);
@@ -300,7 +311,8 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
 							SchemaTypeRegistry.getInstance().registerClass(new QName("http://makingwaves.no/travelExp/","TicketSpecificationVO"),webservices.travelexpense.pdf.TicketSpecificationVO);
 							SchemaTypeRegistry.getInstance().registerClass(new QName("http://makingwaves.no/travelExp/","TravelAllowanceVO"),webservices.travelexpense.pdf.TravelAllowanceVO);
 							SchemaTypeRegistry.getInstance().registerCollectionClass(new QName("http://makingwaves.no/travelExp/","ArrayOfTravelSpecificationVO"),webservices.travelexpense.pdf.ArrayOfTravelSpecificationVO);
-							SchemaTypeRegistry.getInstance().registerClass(new QName("http://makingwaves.no/travelExp/","CarSpecificationVO"),webservices.travelexpense.pdf.CarSpecificationVO);}
+							SchemaTypeRegistry.getInstance().registerClass(new QName("http://makingwaves.no/travelExp/","CarSpecificationVO"),webservices.travelexpense.pdf.CarSpecificationVO);
+		}
 		
 		/* added to collect the webservice url from config xml file */
 		public function getResourceUrl(id:String):String {
@@ -400,7 +412,7 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
 		 * @return Asynchronous token
 		 */
 		public function getTravelObjectFromXml(xmlFileBytes:flash.utils.ByteArray):AsyncToken
-		{
+		{ 
 			var headerArray:Array = new Array();
             var out:Object = new Object();
             out["xmlFileBytes"] = xmlFileBytes;

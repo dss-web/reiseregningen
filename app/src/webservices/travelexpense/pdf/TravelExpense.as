@@ -1,4 +1,3 @@
-
 /**
  * TravelExpenseService.as
  * This file was auto-generated from WSDL by the Apache Axis2 generator modified by Adobe
@@ -28,7 +27,8 @@
   * Then call the operation for which you have set the request wrapper value above, like this:
   * <mx:Button id="myButton" label="Call operation" click="myService.GetVersion_send()" />
   */
- package webservices.travelexpense.pdf{
+package webservices.travelexpense.pdf
+{
 	import mx.rpc.AsyncToken;
 	import flash.events.EventDispatcher;
 	import mx.rpc.events.ResultEvent;
@@ -137,21 +137,21 @@
 		 * Internal variable to store the operation's lastResult
 		 * @private
 		 */
-        private var _GetVersion_lastResult:String;
+        private var _getVersion_lastResult:String;
 		[Bindable]
 		/**
 		 * @see ITravelExpense#GetVersion_lastResult
 		 */	  
 		public function get getVersion_lastResult():String
 		{
-			return _GetVersion_lastResult;
+			return _getVersion_lastResult;
 		}
 		/**
 		 * @private
 		 */
 		public function set getVersion_lastResult(lastResult:String):void
 		{
-			_GetVersion_lastResult = lastResult;
+			_getVersion_lastResult = lastResult;
 		}
 		
 		/**
@@ -166,14 +166,13 @@
 		 * @private
 		 */
         private function _GetVersion_populate_results(event:ResultEvent):void
-        {
-        var e:GetVersionResultEvent = new GetVersionResultEvent();
+		{
+			var e:GetVersionResultEvent = new GetVersionResultEvent();
 		            e.result = event.result as String;
 		                       e.headers = event.headers;
 		             getVersion_lastResult = e.result;
 		             dispatchEvent(e);
-	        		
-		}
+	        		}
 		
 		//stub functions for the getTravelPdf operation
           
@@ -251,14 +250,13 @@
 		 * @private
 		 */
         private function _getTravelPdf_populate_results(event:ResultEvent):void
-        {
-        var e:GetTravelPdfResultEvent = new GetTravelPdfResultEvent();
+		{
+			var e:GetTravelPdfResultEvent = new GetTravelPdfResultEvent();
 		            e.result = event.result as TravelReportDocumentVO;
 		                       e.headers = event.headers;
 		             getTravelPdf_lastResult = e.result;
 		             dispatchEvent(e);
-	        		
-		}
+	        		}
 		
 		//stub functions for the getTravelPdfAsStoredId operation
           
@@ -336,14 +334,13 @@
 		 * @private
 		 */
         private function _getTravelPdfAsStoredId_populate_results(event:ResultEvent):void
-        {
-        var e:GetTravelPdfAsStoredIdResultEvent = new GetTravelPdfAsStoredIdResultEvent();
+		{
+			var e:GetTravelPdfAsStoredIdResultEvent = new GetTravelPdfAsStoredIdResultEvent();
 		            e.result = event.result as String;
 		                       e.headers = event.headers;
 		             getTravelPdfAsStoredId_lastResult = e.result;
 		             dispatchEvent(e);
-	        		
-		}
+	        		}
 		
 		//stub functions for the getTravelXmlAsStoredId operation
           
@@ -421,14 +418,13 @@
 		 * @private
 		 */
         private function _getTravelXmlAsStoredId_populate_results(event:ResultEvent):void
-        {
-        var e:GetTravelXmlAsStoredIdResultEvent = new GetTravelXmlAsStoredIdResultEvent();
+		{
+			var e:GetTravelXmlAsStoredIdResultEvent = new GetTravelXmlAsStoredIdResultEvent();
 		            e.result = event.result as String;
 		                       e.headers = event.headers;
 		             getTravelXmlAsStoredId_lastResult = e.result;
 		             dispatchEvent(e);
-	        		
-		}
+	        		}
 		
 		//stub functions for the removeDataStoredId operation
           
@@ -506,14 +502,13 @@
 		 * @private
 		 */
         private function _removeDataStoredId_populate_results(event:ResultEvent):void
-        {
-        var e:RemoveDataStoredIdResultEvent = new RemoveDataStoredIdResultEvent();
+		{
+			var e:RemoveDataStoredIdResultEvent = new RemoveDataStoredIdResultEvent();
 		            e.result = event.result as Boolean;
 		                       e.headers = event.headers;
 		             removeDataStoredId_lastResult = e.result;
 		             dispatchEvent(e);
-	        		
-		}
+	        		}
 		
 		//stub functions for the getTravelObjectFromXml operation
           
@@ -591,14 +586,13 @@
 		 * @private
 		 */
         private function _getTravelObjectFromXml_populate_results(event:ResultEvent):void
-        {
-        var e:GetTravelObjectFromXmlResultEvent = new GetTravelObjectFromXmlResultEvent();
+		{
+			var e:GetTravelObjectFromXmlResultEvent = new GetTravelObjectFromXmlResultEvent();
 		            e.result = event.result as TravelExpenseVO;
 		                       e.headers = event.headers;
 		             getTravelObjectFromXml_lastResult = e.result;
 		             dispatchEvent(e);
-	        		
-		}
+	        		}
 		
 		//stub functions for the getTravelObjectFromXmlAsStoredId operation
           
@@ -676,14 +670,13 @@
 		 * @private
 		 */
         private function _getTravelObjectFromXmlAsStoredId_populate_results(event:ResultEvent):void
-        {
-        var e:GetTravelObjectFromXmlAsStoredIdResultEvent = new GetTravelObjectFromXmlAsStoredIdResultEvent();
+		{
+			var e:GetTravelObjectFromXmlAsStoredIdResultEvent = new GetTravelObjectFromXmlAsStoredIdResultEvent();
 		            e.result = event.result as TravelExpenseVO;
 		                       e.headers = event.headers;
 		             getTravelObjectFromXmlAsStoredId_lastResult = e.result;
 		             dispatchEvent(e);
-	        		
-		}
+	        		}
 		
 		//stub functions for the RunTestAndGetId operation
           
@@ -710,21 +703,21 @@
 		 * Internal variable to store the operation's lastResult
 		 * @private
 		 */
-        private var _RunTestAndGetId_lastResult:String;
+        private var _runTestAndGetId_lastResult:String;
 		[Bindable]
 		/**
 		 * @see ITravelExpense#RunTestAndGetId_lastResult
 		 */	  
 		public function get runTestAndGetId_lastResult():String
 		{
-			return _RunTestAndGetId_lastResult;
+			return _runTestAndGetId_lastResult;
 		}
 		/**
 		 * @private
 		 */
 		public function set runTestAndGetId_lastResult(lastResult:String):void
 		{
-			_RunTestAndGetId_lastResult = lastResult;
+			_runTestAndGetId_lastResult = lastResult;
 		}
 		
 		/**
@@ -739,14 +732,13 @@
 		 * @private
 		 */
         private function _RunTestAndGetId_populate_results(event:ResultEvent):void
-        {
-        var e:RunTestAndGetIdResultEvent = new RunTestAndGetIdResultEvent();
+		{
+			var e:RunTestAndGetIdResultEvent = new RunTestAndGetIdResultEvent();
 		            e.result = event.result as String;
 		                       e.headers = event.headers;
 		             runTestAndGetId_lastResult = e.result;
 		             dispatchEvent(e);
-	        		
-		}
+	        		}
 		
 		//service-wide functions
 		/**

@@ -626,10 +626,12 @@
 						sharedForm.clear();
 					} catch (e:Error) { trace("deleteAllSharedObjects (1): " + e.message); }
 				}
+				
 				// clear saved forms nameholder
 				try {
 					travelForm.clear();
 				} catch (e:Error) { trace("deleteAllSharedObjects (2): " + e.message); }
+				
 				// clear personal info saver
 				var personal:SharedObject = SharedObject.getLocal("travelexpense_personalia");
 				try {
@@ -639,6 +641,11 @@
 			
 			private function navigationEffectComplete(e:EffectEvent):void {
 				this.setCurrentState(model.stateDistributer.getActiveState());
+			}
+			
+			private function goPreviousVersion(e:MouseEvent):void {
+				var prevVersionUrl:String = getResourceUrl("previous_app_version");
+				navigateToURL(new URLRequest(prevVersionUrl), "_self");
 			}
 			
 		]]>
@@ -1190,8 +1197,14 @@
 		    			<mx:Box id="boxIntroHeader" width="100%" styleName="headerBox">
 			    			<mx:Text id="site_header" width="100%" htmlText="{resourceManager.getString(model.resources.bundleName, 'site_header')}" />
 			    		</mx:Box>
-			    		<mx:Box id="boxIntroContent" width="100%" styleName="formsBox">
+			    		<mx:Box id="boxIntroContent" width="100%" styleName="formsBox" verticalGap="20" paddingBottom="20">
 			    			<mx:Text id="site_intro" width="70%" text="{resourceManager.getString(model.resources.bundleName, 'site_intro')}" />
+			    			
+			    			<mx:Button id="prev_version_button" 
+			    						styleName="secondary" paddingTop="10" paddingBottom="10"
+			    						label="{resourceManager.getString(model.resources.bundleName, 'button_link_prev_app')}"
+			    						click="goPreviousVersion(event)" />
+			    			
 			    		</mx:Box>
 	    			</mx:VBox>
 	    		</mx:VBox>

@@ -11,6 +11,7 @@ package no.makingwaves.cust.dss.commands
 	import no.makingwaves.cust.dss.code.util.Util;
 	import no.makingwaves.cust.dss.model.ModelLocator;
 	import no.makingwaves.cust.dss.vo.*;
+	import no.makingwaves.util.date.DateRanger;
 	
 	import webservices.travelexpense.pdf.*;
 
@@ -99,6 +100,7 @@ package no.makingwaves.cust.dss.commands
 			allowances.allowance = convertRate(modelAllowance.allowance);
 			allowances.allowance_international = convertRateArray(modelAllowance.allowance_international);
 			allowances.allowance_28days = convertRate(modelAllowance.allowance_28days);
+			allowances.allowance_other = convertRateArray(modelAllowance.allowance_other);
 			allowances.car_distance1 = convertRate(modelAllowance.car_distance1);
 			allowances.car_distance2 = convertRate(modelAllowance.car_distance2);
 			allowances.car_otherrates = convertRate(modelAllowance.car_otherrates);
@@ -109,6 +111,21 @@ package no.makingwaves.cust.dss.commands
 			allowances.nighttariff_domestic = convertRate(modelAllowance.nighttariff_domestic);
 			allowances.nighttariff_domestic_hotel = convertRate(modelAllowance.nighttariff_domestic_hotel);
 			allowances.nighttariff_international = convertRateArray(modelAllowance.nighttariff_international); //convertRate(modelAllowance.nighttariff_international);
+			
+			// check wether there is need for additional comments on the print-out
+			if (this.outputType == "pdf") {
+				var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
+				var intTravel:Boolean = (ModelLocator.getInstance().activeTravel.travel_type == ModelLocator.getInstance().activeTravel.ABROAD); 
+				if (travelDateInfo.total_hours > 12 && intTravel) {
+					var commentStr:String = ResourceManager.getInstance().getString(model.resources.bundleName, 'info_international_compensation');
+					commentStr = Util.searchAndReplace(commentStr, "%1", travelDateInfo.days.toString());
+					commentStr = Util.searchAndReplace(commentStr, "%2", modelAllowance.allowance_other.getItemAt(0).rate);
+					
+					var modelComment:no.makingwaves.cust.dss.vo.TravelCommentVO = new no.makingwaves.cust.dss.vo.TravelCommentVO();
+					modelComment.comment = commentStr;
+					this.extraCommentsList.addItem(modelComment);
+				}
+			}
 			
 			return allowances;
 		}
