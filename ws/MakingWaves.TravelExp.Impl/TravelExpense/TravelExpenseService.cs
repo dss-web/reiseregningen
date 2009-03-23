@@ -26,7 +26,8 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense
             getTravelPdf(MakingWaves.TravelExp.Impl.TravelExpense.DataStructures.TravelExpenseVO travel)
         {
             //log.Debug("travel_xml="+StringUtils.ObjectToXmlSerialized(travel));
-            //DebugEx.SaveObjectContent(travel, "getTravelPdf-arg", "txt");
+            if (DebugEx.IsEnabledInWebConfig)
+                DebugEx.SaveObjectContent(travel, "getTravelPdf-arg", "txt");
             MakingWaves.TravelExp.Impl.TravelExpense.DataStructures.TravelReportDocumentVO res =
                 new MakingWaves.TravelExp.Impl.TravelExpense.DataStructures.TravelReportDocumentVO();
             System.IO.MemoryStream pdfOutput = new System.IO.MemoryStream();
@@ -34,7 +35,8 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense
                 new MakingWaves.TravelExp.Impl.TravelExpense.Processing.PdfGenerator(travel, pdfOutput);
             pdfGenerator.GeneratePdf();
             res.PdfFileBytes = pdfOutput.GetBuffer();
-            //DebugEx.SaveBytesToDebugFile(res.PdfFileBytes, "getTravelPdf-res", "pdf");
+            if (DebugEx.IsEnabledInWebConfig)
+                DebugEx.SaveBytesToDebugFile(res.PdfFileBytes, "getTravelPdf-res", "pdf");
             return res;
         }
 

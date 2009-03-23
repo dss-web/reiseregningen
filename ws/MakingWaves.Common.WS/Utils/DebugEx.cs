@@ -21,6 +21,27 @@ namespace MakingWaves.Common.WS.Utils
         private static int uniqueCounter = 0;
 
         /// <summary>
+        /// Gets a value indicating whether this instance is enabled in web.config file.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is enabled in web config; otherwise, <c>false</c>.
+        /// </value>
+        public static bool IsEnabledInWebConfig
+        {
+            get
+            {
+                String debugExEnabled = System.Configuration.ConfigurationManager.AppSettings[
+                    "MakingWaves.Common.WS.Utils.DebugEx.Enabled"];
+                if (debugExEnabled==null)
+                    return false;
+                debugExEnabled = debugExEnabled.ToLower().Trim();
+                if ((debugExEnabled == "true") || (debugExEnabled == "1"))
+                    return true;
+                return false;
+            }
+        }
+        
+        /// <summary>
         /// Saves the content of the object, as XML serialized.
         /// Place of this file is defined by 'MakingWaves.Common.WS.Utils.DebugEx.DestFolder' key in web.config.
         /// </summary>
