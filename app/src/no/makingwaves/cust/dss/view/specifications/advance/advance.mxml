@@ -92,6 +92,7 @@
 			<mx:TextInput id="advance_date_text" width="70" maxChars="8" text="{this.getFormattedDate(this.travel_advance.date)}" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1202" />			
 			<mx:DateField id="advance_date" creationComplete="{dateField_init(advance_date)}" editable="true" width="17" visible="{!model.screenreader}"  tabEnabled="{!model.screenreader}"
 					showToday="true" tabIndex="1203"
+				    selectableRange="{{rangeStart : new Date(2009,0,1), rangeEnd : new Date()}}"	 
 					change="{this.travel_advance.date = advance_date.selectedDate}"
 				    selectedDate="{this.travel_advance.date}" />
 			<mx:Text id="date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />

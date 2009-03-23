@@ -212,7 +212,7 @@
 						// add extra validation
 						var today:Date = new Date();
 						this.addCustomDateValidation(arrivaldate, null, today, departuredate, null, arrivaldate_text);
-						this.addCustomDateValidation(departuredate, null, null, null, arrivaldate, departuredate_text);
+						this.addCustomDateValidation(departuredate, new Date(2009, 2, 1), null, null, arrivaldate, departuredate_text);
 						
 						if (Util.formatDate(departuredate.selectedDate) == Util.formatDate(arrivaldate.selectedDate)) {
 							// extra check on travel time

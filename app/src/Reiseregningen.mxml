@@ -1200,7 +1200,7 @@
 			    		<mx:Box id="boxIntroContent" width="100%" styleName="formsBox" verticalGap="20" paddingBottom="20">
 			    			<mx:Text id="site_intro" width="70%" text="{resourceManager.getString(model.resources.bundleName, 'site_intro')}" />
 			    			
-			    			<mx:Button id="prev_version_button" 
+			    			<mx:Button id="prev_version_button" buttonMode="true" useHandCursor="true"
 			    						styleName="secondary" paddingTop="10" paddingBottom="10"
 			    						label="{resourceManager.getString(model.resources.bundleName, 'button_link_prev_app')}"
 			    						click="goPreviousVersion(event)" />

@@ -46,7 +46,10 @@ package no.makingwaves.cust.dss.code
             dateField.firstDayOfWeek = 1;
             dateField.showToday = true;
             dateField.maxYear = new Date().getFullYear();
-            //dateField.selectableRange = {rangeStart: new Date(2007,0,1), rangeEnd: new Date()};
+            if (dateField.selectableRange == null) {
+            	// set default range start date to 01.03.2009
+            	dateField.selectableRange = {rangeStart: new Date(2009,2,1), rangeEnd: new Date()};
+            }
         }
 			
 		public function setAssistance(id:String, type:String):void {
