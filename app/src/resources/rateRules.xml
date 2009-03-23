@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	17.03.2009
+	@updated:	23.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	17.03.09:	Oppdaterte satser for §9 kostgodtgjørelse dagsreiser
-			12.03.09:	oppdaterte 'allowance_04b' og 'accomodation_maxcover'
-					la til ny sats; 'allowance_international'
+	@comment:	23.03.09:	La til ny sats - admin.tillegg ved utenlandsreiser.
+				17.03.09:	Oppdaterte satser for §9 kostgodtgjørelse dagsreiser
+				12.03.09:	oppdaterte 'allowance_04b' og 'accomodation_maxcover'
+							la til ny sats; 'allowance_international'
 -->
 <travelraterules>
 	<travelraterule id="transport_car_01" cost="3.50" description="Sats for egen bil, kjørt inntil 9000 km i kalenderåret" />
@@ -45,7 +46,9 @@
 	<travelraterule id="redraw_04" cost="" percent="10" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for frokost ved utenlandsreise" />
 	<travelraterule id="redraw_05" cost="" percent="40" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for lunsj ved utenlandsreise" />
 	<travelraterule id="redraw_06" cost="" percent="50" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for middag ved utenlandsreise" />
-	<travelraterule id="redraw_extra" cost="60" description="Særskilt godtgjørelse for hver 24. time for mindre uleg. utgifter" />
+	
+	<travelraterule id="redraw_extra_01" cost="60" rule_travel_type="domestic" description="Særskilt godtgjørelse for hver 24. time for mindre uleg. utgifter ved innenlandsreise" />
+	<travelraterule id="redraw_extra_02" cost="80" rule_travel_type="international" description="Særskilt godtgjørelse for hver 24. time for mindre uleg. utgifter ved utenlandsreise" />
 
 	<travelraterule id="accomodation_unauthorized" cost="400" description="Ulegitimert nattillegg, innenlandsreiser" />
 	<travelraterule id="accomodation_maxcover" cost="1400" description="Maxbeløp for legitimerte utgifter på hotell eller lignende" />
