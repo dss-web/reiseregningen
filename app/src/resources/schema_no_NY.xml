@@ -13,7 +13,8 @@
 	<media>
 		<texts>
 			<text id="site_header" value="Viktig informasjon om reiseregningen" />
-			<text id="site_intro" value="Ved reiser som inneholder et stort antall poster anbefaler i å bruke den Windows-baserte reiseregningen, eller dele opp reiseregningen i flere deler." />
+			<text id="site_intro" value="Ved reiser som innehelder eit stort antall postar anbefaler vi å bruke den Windows-baserte reiseregninga, eller dele opp reiseregninga i fleire delar.
+Viss du reiste før 1 mars 2009 må førre reiserekningsversjon brukast." />
 			<text id="header_personal" value="Personleg informasjon og jobbdetaljar"/>
 			<text id="header_travel" value="Reisa"/>
 			<text id="header_settlement" value="Oppgjer"/>
@@ -41,7 +42,7 @@
 			<text id="button_share_form" value="Lagre til deling"/>
 			<text id="button_print_form" value="Skriv ut blankett"/>
 			<text id="button_accessibility_help" value="Hjelp til brukarar med skjermlesar"/>
-			<text id="button_link_prev_app" value=" - oversettelse mangler -" />
+			<text id="button_link_prev_app" value="Klikk her for å starte førre reiserekningsversjon" />
 			<text id="button_see_edit_personal" value="Endre detaljar for Personleg informasjon og jobbdetaljar"/>
 			<text id="button_see_edit_travel" value="Endre detaljar for Reisa"/>
 			<text id="button_see_edit_specifications" value="Endre detaljar for Detaljar og spesifikasjonar rundt reisa"/>
@@ -78,7 +79,7 @@
 			<text id="error_warning" value="Åtvaring"/>
 			<text id="error_info" value="Informasjon"/>			
 			<text id="alert_maxcost_accomodation" value="Beløpet er høgare enn makssatsen for overnatting i det aktuelle land, sjå § 9 nr. 4 i Særavtalen for reiser utanlands for statens regning." />
-			<text id="info_international_compensation" value=" - oversettelse mangler -" />
+			<text id="info_international_compensation" value="Kompensasjonstillegg for utanlandsreise over %1 døgn lagt til av %2 pr. døgn" />
 			<text id="link_SPH3.3" value="SPH §3.3 http://www.sph.dep.no/templates/Kapittel.aspx?id=2002"/>
 			<text id="link_SPH4" value="SPH §4 http://www.sph.dep.no/templates/Kapittel.aspx?id=2003"/>
 			<text id="link_SPH6" value="SPH §6 http://www.sph.dep.no/templates/Kapittel.aspx?id=2005"/>
