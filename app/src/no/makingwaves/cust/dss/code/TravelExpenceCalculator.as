@@ -109,7 +109,7 @@ package no.makingwaves.cust.dss.code
 				amount += calculateInternationalAllowance(rateRule);
 				
 				// new rule from 01.03.2009, additonal compensation for travelling abroad
-				if (travelDateInfo.total_hours > 12) {
+				if (travelDateInfo.total_hours > 12 && travelDateInfo.total_24hours >= 1) {
 					if (travelDateInfo.total_hours > 24) 
 						days = travelDateInfo.days;
 						
@@ -141,7 +141,11 @@ package no.makingwaves.cust.dss.code
 				if (adminNum > 0) {
 					var admin_allowance:RateVO = new RateVO();
 					admin_allowance.num = adminNum;
-					admin_allowance.rate = this.getRate("redraw_extra").cost;
+					if (travelInfo.travel_type == travelInfo.DOMESTIC) {
+						admin_allowance.rate = this.getRate("redraw_extra_01").cost;
+					} else {
+						admin_allowance.rate = this.getRate("redraw_extra_02").cost;
+					}
 					admin_allowance.amount = admin_allowance.num * admin_allowance.rate;
 					ModelLocator.getInstance().travelAllowance.adm_allowance = admin_allowance;
 					
@@ -188,6 +192,7 @@ package no.makingwaves.cust.dss.code
 				var lastLocationObject:Object;
 				var daysCalculated:int = 0;
 				// for each 24-hour day, check which international rate that should be used
+				if (num24hours == 0) { num24hours = 1; }
 				for (var i:int=0; i < num24hours; i++) {
 					//trace("check between " + Util.formatDate(dateStart) + " - " + Util.formatDate(dateStop));
 					var timeFrameSpecs:ArrayCollection = new ArrayCollection();
@@ -291,7 +296,7 @@ package no.makingwaves.cust.dss.code
 					// find the correct country/city based on the longest timeframe
 					var maxTimeframe:Number = 0;
 					var maxTimeframeObject:Object;
-					if (locationList.length == 0 || (i+1) == num24hours) {
+					if ((locationList.length == 0 || (i+1) == num24hours) && lastLocationObject != null) {
 						// no specification in this timeframe, use last visited country
 						maxTimeframeObject = lastLocationObject;
 					} else {
