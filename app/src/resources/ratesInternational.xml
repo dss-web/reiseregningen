@@ -24,7 +24,7 @@
 	<rate code="BGD" night="1900" allowance="420" textid="BGD" desc="Bangladesh" />
 	<rate code="BRB" night="1600" allowance="650" textid="BRB" desc="Barbados" />
 	<rate code="BEL" night="2000" allowance="850" textid="BEL" desc="Belgia" />
-	<rate code="BEL" night="2000" allowance="850" textid="BEL_brussel" desc="Belgia; Brussel" />
+	<rate code="BEL" night="2400" allowance="880" textid="BEL_brussel" desc="Belgia; Brussel" />
 	<rate code="BEN" night="1100" allowance="580" textid="BEN" desc="Benin" />
 	<rate code="BMU" night="2400" allowance="590" textid="BMU" desc="Bermuda (Br)" />
 	<rate code="BOL" night="1200" allowance="310" textid="BOL" desc="Bolivia" />
@@ -41,7 +41,7 @@
 	<rate code="CRI" night="1100" allowance="670" textid="CRI" desc="Costa Rica" />
 	<rate code="CUB" night="1700" allowance="600" textid="CUB" desc="Cuba" />
 	<rate code="DNK" night="1500" allowance="700" textid="DNK" desc="Danmark" />
-	<rate code="DNK" night="1500" allowance="700" textid="DNK_københavn" desc="Danmark; København" />
+	<rate code="DNK" night="2000" allowance="950" textid="DNK_københavn" desc="Danmark; København" />
 	<rate code="PSE" night="1100" allowance="620" textid="PSE" desc="De palestinske områder" />
 	<rate code="DOM" night="1000" allowance="500" textid="DOM" desc="Den dominikanske rep." />
 	<rate code="DMA" night="1000" allowance="470" textid="DMA" desc="Dominica" />
@@ -55,7 +55,7 @@
 	<rate code="FIN" night="2100" allowance="750" textid="FIN" desc="Finland" />
 	<rate code="ARE" night="2900" allowance="650" textid="ARE" desc="Forente Arabiske Emirater" />
 	<rate code="FRA" night="1400" allowance="750" textid="FRA" desc="Frankrike" />
-	<rate code="FRA" night="1400" allowance="750" textid="FRA_paris" desc="Frankrike; Paris" />
+	<rate code="FRA" night="2600" allowance="940" textid="FRA_paris" desc="Frankrike; Paris" />
 	<rate code="FRO" night="1500" allowance="700" textid="FRO" desc="Færøyene" />
 	<rate code="GAB" night="1400" allowance="800" textid="GAB" desc="Gabon" />
 	<rate code="GMB" night="1000" allowance="370" textid="GMB" desc="Gambia" />
@@ -72,7 +72,7 @@
 	<rate code="GRC" night="2100" allowance="890" textid="GRC" desc="Hellas" />
 	<rate code="BLR" night="1800" allowance="770" textid="BLR" desc="Hviterussland" />
 	<rate code="IND" night="1900" allowance="380" textid="IND" desc="India" />
-	<rate code="IND" night="1900" allowance="380" textid="IND_mumbai (bombay)" desc="India; Mumbai (Bombay)" />
+	<rate code="IND" night="2900" allowance="500" textid="IND_mumbai (bombay)" desc="India; Mumbai (Bombay)" />
 	<rate code="IDN" night="1600" allowance="880" textid="IDN" desc="Indonesia" />
 	<rate code="IRN" night="1300" allowance="360" textid="IRN" desc="Iran" />
 	<rate code="IRL" night="2500" allowance="990" textid="IRL" desc="Irland" />
@@ -80,14 +80,14 @@
 	<rate code="IMN" night="1450" allowance="660" textid="IMN" desc="Isle of Man" />
 	<rate code="ISR" night="2800" allowance="970" textid="ISR" desc="Israel" />
 	<rate code="ITA" night="1400" allowance="710" textid="ITA" desc="Italia" />
-	<rate code="ITA" night="1400" allowance="710" textid="ITA_firenze" desc="Italia; Firenze" />
-	<rate code="ITA" night="1400" allowance="710" textid="ITA_milano" desc="Italia; Milano" />
-	<rate code="ITA" night="1400" allowance="710" textid="ITA_roma" desc="Italia; Roma" />
-	<rate code="ITA" night="1400" allowance="710" textid="ITA_venezia" desc="Italia; Venezia" />
+	<rate code="ITA" night="2400" allowance="750" textid="ITA_firenze" desc="Italia; Firenze" />
+	<rate code="ITA" night="2000" allowance="900" textid="ITA_milano" desc="Italia; Milano" />
+	<rate code="ITA" night="2000" allowance="870" textid="ITA_roma" desc="Italia; Roma" />
+	<rate code="ITA" night="2500" allowance="980" textid="ITA_venezia" desc="Italia; Venezia" />
 	<rate code="JAM" night="1500" allowance="450" textid="JAM" desc="Jamaica" />
 	<rate code="JPN" night="2200" allowance="950" textid="JPN" desc="Japan" />
-	<rate code="JPN" night="2200" allowance="950" textid="JPN_osaka" desc="Japan; Osaka" />
-	<rate code="JPN" night="2200" allowance="950" textid="JPN_tokyo" desc="Japan; Tokyo" />
+	<rate code="JPN" night="2700" allowance="1050" textid="JPN_osaka" desc="Japan; Osaka" />
+	<rate code="JPN" night="2700" allowance="1160" textid="JPN_tokyo" desc="Japan; Tokyo" />
 	<rate code="JEY" night="1450" allowance="660" textid="JEY" desc="Jersey" />
 	<rate code="JOR" night="2200" allowance="960" textid="JOR" desc="Jordan" />
 	<rate code="KHM" night="1800" allowance="880" textid="KHM" desc="Kambodia" />
@@ -96,8 +96,8 @@
 	<rate code="KAZ" night="3000" allowance="800" textid="KAZ" desc="Kasakhstan" />
 	<rate code="KEN" night="1900" allowance="510" textid="KEN" desc="Kenya" />
 	<rate code="CHN" night="1700" allowance="670" textid="CHN" desc="Kina" />
-	<rate code="CHN" night="1700" allowance="670" textid="CHN_hong kong" desc="Kina; Hong Kong" />
-	<rate code="CHN" night="1700" allowance="670" textid="CHN_shanghai" desc="Kina; Shanghai" />
+	<rate code="CHN" night="1700" allowance="850" textid="CHN_hong kong" desc="Kina; Hong Kong" />
+	<rate code="CHN" night="2700" allowance="930" textid="CHN_shanghai" desc="Kina; Shanghai" />
 	<rate code="KOS" night="1350" allowance="500" textid="KOS" desc="Kosovo" />
 	<rate code="KOS" night="800" allowance="320" textid="KOS" desc="Kosovo" />
 	<rate code="HRV" night="2000" allowance="750" textid="HRV" desc="Kroatia" />
@@ -130,8 +130,8 @@
 	<rate code="MNE" night="1200" allowance="470" textid="MNE" desc="Montenegro" />
 	<rate code="NAM" night="1000" allowance="350" textid="NAM" desc="Namibia" />
 	<rate code="NLD" night="1900" allowance="720" textid="NLD" desc="Nederland" />
-	<rate code="NLD" night="1900" allowance="720" textid="NLD_amsterdam" desc="Nederland; Amsterdam" />
-	<rate code="NLD" night="1900" allowance="720" textid="NLD_den haag" desc="Nederland; den Haag" />
+	<rate code="NLD" night="2500" allowance="850" textid="NLD_amsterdam" desc="Nederland; Amsterdam" />
+	<rate code="NLD" night="2000" allowance="800" textid="NLD_den haag" desc="Nederland; den Haag" />
 	<rate code="ANT" night="1200" allowance="460" textid="ANT" desc="Nederlandske Antiller" />
 	<rate code="NPL" night="1400" allowance="320" textid="NPL" desc="Nepal" />
 	<rate code="NZL" night="850" allowance="470" textid="NZL" desc="New Zealand" />
@@ -150,8 +150,8 @@
 	<rate code="QAT" night="2900" allowance="920" textid="QAT" desc="Qatar" />
 	<rate code="ROU" night="1900" allowance="700" textid="ROU" desc="Romania" />
 	<rate code="RUS" night="760" allowance="400" textid="RUS" desc="Russland" />
-	<rate code="RUS" night="760" allowance="400" textid="RUS_moskva" desc="Russland; Moskva" />
-	<rate code="RUS" night="760" allowance="400" textid="RUS_st.petersburg" desc="Russland; St.Petersburg" />
+	<rate code="RUS" night="2700" allowance="1050" textid="RUS_moskva" desc="Russland; Moskva" />
+	<rate code="RUS" night="2100" allowance="700" textid="RUS_st.petersburg" desc="Russland; St.Petersburg" />
 	<rate code="SMR" night="1400" allowance="710" textid="SMR" desc="San Marino" />
 	<rate code="SAU" night="1700" allowance="820" textid="SAU" desc="Saudi-Arabia" />
 	<rate code="SEN" night="1600" allowance="680" textid="SEN" desc="Senegal" />
@@ -161,27 +161,27 @@
 	<rate code="SVK" night="1450" allowance="680" textid="SVK" desc="Slovakia" />
 	<rate code="SVN" night="1600" allowance="640" textid="SVN" desc="Slovenia" />
 	<rate code="ESP" night="1500" allowance="800" textid="ESP" desc="Spania" />
-	<rate code="ESP" night="1500" allowance="800" textid="ESP_barcelona" desc="Spania; Barcelona" />
-	<rate code="ESP" night="1500" allowance="800" textid="ESP_madrid" desc="Spania; Madrid" />
+	<rate code="ESP" night="2000" allowance="900" textid="ESP_barcelona" desc="Spania; Barcelona" />
+	<rate code="ESP" night="2000" allowance="1050" textid="ESP_madrid" desc="Spania; Madrid" />
 	<rate code="LKA" night="1000" allowance="400" textid="LKA" desc="Sri Lanka" />
 	<rate code="KNA" night="2000" allowance="810" textid="KNA" desc="St. Kitts-Nevis" />
 	<rate code="LCA" night="1200" allowance="750" textid="LCA" desc="St. Lucia" />
 	<rate code="VCT" night="1500" allowance="770" textid="VCT" desc="St. Vincent og Grenadinene" />
 	<rate code="GBR" night="1450" allowance="660" textid="GBR" desc="Storbritannia" />
-	<rate code="GBR" night="1450" allowance="660" textid="GBR_london" desc="Storbritannia; London" />
+	<rate code="GBR" night="1850" allowance="880" textid="GBR_london" desc="Storbritannia; London" />
 	<rate code="SDN" night="1700" allowance="650" textid="SDN" desc="Sudan" />
 	<rate code="SUR" night="1200" allowance="360" textid="SUR" desc="Surinam" />
 	<rate code="CHE" night="1600" allowance="780" textid="CHE" desc="Sveits" />
-	<rate code="CHE" night="1600" allowance="780" textid="CHE_genève" desc="Sveits; Genève" />
-	<rate code="CHE" night="1600" allowance="780" textid="CHE_zürich" desc="Sveits; Zürich" />
+	<rate code="CHE" night="2300" allowance="790" textid="CHE_genève" desc="Sveits; Genève" />
+	<rate code="CHE" night="2700" allowance="850" textid="CHE_zürich" desc="Sveits; Zürich" />
 	<rate code="SWE" night="2000" allowance="830" textid="SWE" desc="Sverige" />
 	<rate code="SWZ" night="1100" allowance="340" textid="SWZ" desc="Swaziland" />
 	<rate code="SYR" night="2200" allowance="700" textid="SYR" desc="Syria" />
 	<rate code="ZAF" night="1900" allowance="410" textid="ZAF" desc="Sør-Afrika" />
-	<rate code="ZAF" night="1900" allowance="410" textid="ZAF_cape town" desc="Sør-Afrika; Cape Town" />
-	<rate code="ZAF" night="1900" allowance="410" textid="ZAF_johannesburg" desc="Sør-Afrika; Johannesburg" />
+	<rate code="ZAF" night="2600" allowance="410" textid="ZAF_cape town" desc="Sør-Afrika; Cape Town" />
+	<rate code="ZAF" night="2600" allowance="410" textid="ZAF_johannesburg" desc="Sør-Afrika; Johannesburg" />
 	<rate code="KOR" night="2200" allowance="630" textid="KOR" desc="Sør-Korea" />
-	<rate code="KOR" night="2200" allowance="630" textid="KOR_seoul" desc="Sør-Korea; Seoul" />
+	<rate code="KOR" night="2600" allowance="850" textid="KOR_seoul" desc="Sør-Korea; Seoul" />
 	<rate code="TWN" night="2500" allowance="600" textid="TWN" desc="Taiwan" />
 	<rate code="TZA" night="1300" allowance="400" textid="TZA" desc="Tanzania" />
 	<rate code="THA" night="2300" allowance="850" textid="THA" desc="Thailand" />
@@ -190,11 +190,11 @@
 	<rate code="CZE" night="1750" allowance="700" textid="CZE" desc="Tsjekkiske republikk" />
 	<rate code="TUN" night="2100" allowance="650" textid="TUN" desc="Tunisia" />
 	<rate code="TUR" night="2200" allowance="770" textid="TUR" desc="Tyrkia" />
-	<rate code="TUR" night="2200" allowance="770" textid="TUR_istanbul" desc="Tyrkia; Istanbul" />
+	<rate code="TUR" night="2900" allowance="890" textid="TUR_istanbul" desc="Tyrkia; Istanbul" />
 	<rate code="DEU" night="1800" allowance="800" textid="DEU" desc="Tyskland" />
 	<rate code="USA" night="2000" allowance="650" textid="USA" desc="USA" />
-	<rate code="USA" night="2000" allowance="650" textid="USA_new york" desc="USA; New York" />
-	<rate code="USA" night="2000" allowance="650" textid="USA_washington d.c" desc="USA; Washington D.C" />
+	<rate code="USA" night="3000" allowance="1070" textid="USA_new york" desc="USA; New York" />
+	<rate code="USA" night="3000" allowance="1190" textid="USA_washington d.c" desc="USA; Washington D.C" />
 	<rate code="UGA" night="1900" allowance="610" textid="UGA" desc="Uganda" />
 	<rate code="UKR" night="2200" allowance="600" textid="UKR" desc="Ukraina" />
 	<rate code="HUN" night="1600" allowance="550" textid="HUN" desc="Ungarn" />
@@ -208,5 +208,5 @@
 	<rate code="FIN" night="2100" allowance="750" textid="FIN" desc="Åland" />
 	<rate code="TLS" night="1700" allowance="540" textid="TLS" desc="Øst-Timor" />
 	<rate code="AUT" night="1500" allowance="770" textid="AUT" desc="Østerrike" />
-	<rate code="AUT" night="1500" allowance="770" textid="AUT_wien" desc="Østerrike; Wien" />
+	<rate code="AUT" night="1850" allowance="820" textid="AUT_wien" desc="Østerrike; Wien" />
 </international_rates>
