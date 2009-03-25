@@ -109,9 +109,12 @@ package no.makingwaves.cust.dss.code
 				amount += calculateInternationalAllowance(rateRule);
 				
 				// new rule from 01.03.2009, additonal compensation for travelling abroad
-				if (travelDateInfo.total_hours > 12 && travelDateInfo.total_24hours >= 1) {
-					if (travelDateInfo.total_hours > 24) 
+				if (travelDateInfo.total_hours > 12) {
+					if (travelDateInfo.total_hours > 24) { 
 						days = travelDateInfo.days;
+					} else if (travelDateInfo.total_24hours == 0) {
+						days = 1;
+					}
 						
 					// add additional allowance for international travels
 					var compensationRule:TravelRateRuleVO = this.getRate("allowance_international");
