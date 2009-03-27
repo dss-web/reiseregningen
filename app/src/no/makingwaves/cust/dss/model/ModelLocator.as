@@ -69,7 +69,7 @@ package no.makingwaves.cust.dss.model
 		// VERSION ================================================================
 		
 		//public const VERSION : String = "1.1";
-		public const VERSION : String = "1.1 - TESTVERSJON 23.03.09";
+		public const VERSION : String = "1.1 - TESTVERSJON 27.03.09 / 13:45";
 		
 		// STATICS ================================================================
 		

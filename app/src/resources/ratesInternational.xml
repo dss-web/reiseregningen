@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	13.03.2009
+	@updated:	25.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	Alle satser oppdatert. Nattillegg (night) sine verdier betyr nå makssatser for overnatting.
+	@comment:	Oppdaterte feil satser som var registrert på alle byer
+			Alle satser oppdatert. Nattillegg (night) sine verdier betyr nå makssatser for overnatting.
 -->
 <international_rates>
 	<rate code="AFG" night="1600" allowance="880" textid="AFG" desc="Afganistan" />
