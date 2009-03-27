@@ -86,8 +86,25 @@
 				model.accessibility.addAccessibility(notes_button, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_add') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'notes_label')));
 				model.accessibility.addAccessibility(notes_editbutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_edit') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'notes_label')));
 				model.accessibility.addAccessibility(notes_deletebutton, (resourceManager.getString(model.resources.getResourceBundleName(), 'button_delete') + " " + resourceManager.getString(model.resources.getResourceBundleName(), 'notes_label')));
+				
+				// check wether accomodation is needed
+				var accomodationNeeded:Boolean = true;
+				var startOfNight:int = 22;
+				var endOfNight:int = 6;
+				if (model.travelLength.days < 1) {
+					var start:Date = new Date(model.activeTravel.travel_date_out);
+					start.setHours(startOfNight);
+					var end:Date = new Date(model.activeTravel.travel_date_in);
+					end.setHours(endOfNight);
+					if (model.activeTravel.travel_date_out.time > start.time ||
+						model.activeTravel.travel_date_in.time < end.time) {
+						
+						accomodationNeeded = false;
+					}
+				}
+				
 				// check wether to remove some of the boxes
-				if (model.travelLength.days < 1 && !model.screenreader) {
+				if (!accomodationNeeded && !model.screenreader) {
 					// accomodation is not needed
 					this.accomodationbox.height = 0;
 					this.accomodationbox.enabled = false;
@@ -99,7 +116,7 @@
 					this.redrawsbox.visible = false;
 					this.redrawsbox.includeInLayout = false;
 					*/
-				} else if (model.travelLength.days >= 1 && !model.screenreader) {
+				} else if (accomodationNeeded && !model.screenreader) {
 					this.accomodationbox.percentHeight = 100;
 					this.accomodationbox.includeInLayout = true;
 					this.accomodationbox.enabled = true;
