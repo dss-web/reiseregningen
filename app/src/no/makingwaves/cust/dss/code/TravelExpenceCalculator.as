@@ -308,8 +308,11 @@ package no.makingwaves.cust.dss.code
 							ranger.getDateRange(locationList.getItemAt(l).startDate, locationList.getItemAt(l).stopDate);
 							trace(locationList.getItemAt(l).country + ", (" + locationList.getItemAt(l).city + "): " + ranger.total_min + " minutes");
 							if (ranger.total_min > maxTimeframe) {
-								maxTimeframe = ranger.total_min;
-								maxTimeframeObject = locationList.getItemAt(l);
+								// check wether new total time is domestic
+								if (this.getInternationalRate(locationList.getItemAt(l).country, locationList.getItemAt(l).city) != null || ranger.overnight) {
+									maxTimeframe = ranger.total_min;
+									maxTimeframeObject = locationList.getItemAt(l);
+								}
 							}
 						}
 					}
@@ -373,7 +376,7 @@ package no.makingwaves.cust.dss.code
 						if (!added) {
 							var allowance:RateVO = new RateVO();
 							allowance.rate = dailyAllowance;
-							allowance.num = 1;
+							allowance.num = (travelPeriode.total_24hours > 0) ? 1 : travelPeriode.total_hours;
 							allowance.amount = dailyAllowance;
 							allowancesInternational.addItem(allowance);
 						}
