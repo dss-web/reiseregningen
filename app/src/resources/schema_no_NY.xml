@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	17.03.2009
+	@updated:	@updated:	27.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	17.03.09: La til tekst for sjekkboks Arbeidssted Tromsø
+	@comment:	27.03.09: Endret 'settlement_error_accomodations'.
+				17.03.09: La til tekst for sjekkboks Arbeidssted Tromsø
 				16.03.09: La til tekst for knapp som linker til gammel reiseregningsversjon
 				13.03.09: Oppdaterte alle land og byer i forhold til nytt regulativ.
 				12.03.09: Lagt inn nytt tekstelement 'alert_maxcost_accomodation' med foreløpig tekst for å varsle bruker om at innlagt kostnad overgår maksgrensen.
@@ -434,7 +435,7 @@ Viss du reiste før 1 mars 2009 må førre reiserekningsversjon brukast." />
 			<text id="settlement_error_header" value="Oppgjeret er ikkje klart"/>
 			<text id="settlement_error_intro" value="Oppgjeret er ikkje ferdig utrekna då du ikkje har fyllt ut reisedetaljane ferdig."/>
 			<text id="settlement_error_specifications" value="Reisespesifikasjonane har manglar i forhold til utreise- og innreisedag."/>
-			<text id="settlement_error_accomodations" value="Du har ikkje spesifisert nødvendige overnattingar."/>
+			<text id="settlement_error_accomodations" value="Vennligst kontroller at alle nødvendige overnattinger er spesifisert."/>
 			<text id="settlement_error_deductions" value="Under overnattingar har du spesifisert at du har hatt frukost inkludert i opphaldet. Desse må òg spesifiserast under 'trekk i kostgodtgjersla'."/>
 			<text id="AFG" value="Afganistan" />
 			<text id="AFRIKA - ØVRIGE OMRÅDER" value="Afrika - øvrige områder" />

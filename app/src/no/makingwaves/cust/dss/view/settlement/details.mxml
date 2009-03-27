@@ -226,7 +226,7 @@
 				// alert user of any missing specifications?
 				//if (specError != "" || accError != "" || deductionError != "") {
 				if (specError != "" || accError != "") {
-					formIsValid = false;
+					formIsValid = !(specError != "");
 					var errorHeader:String = resourceManager.getString(model.resources.bundleName, 'settlement_error_header');
 					var errorMessage:String = resourceManager.getString(model.resources.bundleName, 'settlement_error_intro');
 					if (specError != "")

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	19.03.2009
+	@updated:	27.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	19.03.09:	Endret 'alert_maxcost_accomodation' teksten pga funksjonalitetsendringer.
+	@comment:	27.03.09:	Endret 'settlement_error_accomodations'.
+				19.03.09:	Endret 'alert_maxcost_accomodation' teksten pga funksjonalitetsendringer.
 				17.03.09: 	La til tekst for sjekkboks Arbeidssted Tromsø
 				16.03.09:	La til tekst for knapp som linker til gammel reiseregningsversjon
 				13.03.09: 	Oppdaterte alle land og byer i forhold til nytt regulativ.
@@ -602,7 +603,7 @@ Legitimert kostgodtgjørelse for reiser inntil 5 timer skriver du inn her." />
 			<text id="settlement_error_header" value="Oppgjøret er ikke klart" />
 			<text id="settlement_error_intro" value="Oppgjøret er ikke ferdig utregnet da du ikke har fyllt ut reisedetaljene ferdig." />
 			<text id="settlement_error_specifications" value="Reisespesifikasjonene har mangler i forhold til utreise- og innreisedag." />
-			<text id="settlement_error_accomodations" value="Du har ikke spesifisert alle nødvendige overnattinger." />
+			<text id="settlement_error_accomodations" value="Vennligst kontroller at alle nødvendige overnattinger er spesifisert." />
 			<text id="settlement_error_deductions" value="Under overnattinger har du spesifisert at du har hatt frokost inkludert i oppholdet. Disse må også spesifiseres under 'trekk i kostgodtgjørelsen'" />
 
 			<!-- COUNTRIES -->
