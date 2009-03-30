@@ -23,5 +23,10 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.DataStructures
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return "[num=" + num + ";rate=" + rate + ";amount=" + amount + "]";
+        }
     }
 }

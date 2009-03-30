@@ -21,7 +21,7 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
         private static log4net.ILog log = log4net.LogManager.GetLogger(typeof(PdfGenerator));
         
         // number of decimals to be used in amount
-        private const int NODEC = 2;
+        private const int NumberOfDecimalsToShow = 2;
 
         /// <summary>
         /// file used as template, specified in web.config.
@@ -153,10 +153,10 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
                     if (to.cost != null)
                     {
                         FillField((fieldNr + 2).ToString(), to.cost.cost_currency);
-                        FillField((fieldNr + 3).ToString(), to.cost.cost, NODEC);
+                        FillField((fieldNr + 3).ToString(), to.cost.cost, NumberOfDecimalsToShow);
                         FillField((fieldNr + 4).ToString(), to.cost.cost_currency_rate);
                         double finalCost = to.cost.cost * to.cost.cost_currency_rate;
-                        FillField((fieldNr + 5).ToString(), finalCost, NODEC); //to.cost.cost);
+                        FillField((fieldNr + 5).ToString(), finalCost, NumberOfDecimalsToShow); //to.cost.cost);
                         sum += finalCost; // to.cost.cost;
                     }
                     ++counter;
@@ -189,11 +189,11 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
                         if (acc.actual_cost.cost_currency_rate != 1)
                         {
                             FillField((fieldNr + 2).ToString(), acc.actual_cost.cost_currency);
-                            FillField((fieldNr + 3).ToString(), acc.actual_cost.cost, NODEC);
+                            FillField((fieldNr + 3).ToString(), acc.actual_cost.cost, NumberOfDecimalsToShow);
                             FillField((fieldNr + 4).ToString(), acc.actual_cost.cost_currency_rate);
                         }
                         double finalCost = acc.actual_cost.cost * acc.actual_cost.cost_currency_rate;
-                        FillField((fieldNr + 5).ToString(), finalCost, NODEC); //acc.actual_cost.cost);
+                        FillField((fieldNr + 5).ToString(), finalCost, NumberOfDecimalsToShow); //acc.actual_cost.cost);
                         sum += finalCost; //acc.cost.cost;
                     }
                     ++counter;
@@ -251,20 +251,53 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
             }
             else if (!ta.domestic && !ta.accomodation)
             {
-                if (ta.allowance.num < 6)
+                // count all rates for specific ranges of hours: <0,6), <6, 12) and >=12
+                RateVO[] rateSum = {new RateVO(), new RateVO(), new RateVO()};
+                // sum international allowances
+                foreach (RateVO rate in ta.allowance_international)
                 {
-                    // nothing
+                    int whichInterval = 0;
+                    if ((rate.num>=6) && (rate.num<12)) // from 6h to 12h
+                        whichInterval = 1;
+                    else if (rate.num >= 12) // more than 12h
+                        whichInterval = 2;
+                    else
+                    {
+                        log.Warn("RateVO in allowance_international has 'num'<6, so this is ignored! " + rate);
+                    }
+                    rateSum[whichInterval].num += rate.num;
+                    rateSum[whichInterval].amount += rate.amount;
+                    if ((rateSum[whichInterval].rate == 0) || (rateSum[whichInterval].rate == rate.rate))
+                        rateSum[whichInterval].rate = rate.rate;
+                    else
+                        rateSum[whichInterval].rate = double.NaN; // different rates => do not show rate
                 }
-                else if (ta.allowance.num < 12)
-                {
-                    FillFieldAmountsWithHours("40", "41", "98", ta.allowance);
-                    AddSum(ref sum, ta.allowance.amount);
-                }
-                else
-                {
-                    FillFieldAmountsWithHours("42", "43", "99", ta.allowance);
-                    AddSum(ref sum, ta.allowance.amount);
-                }
+                //FillFieldAmounts("48", "49", "102", rateSum[0]);
+                FillFieldAmountsWithHours("40", "41", "98", rateSum[1]);
+                FillFieldAmountsWithHours("42", "43", "99", rateSum[2]);
+                // put '1' instead of anything else in 'num' column
+                if (rateSum[1].num > 0)
+                    FillField("40", "1");
+                if (rateSum[2].num > 0)
+                    FillField("42", "1");
+
+                AddSum(ref sum, rateSum[1].amount);
+                AddSum(ref sum, rateSum[2].amount);
+
+                //if (ta.allowance_international.num < 6)
+                //{
+                //    // nothing
+                //}
+                //else if (ta.allowance_international.num < 12)
+                //{
+                //    FillFieldAmountsWithHours("40", "41", "98", ta.allowance_international);
+                //    AddSum(ref sum, ta.allowance_international.amount);
+                //}
+                //else
+                //{
+                //    FillFieldAmountsWithHours("42", "43", "99", ta.allowance_international);
+                //    AddSum(ref sum, ta.allowance_international.amount);
+                //}
             }
             else if (ta.domestic && ta.accomodation)
             {
@@ -399,7 +432,7 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
             }
 
 
-            FillField("115", sum, NODEC);
+            FillField("115", sum, NumberOfDecimalsToShow);
 
             double sumBrutto = sum;
             //FillField("79", ta.other_other_name);
@@ -416,14 +449,14 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
                 FillField("83", sumCost);
                 AddSum(ref sumBrutto, -sumCost);
             }
-            FillField("117", sumBrutto, NODEC);
+            FillField("117", sumBrutto, NumberOfDecimalsToShow);
 
             if ((travelExpense.travelAdvanceList!=null) &&
                 (travelExpense.travelAdvanceList.Length>0))
                 FillField("86", travelExpense.travelAdvanceList[0].location);
 
             FillField("87", GetSummaryOfCost(travelExpense.travelAdvanceList));            
-            FillField("118", ta.netamount, NODEC);
+            FillField("118", ta.netamount, NumberOfDecimalsToShow);
 
         }
 
@@ -481,8 +514,8 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
         private void FillFieldAmounts(string nrofID, string rateID, string amountID, RateVO rateVO)
         {
             FillField(nrofID, rateVO.num);
-            FillField(rateID, rateVO.rate, NODEC);
-            FillField(amountID, rateVO.amount, NODEC);
+            FillField(rateID, rateVO.rate, NumberOfDecimalsToShow);
+            FillField(amountID, rateVO.amount, NumberOfDecimalsToShow);
         }
 
         private void FillFieldAmounts(string nrofID, string rateID, string amountID, double nrofVal, double rateVal)
@@ -612,7 +645,7 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
 
                                 // Added 22.10.2008 Örjan Andersson
                                 // cost of car should be added to the "Beløp" column and total sum
-                                FillField((startField + 10).ToString(), com.cost.cost, NODEC);
+                                FillField((startField + 10).ToString(), com.cost.cost, NumberOfDecimalsToShow);
                                 sum_cost_nok += com.cost.cost;
 
 
@@ -629,12 +662,12 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
                                 // currency code (all except 'NOK')
                                 FillField((startField + 7).ToString(), thisCost.cost_currency);
                                 // cost in local
-                                FillField((startField + 8).ToString(), thisCost.cost, NODEC); 
+                                FillField((startField + 8).ToString(), thisCost.cost, NumberOfDecimalsToShow); 
                                 FillField((startField + 9).ToString(), thisCost.cost_currency_rate.ToString());
                             }
                             //double finalCost = StringUtils.GetDoubleFromString(thisCost.local_cost) * thisCost.cost_currency_rate;
                             double finalCost = thisCost.cost * thisCost.cost_currency_rate;
-                            FillField((startField + 10).ToString(), finalCost, NODEC); // thisCost.cost.ToString());
+                            FillField((startField + 10).ToString(), finalCost, NumberOfDecimalsToShow); // thisCost.cost.ToString());
                             sum_cost_nok += finalCost; // thisCost.cost;
                         }
                         else
@@ -652,7 +685,7 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
             }
             FillField("326", sumDistance);            
             //FillField("329", sum_cost_nok.ToString());
-            FillField("329", sum_cost_nok, NODEC);
+            FillField("329", sum_cost_nok, NumberOfDecimalsToShow);
         }
 
         private void SetTravel()
@@ -724,18 +757,17 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.Processing
 
         private void FillField(string id, double value)
         {
-            
             if (double.IsNaN(value))
                 return;
             FillField(id, StringUtils.DoubleToStringPoint(value));
         }
 
-        private void FillField(string id, double value, int nodecimals)
+        private void FillField(string id, double value, int noDecimals)
         {
 
             if (double.IsNaN(value))
                 return;
-            FillField(id, StringUtils.DoubleToStringPoint(value, nodecimals));
+            FillField(id, StringUtils.DoubleToStringPoint(value, noDecimals));
         }
 
     }

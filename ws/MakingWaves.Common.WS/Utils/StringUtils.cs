@@ -353,11 +353,11 @@ namespace MakingWaves.Common.WS.Utils
         /// <param name="val">Value that should be converted to string</param>
         /// <param name="nodecimals">Number of decimals</param>
         /// <returns></returns>
-        public static string DoubleToStringPoint(double val, int nodecimals)
+        public static string DoubleToStringPoint(double val, int noDecimals)
         {
             System.Globalization.NumberFormatInfo nfi = new System.Globalization.NumberFormatInfo();
             nfi.NumberDecimalSeparator = ",";
-            nfi.NumberDecimalDigits = nodecimals;
+            nfi.NumberDecimalDigits = noDecimals;
             return val.ToString("F", nfi);
         }
 

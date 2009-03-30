@@ -126,15 +126,6 @@ namespace MakingWaves.Common.WS.Utils
                 res = serializer.Deserialize(reader);
 
 
-                //file = File.Open(fileName, FileMode.Open, FileAccess.Read);
-                //byte[] data = new byte[file.Length];
-                //file.Read(data, 0, (int)file.Length);
-                //file.Close();
-                //file = null;
-                //String xmlContent = StringUtils.ByteArrayToString(data);
-                //StringReader tr = new StringReader(xmlContent);
-                //XmlSerializer ser = new XmlSerializer(objectType);
-                //res = ser.Deserialize(tr);
             }
             finally
             {
