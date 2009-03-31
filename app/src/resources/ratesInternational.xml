@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	25.03.2009
+	@updated:	31.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	Oppdaterte feil satser som var registrert på alle byer
+	@comment:	Endret landskode fro Nord-Irland
+			Oppdaterte feil satser som var registrert på alle byer
 			Alle satser oppdatert. Nattillegg (night) sine verdier betyr nå makssatser for overnatting.
 -->
 <international_rates>
@@ -138,7 +139,7 @@
 	<rate code="NZL" night="850" allowance="470" textid="NZL" desc="New Zealand" />
 	<rate code="NIC" night="1300" allowance="390" textid="NIC" desc="Nicaragua" />
 	<rate code="NGA" night="2300" allowance="1100" textid="NGA" desc="Nigeria" />
-	<rate code="GBR" night="1450" allowance="660" textid="GBR" desc="Nord-Irland" />
+	<rate code="NIR" night="1450" allowance="660" textid="NIR" desc="Nord-Irland" />
 	<rate code="OMN" night="2500" allowance="460" textid="OMN" desc="Oman" />
 	<rate code="PAK" night="2400" allowance="400" textid="PAK" desc="Pakistan" />
 	<rate code="PAN" night="1900" allowance="590" textid="PAN" desc="Panama" />

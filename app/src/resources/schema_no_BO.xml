@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	27.03.2009
+	@updated:	31.03.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	27.03.09:	Endret 'settlement_error_accomodations'.
+	@comment:	31.03.09:	Endret landskode fro Nord-Irland
+				27.03.09:	Endret 'settlement_error_accomodations'.
 				19.03.09:	Endret 'alert_maxcost_accomodation' teksten pga funksjonalitetsendringer.
 				17.03.09: 	La til tekst for sjekkboks Arbeidssted Tromsø
 				16.03.09:	La til tekst for knapp som linker til gammel reiseregningsversjon
@@ -738,7 +739,7 @@ Legitimert kostgodtgjørelse for reiser inntil 5 timer skriver du inn her." />
 			<text id="NZL" value="New Zealand" />
 			<text id="NIC" value="Nicaragua" />
 			<text id="NGA" value="Nigeria" />
-			<text id="GBR" value="Nord-Irland" />
+			<text id="NIR" value="Nord-Irland" />
 			<text id="OMN" value="Oman" />
 			<text id="PAK" value="Pakistan" />
 			<text id="PAN" value="Panama" />
@@ -766,6 +767,7 @@ Legitimert kostgodtgjørelse for reiser inntil 5 timer skriver du inn her." />
 			<text id="KNA" value="St. Kitts-Nevis" />
 			<text id="LCA" value="St. Lucia" />
 			<text id="VCT" value="St. Vincent og Grenadinene" />
+			<text id="GBR" value="Storbritannia" />
 			<text id="GBR_london" value="London" />
 			<text id="SDN" value="Sudan" />
 			<text id="SUR" value="Surinam" />
