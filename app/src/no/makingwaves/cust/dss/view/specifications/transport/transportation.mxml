@@ -143,7 +143,7 @@
 				}
 				return false;
 			} 
-			
+						
 			private function countryChanged(event:ListEvent):void {
 				if (event.currentTarget == this.cmb_countryfrom) {
 					buildInternationalCitySources(event.currentTarget.selectedItem.data, this.cmb_cityfrom);
@@ -265,13 +265,13 @@
 	            	specifications.from_time = fromtime.text;
 	            	specifications.from_date.setHours(Number(fromtime.text.substr(0,2)), Number(fromtime.text.substr(2,2)));
 
-	            	specifications.from_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezonefrom.selectedItem.data : -(new Date().timezoneOffset / 60);
+	            	specifications.from_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezonefrom.selectedItem.data : -(specifications.from_date.timezoneOffset / 60);
 	            	specifications.to_destination = locationto.text;
 	            	specifications.to_date = todate.selectedDate;
 	            	specifications.to_time = totime.text;
 	            	specifications.to_date.setHours(Number(totime.text.substr(0,2)), Number(totime.text.substr(2,2)));
 	            	
-	            	specifications.to_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezoneto.selectedItem.data : -(new Date().timezoneOffset / 60);
+	            	specifications.to_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezoneto.selectedItem.data : -(specifications.to_date.timezoneOffset / 60);
 	            	specifications.from_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryfrom.selectedItem.data : "";
 	            	specifications.from_city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_cityfrom.selectedItem.data : "";
 	            	specifications.to_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryto.selectedItem.data : "";
