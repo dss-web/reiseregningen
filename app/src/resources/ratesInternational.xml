@@ -115,7 +115,7 @@
 	<rate code="LTU" night="1800" allowance="520" textid="LTU" desc="Litauen" />
 	<rate code="LUX" night="2150" allowance="850" textid="LUX" desc="Luxembourg" />
 	<rate code="MDG" night="1900" allowance="670" textid="MDG" desc="Madagaskar" />
-	<rate code="PRT" night="2100" allowance="830" textid="PRT" desc="Madeira" />
+	<rate code="PRT" night="2100" allowance="830" textid="PRT#Madeira" desc="Madeira" />
 	<rate code="MKD" night="1400" allowance="520" textid="MKD" desc="Makedonia" />
 	<rate code="MWI" night="1000" allowance="450" textid="MWI" desc="Malawi" />
 	<rate code="MYS" night="1900" allowance="710" textid="MYS" desc="Malaysia" />
@@ -165,7 +165,7 @@
 	<rate code="ESP" night="1500" allowance="800" textid="ESP" desc="Spania" />
 	<rate code="ESP" night="2000" allowance="900" textid="ESP_barcelona" desc="Spania; Barcelona" />
 	<rate code="ESP" night="2000" allowance="1050" textid="ESP_madrid" desc="Spania; Madrid" />
-	<rate code="ESP" night="1500" allowance="800" textid="ESP_canary" desc="Spania; Kanariøyene" />
+	<rate code="ESP" night="1500" allowance="800" textid="ESP#canary" desc="Spania; Kanariøyene" />
 	<rate code="LKA" night="1000" allowance="400" textid="LKA" desc="Sri Lanka" />
 	<rate code="KNA" night="2000" allowance="810" textid="KNA" desc="St. Kitts-Nevis" />
 	<rate code="LCA" night="1200" allowance="750" textid="LCA" desc="St. Lucia" />
@@ -208,7 +208,7 @@
 	<rate code="YEM" night="1000" allowance="620" textid="YEM" desc="Yemen" />
 	<rate code="ZMB" night="2100" allowance="450" textid="ZMB" desc="Zambia" />
 	<rate code="ZWE" night="1350" allowance="580" textid="ZWE" desc="Zimbabwe" />
-	<rate code="FIN" night="2100" allowance="750" textid="FIN" desc="Åland" />
+	<rate code="FIN" night="2100" allowance="750" textid="FIN#Aaland" desc="Åland" />
 	<rate code="TLS" night="1700" allowance="540" textid="TLS" desc="Øst-Timor" />
 	<rate code="AUT" night="1500" allowance="770" textid="AUT" desc="Østerrike" />
 	<rate code="AUT" night="1850" allowance="820" textid="AUT_wien" desc="Østerrike; Wien" />

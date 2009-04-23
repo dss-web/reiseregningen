@@ -657,6 +657,7 @@ Legitimert kostgodtgjørelse for reiser inntil 5 timer skriver du inn her." />
 			<text id="FJI" value="Fiji" />
 			<text id="PHL" value="Fillipinene" />
 			<text id="FIN" value="Finland" />
+			<text id="FIN#Aaland" value="Åland" />
 			<text id="ARE" value="Forente Arabiske Emirater" />
 			<text id="FRA" value="Frankrike" />
 			<text id="FRA_paris" value="Paris" />
@@ -715,7 +716,8 @@ Legitimert kostgodtgjørelse for reiser inntil 5 timer skriver du inn her." />
 			<text id="LTU" value="Litauen" />
 			<text id="LUX" value="Luxembourg" />
 			<text id="MDG" value="Madagaskar" />
-			<text id="PRT" value="Madeira" />
+			<text id="PRT#Madeira" value="Madeira" />
+			<text id="PRT" value="Portugal" />
 			<text id="MKD" value="Makedonia" />
 			<text id="MWI" value="Malawi" />
 			<text id="MYS" value="Malaysia" />
@@ -764,7 +766,7 @@ Legitimert kostgodtgjørelse for reiser inntil 5 timer skriver du inn her." />
 			<text id="ESP" value="Spania" />
 			<text id="ESP_barcelona" value="Barcelona" />
 			<text id="ESP_madrid" value="Madrid" />
-			<text id="ESP_canary" value="Kanariøyene" />
+			<text id="ESP#canary" value="Kanariøyene" />
 			<text id="LKA" value="Sri Lanka" />
 			<text id="KNA" value="St. Kitts-Nevis" />
 			<text id="LCA" value="St. Lucia" />

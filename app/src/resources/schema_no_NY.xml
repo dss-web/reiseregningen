@@ -487,6 +487,7 @@ Viss du reiste før 1 mars 2009 må førre reiserekningsversjon brukast." />
 			<text id="FJI" value="Fiji" />
 			<text id="PHL" value="Fillipinene" />
 			<text id="FIN" value="Finland" />
+			<text id="FIN#Aaland" value="Åland" />
 			<text id="ARE" value="Forente Arabiske Emirater" />
 			<text id="FRA" value="Frankrike" />
 			<text id="FRA_paris" value="Paris" />
@@ -545,7 +546,8 @@ Viss du reiste før 1 mars 2009 må førre reiserekningsversjon brukast." />
 			<text id="LTU" value="Litauen" />
 			<text id="LUX" value="Luxembourg" />
 			<text id="MDG" value="Madagaskar" />
-			<text id="PRT" value="Madeira" />
+			<text id="PRT#Madeira" value="Madeira" />
+			<text id="PRT" value="Portugal" />
 			<text id="MKD" value="Makedonia" />
 			<text id="MWI" value="Malawi" />
 			<text id="MYS" value="Malaysia" />
@@ -592,7 +594,7 @@ Viss du reiste før 1 mars 2009 må førre reiserekningsversjon brukast." />
 			<text id="SVK" value="Slovakia" />
 			<text id="SVN" value="Slovenia" />
 			<text id="ESP" value="Spania" />
-			<text id="ESP_canary" value="Kanariøyene" />
+			<text id="ESP#canary" value="Kanariøyene" />
 			<text id="ESP_barcelona" value="Barcelona" />
 			<text id="ESP_madrid" value="Madrid" />
 			<text id="LKA" value="Sri Lanka" />
