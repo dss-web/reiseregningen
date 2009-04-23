@@ -112,6 +112,9 @@ package no.makingwaves.cust.dss.code
 				if (travelDateInfo.total_hours > 12) {
 					if (travelDateInfo.total_hours > 24) { 
 						days = travelDateInfo.days;
+						if (travelDateInfo.hours >= 12) {
+							days++;
+						}
 					} else if (travelDateInfo.total_24hours == 0) {
 						days = 1;
 					}
