@@ -30,6 +30,7 @@ package no.makingwaves.cust.dss.code
 		public const DATE : String = "DateValidator";
 		public const VALIDATOR_FORMAT_TIME : String = "time";
 		public const VALIDATOR_FORMAT_DOUBLE : String = "double";
+		public const VALIDATOR_FORMAT_INT : String = "int";
 		
 		public var validationSourceList : ArrayCollection = new ArrayCollection();
 		public var validationCustomSourceList : ArrayCollection = new ArrayCollection();
@@ -288,9 +289,12 @@ package no.makingwaves.cust.dss.code
 							doubleAllowed = true;
 							value = value.replace(",", ".");
 							TextInput(stringObject.component).text = value;
+							
+						} else if (stringObject.format == this.VALIDATOR_FORMAT_INT) {
+							value = value.replace(",", ".");
 						}
 						
-						if (isNaN(Number(value))) {
+						if (isNaN(Number(value)) || (stringObject.format == this.VALIDATOR_FORMAT_INT && value.indexOf(".") != -1)) {
 							var componentId:String = UIComponent(stringObject.component).id + "_label";
 							var compLabel:String = ResourceManager.getInstance().getString(model.resources.bundleName, componentId);
 							var defaultMsgStart:String = ResourceManager.getInstance().getString(model.resources.bundleName, "error_field_description_default");

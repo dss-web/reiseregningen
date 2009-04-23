@@ -29,8 +29,8 @@
                 model.accessibility.addAccessibility(car_forrestroad_km, resourceManager.getString(model.resources.bundleName, car_forrestroad_km.id+'_label'));
                 model.accessibility.addAccessibility(car_addon_hanger_chk, resourceManager.getString(model.resources.bundleName, car_addon_hanger_chk.id+'_label'));
                 // add validation
-                this.addCustomStringValidation(car_forrestroad_km, false, true);
-                this.addCustomStringValidation(car_passengers, false, true);
+                this.addCustomStringValidation(car_forrestroad_km, false, true, this.VALIDATOR_FORMAT_INT);
+                this.addCustomStringValidation(car_passengers, false, true, this.VALIDATOR_FORMAT_INT);
 			}
 			
 			private function reset():void {

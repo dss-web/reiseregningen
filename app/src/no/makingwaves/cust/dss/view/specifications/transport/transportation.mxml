@@ -93,7 +93,7 @@
                	this.addValidationField(locationfrom);
                	this.addValidationField(locationto);
                	travelTimeController();
-			}
+   			}
 			
 			private function buildInternationalTravelSources():void {
 				_countryList = new ArrayCollection();

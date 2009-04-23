@@ -36,7 +36,7 @@
 				model.accessibility.addAccessibility(distance_km, resourceManager.getString(model.resources.getResourceBundleName(), distance_km.id+'_label'));
 				// add validation
 				this.addValidationField(distance_km);
-				this.addCustomStringValidation(distance_km, false, true);
+				this.addCustomStringValidation(distance_km, false, true, this.VALIDATOR_FORMAT_INT);
 				// editmode?
 				if (this.autoFillInMode) {
 					distance_km.text = commonspecifications.distance.toString();
