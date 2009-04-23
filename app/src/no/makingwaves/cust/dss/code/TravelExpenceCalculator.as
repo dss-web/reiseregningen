@@ -436,19 +436,19 @@ package no.makingwaves.cust.dss.code
 				
 			} else {
 				// INTERNATIONAL TRAVEL
-				if (travelDateInfo.total_hours >= 6 && travelDateInfo.total_hours < 12) {
-					// travel longer than 12 hours
+				if (travelDateInfo.total_hours >= 6 && travelDateInfo.total_hours < 12 && !forDeduction) {
+					// travel periode between 6 and 12 hours
 					rateName += "_05";
 			
-				} else if (travelDateInfo.total_hours >= 12) {
-					// travel periode between 5 and 9 hours
+				} else if (travelDateInfo.total_hours >= 12 || forDeduction) {
+					// travel longer than 12 hours or when calculation deductions
 					rateName += "_06";
 				}
 			}
 			return getRate(rateName);
 		}
 		
-		public function getDailyAllowance(date:Date):Number {
+		public function getDailyAllowance(date:Date, forDeduction:Boolean=false):Number {
 			var amount:Number = 0.0;
 			var travelInfo:TravelVO = ModelLocator.getInstance().activeTravel;
 			var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
@@ -467,7 +467,7 @@ package no.makingwaves.cust.dss.code
 				
 			} else {
 				// internation travel, calculation must check period of time and location
-				var rateRule:TravelRateRuleVO = this.getAllowanceRate(travelInfo, travelDateInfo);
+				var rateRule:TravelRateRuleVO = this.getAllowanceRate(travelInfo, travelDateInfo, forDeduction);
 				amount = this.calculateInternationalAllowance(rateRule, date);
 			}
 			
@@ -877,7 +877,11 @@ package no.makingwaves.cust.dss.code
 		
 		public function calculateDeduction(deduction:TravelDeductionVO, breakfastRate:TravelRateRuleVO, lunchRate:TravelRateRuleVO, dinnerRate:TravelRateRuleVO, extraRate:TravelRateRuleVO, allowance:Number=0, realAllowance:Number=0):Number {
 			var amount:Number = 0.0;
-			var dailyAllowance:Number = (allowance != 0) ? allowance : this.getDailyAllowance(deduction.date);
+			var dailyAllowance:Number = allowance;
+			if (allowance == 0) {
+				dailyAllowance = this.getDailyAllowance(deduction.date, true);
+				realAllowance = this.getDailyAllowance(deduction.date);
+			}
 			if (deduction.breakfast) {
 				if (breakfastRate.cost != 0) {
 					amount -= Number(breakfastRate.cost);
