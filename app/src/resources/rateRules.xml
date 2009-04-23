@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	23.03.2009
+	@updated:	23.04.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	23.03.09:	La til ny sats - admin.tillegg ved utenlandsreiser.
+	@comment:	23.04.09: Lagt til nye satser for trekk i kostgodtgjørelse ved innenlandsreise uten overnatting.
+				23.03.09:	La til ny sats - admin.tillegg ved utenlandsreiser.
 				17.03.09:	Oppdaterte satser for §9 kostgodtgjørelse dagsreiser
 				12.03.09:	oppdaterte 'allowance_04b' og 'accomodation_maxcover'
 							la til ny sats; 'allowance_international'
@@ -43,6 +44,11 @@
 	<travelraterule id="redraw_01" cost="" percent="10" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for frokost ved innenlandsreise" />
 	<travelraterule id="redraw_02" cost="" percent="40" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for lunsj ved innenlandsreise" />
 	<travelraterule id="redraw_03" cost="" percent="50" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for middag ved innenlandsreise" />
+	
+	<travelraterule id="redraw_01_day" cost="0" percent="" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for frokost ved dagsreise u/overnatting innenlands" />
+	<travelraterule id="redraw_02_day" cost="170" percent="" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for lunsj ved dagsreise u/overnatting innenlands" />
+	<travelraterule id="redraw_03_day" cost="212.50" percent="" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for middag ved dagsreise u/overnatting innenlands" />
+	
 	<travelraterule id="redraw_04" cost="" percent="10" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for frokost ved utenlandsreise" />
 	<travelraterule id="redraw_05" cost="" percent="40" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for lunsj ved utenlandsreise" />
 	<travelraterule id="redraw_06" cost="" percent="50" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for middag ved utenlandsreise" />

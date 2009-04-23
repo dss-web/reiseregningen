@@ -59,7 +59,7 @@ package no.makingwaves.cust.dss.code
 			
 			ModelLocator.getInstance().travelAllowance.allowance_other.removeAll();
 			// update travelallowance accomodation setting
-			ModelLocator.getInstance().travelAllowance.accomodation = (travelDateInfo.total_hours > 24);
+			ModelLocator.getInstance().travelAllowance.accomodation = (travelDateInfo.overnight);
 			
 			// domestic or international travel
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
@@ -328,7 +328,7 @@ package no.makingwaves.cust.dss.code
 						intRate = new TravelRateInternationalVO();
 						var travelInfo:DateRanger = ModelLocator.getInstance().travelLength;
 						var localRate:TravelRateRuleVO;
-						if (travelInfo.total_hours >= 24) {
+						if (travelInfo.total_hours >= 12 && travelInfo.overnight) {
 							localRate = getRate("allowance_04b"); 
 							
 						} else if (travelInfo.total_hours > 12) {
@@ -413,7 +413,7 @@ package no.makingwaves.cust.dss.code
 			var rateName:String = "allowance";
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				// DOMESTIC TRAVEL
-				if (travelDateInfo.total_hours >= 24 || (travelDateInfo.total_hours > 0 && forDeduction)) {
+				if ((travelDateInfo.total_hours >= 12 && travelDateInfo.overnight) || (travelDateInfo.total_hours > 0 && forDeduction)) {
 					// travel longer than 12 hours ( with accomodation ) OR if over 12 hours when getting allowance for deductions
 					rateName += "_04b";
 					
@@ -842,9 +842,15 @@ package no.makingwaves.cust.dss.code
 			var dailyAllowance:Number = 0;
 			var dailyRealAllowance:Number = 0;
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
-				breakfastRate = this.getRate(rateName + "_01");
-				lunchRate = this.getRate(rateName + "_02");
-				dinnerRate = this.getRate(rateName + "_03");
+				if (travelDateInfo.overnight) {
+					breakfastRate = this.getRate(rateName + "_01");
+					lunchRate = this.getRate(rateName + "_02");
+					dinnerRate = this.getRate(rateName + "_03");
+				} else {
+					breakfastRate = this.getRate(rateName + "_01_day");
+					lunchRate = this.getRate(rateName + "_02_day");
+					dinnerRate = this.getRate(rateName + "_03_day");
+				}
 				// calc daily allowance for domestic travel
 				var rateRealRule:TravelRateRuleVO = this.getAllowanceRate(travelInfo, travelDateInfo);
 				var rateDeductionRule:TravelRateRuleVO = this.getAllowanceRate(travelInfo, travelDateInfo, true);

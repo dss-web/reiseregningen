@@ -18,6 +18,10 @@ package no.makingwaves.util.date
 		
 		public var overnight : Boolean = false; 
 		
+		private var nightStartHours : int = 22;
+		
+		private var nightEndHours : int = 6;
+		
 		public function DateRanger()
 		{
 		}
@@ -41,7 +45,10 @@ package no.makingwaves.util.date
 				this.minutes = Math.floor((dateRange.time - (this.total_hours * 60 * 60000)) / 60000);			
 				this.seconds = Math.floor((dateRange.time - (this.total_hours * 60 * 60000) - (this.total_min * 60000)) / 1000);			
 				
-				this.overnight = ((this.total_24hours > 0) || (endDate.getDay() > startDate.getDay()));
+				this.overnight = ((this.total_24hours > 0) || 
+								 (endDate.getDate() - startDate.getDate() > 1) ||
+								 (endDate.getMonth() - startDate.getMonth() > 0) ||
+								 (startDate.getHours() <= nightStartHours && endDate.getHours() >= nightEndHours && ((endDate.getDate() - startDate.getDate()) == 1)));
 			}
 		}
 
