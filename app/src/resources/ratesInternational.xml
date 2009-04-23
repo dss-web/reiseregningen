@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	31.03.2009
+	@updated:	23.04.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	Endret landskode fro Nord-Irland
+	@comment:	23.04.2009:	Endret id for Kanariøyene
+			31.03.2009:	Endret landskode fro Nord-Irland
 			Oppdaterte feil satser som var registrert på alle byer
 			Alle satser oppdatert. Nattillegg (night) sine verdier betyr nå makssatser for overnatting.
 -->
@@ -94,7 +95,6 @@
 	<rate code="JOR" night="2200" allowance="960" textid="JOR" desc="Jordan" />
 	<rate code="KHM" night="1800" allowance="880" textid="KHM" desc="Kambodia" />
 	<rate code="CMR" night="1500" allowance="490" textid="CMR" desc="Kamerun" />
-	<rate code="ESP" night="1500" allowance="800" textid="ESP" desc="Kanariøyene" />
 	<rate code="KAZ" night="3000" allowance="800" textid="KAZ" desc="Kasakhstan" />
 	<rate code="KEN" night="1900" allowance="510" textid="KEN" desc="Kenya" />
 	<rate code="CHN" night="1700" allowance="670" textid="CHN" desc="Kina" />
@@ -165,6 +165,7 @@
 	<rate code="ESP" night="1500" allowance="800" textid="ESP" desc="Spania" />
 	<rate code="ESP" night="2000" allowance="900" textid="ESP_barcelona" desc="Spania; Barcelona" />
 	<rate code="ESP" night="2000" allowance="1050" textid="ESP_madrid" desc="Spania; Madrid" />
+	<rate code="ESP" night="1500" allowance="800" textid="ESP_canary" desc="Spania; Kanariøyene" />
 	<rate code="LKA" night="1000" allowance="400" textid="LKA" desc="Sri Lanka" />
 	<rate code="KNA" night="2000" allowance="810" textid="KNA" desc="St. Kitts-Nevis" />
 	<rate code="LCA" night="1200" allowance="750" textid="LCA" desc="St. Lucia" />
