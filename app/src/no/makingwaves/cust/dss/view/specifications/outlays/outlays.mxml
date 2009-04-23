@@ -14,6 +14,8 @@
 			[Bindable]
 			public var travel_outlay : TravelOutlayVO;
 			
+			private var validStartDate : Date = new Date();
+			
 			private var _introIntervaller : Number;
 			
 			public function init(travelOutlay:TravelOutlayVO):void {
@@ -22,10 +24,14 @@
 			}
 			
 			private function initForm():void {
+				// set valid start date for outlay to six months ago
+				validStartDate = model.activeTravel.travel_date_out;
+				validStartDate.time -= ((1000 * 60 * 60 * 24) * (365/2));
+				outlay_date.selectableRange = {rangeStart : validStartDate, rangeEnd : model.activeTravel.travel_date_in};
 				// add validators
 				this.addValidationField(outlay_date_text, this.STRING, true, 8, 8);
 				this.addCustomStringValidation(outlay_date_text, false, false, this.DATE);
-				this.addCustomDateValidation(outlay_date, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in, null, null, outlay_date_text);
+				this.addCustomDateValidation(outlay_date, validStartDate, model.activeTravel.travel_date_in, null, null, outlay_date_text);
 				this.addValidationField(outlay_specification);
 				
 				// add accessibility
@@ -93,7 +99,7 @@
 						text="{resourceManager.getString(model.resources.bundleName, outlay_date_label.id)}" />
 			<mx:TextInput id="outlay_date_text" width="70" maxChars="8" text="{this.getFormattedDate(this.travel_outlay.date)}" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1402" />
 			<mx:DateField id="outlay_date" creationComplete="{dateField_init(outlay_date)}" editable="true" width="17" visible="{!model.screenreader}" tabEnabled="{!model.screenreader}" tabIndex="1403"
-					selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}"
+					selectableRange="{{rangeStart : validStartDate, rangeEnd : model.activeTravel.travel_date_in}}"
 					change="{this.travel_outlay.date = outlay_date.selectedDate}"
 				    selectedDate="{this.travel_outlay.date}" />
 			<mx:Text id="date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
