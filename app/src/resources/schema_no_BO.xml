@@ -17,7 +17,7 @@
 		<texts>
 			<!-- HEADERS AND COMMON TEXTS -->
 			<text id="site_header" value="Viktig informasjon om reiseregningen" />
-			<text id="site_intro" value="Ved reiser som inneholder et stort antall poster anbefaler i å bruke den Windows-baserte reiseregningen, eller dele opp reiseregningen i flere deler.
+			<text id="site_intro" value="Ved reiser som inneholder et stort antall poster anbefaler vi å bruke den Windows-baserte reiseregningen, eller dele opp reiseregningen i flere deler.
 Dersom du reiste før 1. mars 2009 må forrige reiseregningsversjon brukes." />
 			<text id="header_personal" value="Personlig informasjon og jobbdetaljer"/>
 			<text id="header_travel" value="Reisen" />
