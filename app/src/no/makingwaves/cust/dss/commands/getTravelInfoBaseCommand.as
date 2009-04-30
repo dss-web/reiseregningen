@@ -117,8 +117,18 @@ package no.makingwaves.cust.dss.commands
 				var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
 				var intTravel:Boolean = (ModelLocator.getInstance().activeTravel.travel_type == ModelLocator.getInstance().activeTravel.ABROAD); 
 				if (travelDateInfo.total_hours > 12 && intTravel) {
+					var days:int = 1;
+					if (travelDateInfo.total_hours > 24) { 
+						days = travelDateInfo.days;
+						if (travelDateInfo.hours >= 12) {
+							days++;
+						}
+					} else if (travelDateInfo.total_24hours == 0) {
+						days = 1;
+					}					
+					
 					var commentStr:String = ResourceManager.getInstance().getString(model.resources.bundleName, 'info_international_compensation');
-					commentStr = Util.searchAndReplace(commentStr, "%1", travelDateInfo.days.toString());
+					commentStr = Util.searchAndReplace(commentStr, "%1", days.toString());
 					commentStr = Util.searchAndReplace(commentStr, "%2", modelAllowance.allowance_other.getItemAt(0).rate);
 					
 					var modelComment:no.makingwaves.cust.dss.vo.TravelCommentVO = new no.makingwaves.cust.dss.vo.TravelCommentVO();
