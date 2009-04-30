@@ -58,6 +58,9 @@ package no.makingwaves.cust.dss.commands
 					newRate.city = city;
 					newRate.night = Number(rate.@night);
 					newRate.allowance = Number(rate.@allowance);
+					newRate.timezone = (rate.@timezone != "") ? int(rate.@timezone) : 0;
+					newRate.daylightsaving = (rate.@daylightsaving == "true") ? true : false;
+					
 					ModelLocator.getInstance().travelRatesInternationalList.addItem(newRate);
 				}
 				

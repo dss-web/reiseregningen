@@ -145,11 +145,15 @@
 			} 
 						
 			private function countryChanged(event:ListEvent):void {
+				var targetStatus:String;
 				if (event.currentTarget == this.cmb_countryfrom) {
+					targetStatus = "from";
 					buildInternationalCitySources(event.currentTarget.selectedItem.data, this.cmb_cityfrom);
 				} else {
+					targetStatus = "to";
 					buildInternationalCitySources(event.currentTarget.selectedItem.data, this.cmb_cityto);
 				}
+				autoAdjustTimezone(targetStatus);
 			}
 			
 			private function buildInternationalCitySources(countryName:String, combobox:ComboBox):void {
@@ -233,6 +237,43 @@
         		for (var fromZ:Number = 0; fromZ < ArrayCollection(this.cmb_timezonefrom.dataProvider).length; fromZ++) {
         			if (ArrayCollection(this.cmb_timezonefrom.dataProvider).getItemAt(fromZ).data == travelspecifications.from_timezone) {
         				this.cmb_timezonefrom.selectedIndex = fromZ;
+        				break;
+        			}
+        		}
+			}
+			
+			private function autoAdjustTimezone(target:String):void {
+				var targetCombobox:ComboBox = (target == "from") ? this.cmb_countryfrom : this.cmb_countryto;
+				var code:String = targetCombobox.selectedItem.data;
+				
+				var dateToCheck:Date = (target == "from") ? this.fromdate.selectedDate : this.todate.selectedDate;
+				var useDaylightSaving:Boolean = false;
+				useDaylightSaving = (Math.abs(dateToCheck.timezoneOffset / 60) == 2);
+				
+				var timezoneInfo:Object = model.getTimeZoneInfoFromCountryCode(code);
+				if (timezoneInfo == null) {
+					timezoneInfo = new Object();
+					timezoneInfo.timezone = -(dateToCheck.timezoneOffset / 60);
+					timezoneInfo.daylightsaving = (Math.abs(timezoneInfo.timezone) == 2);
+					// since it already has collected the true timezone offset and it is using
+					// daylight savings > remove the daylight saving addition because it is supposed to
+					// added later in this method. This should only apply for travels to/from Norway
+					if (timezoneInfo.daylightsaving) { timezoneInfo.timezone--; }
+				}
+				
+				var timezone:String = "";
+				var zoneNum:int = timezoneInfo.timezone;				
+				if (useDaylightSaving && timezoneInfo.daylightsaving) {
+					zoneNum++;
+				}
+				timezone += (zoneNum > 0) ? "+" : "";
+				timezone += (zoneNum < 0) ? "-" : "";
+				timezone += Math.abs(zoneNum).toString();
+				
+				var timezoneCombo:ComboBox = (target == "from") ? this.cmb_timezonefrom : this.cmb_timezoneto;
+        		for (var i:Number = 0; i < ArrayCollection(timezoneCombo.dataProvider).length; i++) {
+        			if (ArrayCollection(timezoneCombo.dataProvider).getItemAt(i).data == timezone) {
+        				timezoneCombo.selectedIndex = i;
         				break;
         			}
         		}
@@ -379,15 +420,31 @@
             }
 			
 			private function textDatefieldChanged(e:FocusEvent):void {
+				var targetStatus:String;
 				var textField:TextInput = TextInput(e.currentTarget);
 				if (this.validateCustomField(textField) && textField.text != "") {
 					var dateValues:Array = textField.text.split(".");
 					if (textField == this.todate_text) {
+						targetStatus = "to";
 						this.todate.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
 					} else if (textField == this.fromdate_text) {
+						targetStatus = "from";
 						this.fromdate.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
 					}
+					this.autoAdjustTimezone(targetStatus);
 				}
+			}
+			
+			private function dateFieldChangedHandler(e:Event):void {
+				var targetStatus:String;
+				if (e.currentTarget == this.fromdate) {
+					targetStatus = "from";
+					fromdate_text.text = this.getFormattedDate(fromdate.selectedDate);
+				} else if (e.currentTarget == this.todate) {
+					targetStatus = "to";
+					todate_text.text = this.getFormattedDate(todate.selectedDate);
+				}
+				this.autoAdjustTimezone(targetStatus);
 			}
 		]]>
 	</mx:Script>
@@ -459,7 +516,7 @@
 						text="{resourceManager.getString(model.resources.bundleName, fromdate_label.id)}" />
 		<mx:TextInput id="fromdate_text" width="70" maxChars="8" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1609" />
 		<mx:DateField id="fromdate" creationComplete="{dateField_init(fromdate)}" editable="true" width="17" visible="{!model.screenreader}" tabIndex="1610" 
-						change="{fromdate_text.text = this.getFormattedDate(fromdate.selectedDate)}" tabEnabled="{!model.screenreader}"
+						change="{dateFieldChangedHandler(event)}" tabEnabled="{!model.screenreader}"
 						selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}" />
 		<mx:Text id="date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
 						
@@ -516,7 +573,7 @@
 		<mx:DateField id="todate" creationComplete="{this.dateField_init(todate)}" tabIndex="1617" 
 						editable="true" width="17" visible="{!model.screenreader}"  tabEnabled="{!model.screenreader}"
 						selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}"
-						change="{todate_text.text = this.getFormattedDate(todate.selectedDate)}"
+						change="{dateFieldChangedHandler(event)}"
 						enabled="true" />
 		<mx:Text id="date_help2" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
 						

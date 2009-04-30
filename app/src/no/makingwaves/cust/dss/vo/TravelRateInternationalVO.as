@@ -4,8 +4,6 @@
 package no.makingwaves.cust.dss.vo
 {
 	import com.adobe.cairngorm.vo.IValueObject;
-	
-	import mx.collections.ArrayCollection;
 
 	[Bindable]
 	public class TravelRateInternationalVO extends Object implements IValueObject
@@ -20,6 +18,10 @@ package no.makingwaves.cust.dss.vo
 		public var night : Number = 0;
 		
 		public var allowance : Number = 0;
+		
+		public var timezone : int = 0;
+		
+		public var daylightsaving : Boolean = false;
 		
 	}
 }

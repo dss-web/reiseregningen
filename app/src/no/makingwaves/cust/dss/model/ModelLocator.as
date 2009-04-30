@@ -68,9 +68,9 @@ package no.makingwaves.cust.dss.model
 		
 		// VERSION ================================================================
 		
-		public const VERSION : String = "1.1";
-		//public const VERSION : String = "1.1 - TESTVERSJON 01.04.09 / 11:10";
-		
+		//public const VERSION : String = "1.1.1";
+		public const VERSION : String = "1.1.1 - TESTVERSJON 30.04.09";
+				
 		// STATICS ================================================================
 		
 		public const DETAILS : Number = 0;
@@ -185,6 +185,8 @@ package no.makingwaves.cust.dss.model
 		
 		public var positionParameter : Number = (800 / 3);
 		
+		public var useDaylightSaving : Boolean = false;
+		
 		// state icon vars =============================================================
 				
 		public var helpTextPersonalinfo : String = "";
@@ -249,6 +251,21 @@ package no.makingwaves.cust.dss.model
 		
 		public function isSettlementValid():Boolean {
 			return validationStatusSettlement = isSpecificationsValid();
+		}
+		
+		public function getTimeZoneInfoFromCountryCode(code:String):Object {
+			var timezoneInfo:Object = new Object();
+			//timezoneInfo.timezone = -((new Date()).timezoneOffset / 60);
+			//timezoneInfo.daylightsaving = false;
+			for (var i:int = 0; i < travelRatesInternationalList.length; i++) {
+				var info:TravelRateInternationalVO = TravelRateInternationalVO(travelRatesInternationalList.getItemAt(i));
+				if (info.code == code) {
+					timezoneInfo.timezone = info.timezone;
+					timezoneInfo.daylightsaving = info.daylightsaving;
+					return timezoneInfo;
+				}
+			}
+			return null;
 		}
 	}
 }
