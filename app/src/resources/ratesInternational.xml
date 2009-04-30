@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	23.04.2009
+	@updated:	30.04.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	23.04.2009:	Endret id for Kanariøyene
+	@comment:	30.04.2009:	La til definisjon av tidssoner og sommertid
+			23.04.2009:	Endret id for Kanariøyene
 			31.03.2009:	Endret landskode fro Nord-Irland
 			Oppdaterte feil satser som var registrert på alle byer
 			Alle satser oppdatert. Nattillegg (night) sine verdier betyr nå makssatser for overnatting.

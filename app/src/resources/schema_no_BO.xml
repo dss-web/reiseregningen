@@ -2,14 +2,14 @@
 <!--
 	@updated:	23.04.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	23.04.2009:	La til manglende kode for Spania
+	@comment:	23.04.2009: La til manglende kode for Spania
 				31.03.09:	Endret landskode fro Nord-Irland
 				27.03.09:	Endret 'settlement_error_accomodations'.
 				19.03.09:	Endret 'alert_maxcost_accomodation' teksten pga funksjonalitetsendringer.
-				17.03.09: 	La til tekst for sjekkboks Arbeidssted Tromsø
+				17.03.09: La til tekst for sjekkboks Arbeidssted Tromsø
 				16.03.09:	La til tekst for knapp som linker til gammel reiseregningsversjon
-				13.03.09: 	Oppdaterte alle land og byer i forhold til nytt regulativ.
-				12.03.09: 	Lagt inn nytt tekstelement 'alert_maxcost_accomodation' med foreløpig tekst for å varsle bruker om at innlagt kostnad overgår maksgrensen.
+				13.03.09: Oppdaterte alle land og byer i forhold til nytt regulativ.
+				12.03.09: Lagt inn nytt tekstelement 'alert_maxcost_accomodation' med foreløpig tekst for å varsle bruker om at innlagt kostnad overgår maksgrensen.
 -->
 <localization>
 	<type>no_BO</type>
