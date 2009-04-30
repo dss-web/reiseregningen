@@ -378,7 +378,11 @@ package no.makingwaves.cust.dss.code
 						if (!added) {
 							var allowance:RateVO = new RateVO();
 							allowance.rate = dailyAllowance;
-							allowance.num = (travelPeriode.total_24hours > 0) ? 1 : travelPeriode.total_hours;
+							if (!travelPeriode.overnight) {
+								allowance.num = travelPeriode.total_hours;
+							} else {
+								allowance.num = 1;
+							}
 							allowance.amount = dailyAllowance;
 							allowancesInternational.addItem(allowance);
 						}
