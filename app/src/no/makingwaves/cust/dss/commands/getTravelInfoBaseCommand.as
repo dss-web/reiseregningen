@@ -166,7 +166,7 @@ package no.makingwaves.cust.dss.commands
 				var modelSpecification:no.makingwaves.cust.dss.vo.TravelSpecificationVO = no.makingwaves.cust.dss.vo.TravelSpecificationVO(modelList.getItemAt(i));
 				newSpecification.transportation_type = modelSpecification.transportation_type;
 				newSpecification.from_destination = modelSpecification.from_destination;
-				newSpecification.from_country = modelSpecification.from_country;
+				newSpecification.from_country = (this.outputType == "pdf") ? modelSpecification.from_country.split("#")[0] : modelSpecification.from_country;
 				newSpecification.from_city = modelSpecification.from_city;
 				newSpecification.from_date = modelSpecification.from_date;
 				if (modelSpecification.from_time != "" && modelSpecification.from_time != null) {
@@ -175,7 +175,7 @@ package no.makingwaves.cust.dss.commands
 				}
 					
 				newSpecification.to_destination = modelSpecification.to_destination;
-				newSpecification.to_country = modelSpecification.to_country;
+				newSpecification.to_country = (this.outputType == "pdf") ? modelSpecification.to_country.split("#")[0] : modelSpecification.to_country;
 				newSpecification.to_city = modelSpecification.to_city;
 				newSpecification.to_date = modelSpecification.to_date;
 				if (modelSpecification.to_time != "" && modelSpecification.to_time != null) {
@@ -302,7 +302,7 @@ package no.makingwaves.cust.dss.commands
 				newAccomodation.adress = modelAccomodation.adress;
 				newAccomodation.fromdate = modelAccomodation.fromdate;
 				newAccomodation.todate = modelAccomodation.todate;
-				newAccomodation.country = modelAccomodation.country;
+				newAccomodation.country = (this.outputType == "pdf") ? modelAccomodation.country.split("#")[0] : modelAccomodation.country;
 				newAccomodation.city = modelAccomodation.city;
 				newAccomodation.breakfast_inluded = modelAccomodation.breakfast_inluded;
 				newAccomodation.cost = new webservices.travelexpense.pdf.CostVO();

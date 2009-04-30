@@ -212,9 +212,8 @@ package no.makingwaves.cust.dss.code
 						
 						if (fromDate >= dateStart && fromDate < dateStop) {
 							timeFrameSpecs.addItem(spec);
-							//trace("-> in timeframe: " + spec.from_destination + ", " + spec.from_country);
+
 						} else if (toDate >= dateStart && toDate <= dateStop) {
-							//trace("-> in timeframe: " + spec.from_destination + ", " + spec.from_country);
 							timeFrameSpecs.addItem(spec);
 						}
 					}
@@ -232,7 +231,7 @@ package no.makingwaves.cust.dss.code
 						if (activeLocation == null) {
 							activeLocation = null;
 							activeLocation = new Object();
-							activeLocation.country = spec.from_country;
+							activeLocation.country = spec.from_country.split("#")[0];
 							activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
 							specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 							activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
@@ -241,7 +240,7 @@ package no.makingwaves.cust.dss.code
 							activeCity = activeLocation.city;
 							specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
 							specToCity = (spec.to_city == "-") ? "" : spec.to_city;
-							if (activeLocation.country != spec.from_country || (activeCity != specFromCity)) {
+							if (activeLocation.country != spec.from_country.split("#")[0] || (activeCity != specFromCity)) {
 								specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
 								activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;;
 								locationList.addItem(activeLocation);
@@ -250,12 +249,12 @@ package no.makingwaves.cust.dss.code
 								specStopDate = new Date();
 								activeLocation = null;
 								activeLocation = new Object();
-								activeLocation.country = spec.from_country;
+								activeLocation.country = spec.from_country.split("#")[0];
 								activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
 								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 								
-							} else if (activeLocation.country != spec.to_country || activeCity != specToCity) {
+							} else if (activeLocation.country != spec.to_country.split("#")[0] || activeCity != specToCity) {
 								specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
 								activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;
 								locationList.addItem(activeLocation);
@@ -264,7 +263,7 @@ package no.makingwaves.cust.dss.code
 								specStopDate = new Date();
 								activeLocation = null;
 								activeLocation = new Object();
-								activeLocation.country = spec.to_country;
+								activeLocation.country = spec.to_country.split("#")[0];
 								activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
 								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
@@ -275,7 +274,7 @@ package no.makingwaves.cust.dss.code
 						
 						specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
 						specToCity = (spec.to_city == "-") ? "" : spec.to_city;
-						if ((activeLocation != null && testTravelEnd && (spec.from_country != spec.to_country || specFromCity != specToCity)) ||
+						if ((activeLocation != null && testTravelEnd && (spec.from_country.split("#")[0] != spec.to_country.split("#")[0] || specFromCity != specToCity)) ||
 						    (activeLocation != null && t == (timeFrameSpecs.length-1))) {
 							// current country rate has reached its end - register it
 							specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
@@ -284,7 +283,7 @@ package no.makingwaves.cust.dss.code
 							if (t != (timeFrameSpecs.length)) {
 								if (specStopDate.getTime() < dateStop.getTime()) {
 									activeLocation = new Object();
-									activeLocation.country = spec.to_country;
+									activeLocation.country = spec.to_country.split("#")[0];
 									activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
 									activeLocation.startDate = specStopDate;
 									activeLocation.stopDate = dateStop;
@@ -683,17 +682,34 @@ package no.makingwaves.cust.dss.code
 			ModelLocator.getInstance().travelAllowance.car_otherrates = car_otherrates;
 		}
 		
-		public function getVisitedCountries():ArrayCollection {
+		public function getVisitedCountries(onDate:Date=null):ArrayCollection {
+			var country:String;
+			var lastCountry:String = "";
 			var visited:ArrayCollection = new ArrayCollection();
 			var specificationList:ArrayCollection = ModelLocator.getInstance().travelSpecsList;
 			for (var i:Number = 0; i < specificationList.length; i++) {
 				var specification:TravelSpecificationVO = TravelSpecificationVO(specificationList.getItemAt(i));
-				if (specification.is_travel_end) {
-					if (specification.to_country != "") {
-						var country:String = specification.to_country;
-						visited.addItem(country);						
+				var valid:Boolean = true;
+				if (onDate != null) {
+					if ((specification.from_date.time < onDate.time && specification.to_date.time < onDate.time) ||
+					 	(specification.from_date.time > onDate.time && specification.to_date.time > onDate.time) ) {
+						// specification dates are before of after accomodation occours
+						valid = false;
 					}
 				}
+				if (specification.to_country != "" && valid) {
+					country = specification.to_country;
+					visited.addItem(country);						
+				} else {
+					if (onDate != null) {
+						if (specification.from_date.time < onDate.time && specification.to_date.time < onDate.time) {
+							lastCountry = specification.to_country;
+						}
+					}
+				}
+			}
+			if (visited.length == 0 && lastCountry != "") {
+				visited.addItem(lastCountry);	
 			}
 			return visited;
 		}
@@ -795,7 +811,7 @@ package no.makingwaves.cust.dss.code
 					
 				} else {
 					// get max cover for international travel
-					var intRate:TravelRateInternationalVO = this.getInternationalRate(accomodation.country, accomodation.city);
+					var intRate:TravelRateInternationalVO = this.getInternationalRate(accomodation.country.split("#")[0], accomodation.city);
 					if (intRate != null) {
 						maxCover = intRate.night;
 					} else {
@@ -967,6 +983,7 @@ package no.makingwaves.cust.dss.code
 		}
 		
 		public function getInternationalRate(countryCode:String, city:String=""):TravelRateInternationalVO {
+			if (countryCode.indexOf("#") != -1) { countryCode = countryCode.split("#")[0]; }
 			var rateList:ArrayCollection = ModelLocator.getInstance().travelRatesInternationalList;
 			for (var i:Number = 0; i < rateList.length; i++) {
 				if (TravelRateInternationalVO(rateList.getItemAt(i)).code == countryCode &&

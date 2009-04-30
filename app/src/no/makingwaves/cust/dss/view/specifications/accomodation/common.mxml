@@ -41,9 +41,6 @@
 				this.addCustomDateValidation(accomodation_stopdate, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in, accomodation_startdate, null, accomodation_stopdate_text);
 				
 				//this.showNumberOfBreakfasts((travelaccomodations.breakfast_inluded != 0));
-				// if international travel, build country list
-				if (model.activeTravel.travel_type == model.activeTravel.ABROAD)
-					this.buildInternationalTravelSources();
 				
 				// check accomodation date and find automatic date if possible
 				if (travelaccomodations.fromdate == null) {
@@ -56,6 +53,11 @@
 						travelaccomodations.fromdate = TravelAccomodationVO(model.travelAccomodationList.getItemAt(model.travelAccomodationList.length-1)).todate;
 					}
 				}	
+				
+				// if international travel, build country list
+				if (model.activeTravel.travel_type == model.activeTravel.ABROAD)
+					this.buildInternationalTravelSources();
+					
 				// add accessibility
 				//model.accessibility.addAccessibility(accomodation_breakfast_chk, resourceManager.getString(model.resources.bundleName, accomodation_breakfast_chk.id+'_label'));
 				//model.accessibility.addAccessibility(accomodation_breakfast_num, resourceManager.getString(model.resources.bundleName, accomodation_breakfast_num.id+'_label'));
@@ -84,7 +86,7 @@
 			override public function submitData(specifications:*):* {
 				TravelAccomodationVO(specifications).fromdate = accomodation_startdate.selectedDate;
 				TravelAccomodationVO(specifications).todate = accomodation_stopdate.selectedDate;
-				TravelAccomodationVO(specifications).country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_country.selectedItem.data : "";
+				TravelAccomodationVO(specifications).country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_country.selectedItem.data + "#" + this.cmb_country.selectedItem.label : "";
 				TravelAccomodationVO(specifications).city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_city.selectedItem.data : "";
 				//TravelAccomodationVO(specifications).breakfast_inluded = (this.accomodation_breakfast_chk.selected) ? Number(this.accomodation_breakfast_num.text) : 0;
 				return TravelAccomodationVO(specifications);
@@ -179,7 +181,7 @@
 					setInitialCountryCombo(this.travelaccomodations.country, this.cmb_country);
 				} else {
 					// no country specified -> try to figure out country based on registered specifications
-					var visitedCountries:ArrayCollection = model.calculator.getVisitedCountries(); 
+					var visitedCountries:ArrayCollection = model.calculator.getVisitedCountries(this.travelaccomodations.fromdate); 
 					var accomodationNum:Number = model.travelAccomodationList.length;
 					if (visitedCountries.length > 0) {
 						if (accomodationNum >= visitedCountries.length) {
@@ -256,7 +258,7 @@
 			private function setInitialCountryCombo(countryName:String, comboBox:ComboBox):void {
 				var found:Boolean = false;
 				for (var i:Number = 0; i < _countryList.length; i++) {
-            		if (_countryList.getItemAt(i).data == countryName) {
+            		if (_countryList.getItemAt(i).data + "#" + _countryList.getItemAt(i).label == countryName) {
             			comboBox.selectedIndex = i;
             			found = true;
             			break;           			

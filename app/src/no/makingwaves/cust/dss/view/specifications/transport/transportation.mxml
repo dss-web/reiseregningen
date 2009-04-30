@@ -209,7 +209,7 @@
 			
 			private function setInitialCountryCombo(countryName:String, comboBox:ComboBox):void {
 				for (var i:Number = 0; i < _countryList.length; i++) {
-            		if (_countryList.getItemAt(i).data == countryName) {
+            		if ((_countryList.getItemAt(i).data + "#" + _countryList.getItemAt(i).label) == countryName) {
             			comboBox.selectedIndex = i;
             			break;           			
             		}
@@ -313,9 +313,9 @@
 	            	specifications.to_date.setHours(Number(totime.text.substr(0,2)), Number(totime.text.substr(2,2)));
 	            	
 	            	specifications.to_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezoneto.selectedItem.data : -(specifications.to_date.timezoneOffset / 60);
-	            	specifications.from_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryfrom.selectedItem.data : "";
+	            	specifications.from_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryfrom.selectedItem.data + "#" + this.cmb_countryfrom.selectedItem.label : "";
 	            	specifications.from_city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_cityfrom.selectedItem.data : "";
-	            	specifications.to_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryto.selectedItem.data : "";
+	            	specifications.to_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryto.selectedItem.data + "#" + this.cmb_countryto.selectedItem.label : "";
 	            	specifications.to_city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_cityto.selectedItem.data : "";
 	            	return specifications;
 	           } else {
