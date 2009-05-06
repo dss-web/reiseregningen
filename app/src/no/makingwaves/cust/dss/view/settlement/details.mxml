@@ -173,18 +173,21 @@
 				for (var n:int = 0; n < model.travelSpecsList.length; n++) {
 					var spec:TravelSpecificationVO = model.travelSpecsList.getItemAt(n) as TravelSpecificationVO;
 					// check wether a travel distance went during night time
-					if ((spec.to_date.getDate() > spec.from_date.getDate()) || (spec.to_date.getMonth() > spec.from_date.getMonth())
-					 && int(spec.from_time.substr(0,2)) >= nightStartHours
-					 && int(spec.to_time.substr(0,2)) >= nightEndHours ) {
+					var startHours:int = int(spec.from_time.substr(0,2));
+					var stopHours:int = int(spec.to_time.substr(0,2));
+					startHours = (startHours == 0) ? 24 : startHours;
+					stopHours = (stopHours == 0) ? 24 : stopHours;
+					if (spec.to_date.getDate() > spec.from_date.getDate() || spec.to_date.getMonth() > spec.from_date.getMonth()) {
+						if (startHours <= nightStartHours && stopHours >= nightEndHours) {
+							nightOnTravel++;
+						}
 					 	
-					 	nightOnTravel++;
-					 	
-					} else if ((spec.to_date.getDate() > spec.from_date.getDate()) || (spec.to_date.getMonth() > spec.from_date.getMonth())
-							&& int(spec.to_time.substr(0,2)) < nightEndHours ) {
-						
-						// a late arrival can't create a demand for accomodation		
-						nightOnTravel++;
-					}
+					} else if (spec.to_date.getDate() > spec.from_date.getDate() || spec.to_date.getMonth() > spec.from_date.getMonth()) {
+						if (stopHours < nightEndHours) {
+							// a late arrival can't create a demand for accomodation		
+							nightOnTravel++;
+						}
+					}					
 				}
 				
 				var nightsOfAccomodation:Number = 0;
@@ -202,7 +205,7 @@
 					}
 				}
 				var accError:String = "";
-				if ((nightsOfTravel.total_24hours - nightOnTravel) != nightsOfAccomodation) {
+				if ((nightsOfTravel.total_24hours - nightOnTravel) > nightsOfAccomodation) {
 					// accomodations are not completed
 					accError = resourceManager.getString(model.resources.bundleName, 'settlement_error_accomodations');
 				}

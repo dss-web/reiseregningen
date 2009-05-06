@@ -305,15 +305,38 @@ package no.makingwaves.cust.dss.code
 						// no specification in this timeframe, use last visited country
 						maxTimeframeObject = lastLocationObject;
 					} else {
+						// create new array that holds no duplicates
+						var newLocationList:ArrayCollection = new ArrayCollection();
+						// update locationlist with travel length
 						for (var l:int=0; l < locationList.length; l++) {
 							var ranger:DateRanger = new DateRanger();
 							ranger.getDateRange(locationList.getItemAt(l).startDate, locationList.getItemAt(l).stopDate);
-							trace(locationList.getItemAt(l).country + ", (" + locationList.getItemAt(l).city + "): " + ranger.total_min + " minutes");
-							if (ranger.total_min > maxTimeframe) {
+							
+							var add:Boolean = true;
+							locationList.getItemAt(l).total_min = ranger.total_min;
+							locationList.getItemAt(l).overnight = ranger.overnight;
+							for (var n:int=0; n < newLocationList.length; n++) {
+								if (locationList.getItemAt(l).country == newLocationList.getItemAt(n).country) {
+									newLocationList.getItemAt(n).total_min += locationList.getItemAt(l).total_min;
+									if (!newLocationList.getItemAt(n).overnight) {
+										newLocationList.getItemAt(n).overnight = locationList.getItemAt(l).overnight 
+									}
+									add = false;
+									break;
+								}
+							}
+							if (add) {
+								newLocationList.addItem(locationList.getItemAt(l));
+							}
+						}
+						// find area with the longest stay
+						for (l = 0; l < newLocationList.length; l++) {
+							trace(newLocationList.getItemAt(l).country + ", (" + newLocationList.getItemAt(l).city + "): " + newLocationList.getItemAt(l).total_min + " minutes");
+							if (newLocationList.getItemAt(l).total_min > maxTimeframe) {
 								// check wether new total time is domestic
-								if (this.getInternationalRate(locationList.getItemAt(l).country, locationList.getItemAt(l).city) != null || ranger.overnight) {
-									maxTimeframe = ranger.total_min;
-									maxTimeframeObject = locationList.getItemAt(l);
+								if (this.getInternationalRate(newLocationList.getItemAt(l).country, newLocationList.getItemAt(l).city) != null || newLocationList.getItemAt(l).overnight) {
+									maxTimeframe = newLocationList.getItemAt(l).total_min;
+									maxTimeframeObject = newLocationList.getItemAt(l);
 								}
 							}
 						}
