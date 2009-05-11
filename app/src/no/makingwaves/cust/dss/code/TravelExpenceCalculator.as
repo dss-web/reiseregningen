@@ -233,6 +233,7 @@ package no.makingwaves.cust.dss.code
 							activeLocation = new Object();
 							activeLocation.country = spec.from_country.split("#")[0];
 							activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
+							activeLocation.intermediate_landing = spec.intermediate_landing;
 							specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 							activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 							
@@ -251,6 +252,7 @@ package no.makingwaves.cust.dss.code
 								activeLocation = new Object();
 								activeLocation.country = spec.from_country.split("#")[0];
 								activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
+								activeLocation.intermediate_landing = spec.intermediate_landing;
 								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 								
@@ -265,6 +267,7 @@ package no.makingwaves.cust.dss.code
 								activeLocation = new Object();
 								activeLocation.country = spec.to_country.split("#")[0];
 								activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
+								activeLocation..intermediate_landing = spec.intermediate_landing;
 								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 								testTravelEnd = false;
@@ -285,6 +288,7 @@ package no.makingwaves.cust.dss.code
 									activeLocation = new Object();
 									activeLocation.country = spec.to_country.split("#")[0];
 									activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
+									activeLocation.intermediate_landing = spec.intermediate_landing;
 									activeLocation.startDate = specStopDate;
 									activeLocation.stopDate = dateStop;
 									locationList.addItem(activeLocation);
@@ -321,6 +325,9 @@ package no.makingwaves.cust.dss.code
 									if (!newLocationList.getItemAt(n).overnight) {
 										newLocationList.getItemAt(n).overnight = locationList.getItemAt(l).overnight 
 									}
+									if (!newLocationList.getItemAt(n).intermediate_landing) {
+										newLocationList.getItemAt(n).intermediate_landing = locationList.getItemAt(l).intermediate_landing
+									}
 									add = false;
 									break;
 								}
@@ -334,7 +341,9 @@ package no.makingwaves.cust.dss.code
 							trace(newLocationList.getItemAt(l).country + ", (" + newLocationList.getItemAt(l).city + "): " + newLocationList.getItemAt(l).total_min + " minutes");
 							if (newLocationList.getItemAt(l).total_min > maxTimeframe) {
 								// check wether new total time is domestic
-								if (this.getInternationalRate(newLocationList.getItemAt(l).country, newLocationList.getItemAt(l).city) != null || newLocationList.getItemAt(l).overnight) {
+								if ( (this.getInternationalRate(newLocationList.getItemAt(l).country, newLocationList.getItemAt(l).city) != null || newLocationList.getItemAt(l).overnight)
+								  && (!newLocationList.getItemAt(l).intermediate_landing)) {
+								  	
 									maxTimeframe = newLocationList.getItemAt(l).total_min;
 									maxTimeframeObject = newLocationList.getItemAt(l);
 								}

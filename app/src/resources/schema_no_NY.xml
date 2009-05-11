@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	06.05.2009
+	@updated:	08.05.2009
 	@by:		Sven Aanesen, Making Waves
-	@comment:	06.05.2009: Oppdaterte "site_intro" teksten.
+	@comment:	08.05.2009: La til tekst rundt mellomlandinger
+				06.05.2009: Oppdaterte "site_intro" teksten.
 				30.04.2009: Endret formattering på 'outlay_intro_help'
 				23.04.2009: La til manglende kode for Spania
 				31.03.2009: Endret landskode fro Nord-Irland
@@ -334,6 +335,8 @@
 			<text id="departurelocation_listlabel" value="Stad"/>
 			<text id="arrivaldate_listlabel" value="Framkomst"/>
 			<text id="cost_listlabel" value="Utlegg"/>
+			<text id="intermediate_landing" value="Dette er en mellomlanding" />
+			<text id="intermediate_landing_info" value="Du må spesifisere om dette er en mellomlanding for å sørge for at du får beregnet riktig kostgodtgjørelse basert på oppdragsstedet ditt." />
 			<text id="accomodation_intro_help" value="Fyll ut informasjon om overnattingsstad for delar av eller heile reisa."/>
 			<text id="accomodationtype_label" value="Vel overnattingsstad"/>
 			<text id="accomodationtype_help" value="Hjelpetekst om legitimert/ulegitimert kjem..."/>

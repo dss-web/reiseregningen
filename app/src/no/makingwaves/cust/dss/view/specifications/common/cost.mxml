@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<code:BasicFormBase
+<code:BasicFormBase width="100%"
 			xmlns:code="no.makingwaves.cust.dss.code.*"
 			xmlns:view="no.makingwaves.cust.dss.view.*"
 			xmlns:specs="no.makingwaves.cust.dss.view.specifications.*"

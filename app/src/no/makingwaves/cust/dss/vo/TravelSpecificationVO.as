@@ -42,6 +42,8 @@ package no.makingwaves.cust.dss.vo
 		
 		public var is_travel_end : Boolean = false;
 		
+		public var intermediate_landing : Boolean = false;
+		
 		public var specification : *;
 		
 		public var cost : CostVO = new CostVO();

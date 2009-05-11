@@ -186,6 +186,8 @@ package no.makingwaves.cust.dss.commands
 				newSpecification.is_travel_continious = modelSpecification.is_travel_continious;
 				newSpecification.is_travel_start = modelSpecification.is_travel_start;
 				newSpecification.is_travel_end = modelSpecification.is_travel_end;
+				
+				// REMOVE WHEN WEBSERVICE IS UPDATED //newSpecification.intermediate_landing = modelSpecification.intermediate_landing;
 				// update cost vo
 				newSpecification.cost = new webservices.travelexpense.pdf.CostVO();
 				newSpecification.cost.cost = modelSpecification.cost.cost;

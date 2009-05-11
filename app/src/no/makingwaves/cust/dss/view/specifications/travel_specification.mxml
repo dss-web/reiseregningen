@@ -140,8 +140,14 @@
 	            	_activeStateContainer.autoFillIn();
             	}
             	this.transportation.initForm();
-            	if (_activeStateContainer == this.ticket) {
-            		this.ticket.init(this.travelspecifications);
+            	if (this.ticket != null) {
+            		if (_activeStateContainer == this.ticket) {
+            			this.ticket.init(this.travelspecifications);
+            		}	
+            	} else if (this.plane != null) {
+            		if (_activeStateContainer == this.plane) {
+            			this.plane.init(this.travelspecifications);
+            		}	
             	}
             	activate();
             }
@@ -212,9 +218,13 @@
             			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
             								  resourceManager.getString(model.resources.bundleName, 'transportation_taxi_help'));
             			break;
+            		case 6:
+            			newState = "state_plane";
+            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
+            								  resourceManager.getString(model.resources.bundleName, 'transportation_ticket_help'));
+            			break;
             		case 4:
             		case 5:
-            		case 6:
             		case 7:
             		case 9:
             			newState = "state_ticket";
@@ -422,6 +432,16 @@
 			<mx:SetProperty target="{this.button_registertravel}" name="enabled" value="true" />
 			<mx:AddChild relativeTo="{specbox}">
 				<transport:motorcycle id="motorcycle" travelspecifications="{travelspecifications}" />
+			</mx:AddChild>
+		</mx:State>
+		
+		<mx:State id="state_plane" name="state_plane" enterState="{_activeStateContainer = plane; stateListener(event)}">
+			<mx:SetProperty target="{transportation}" name="enabled" value="true" />
+			<mx:SetProperty target="{transportation}" name="visible" value="true" />
+			<mx:SetProperty target="{this.button_continuetravel}" name="enabled" value="{!_editMode}" />
+			<mx:SetProperty target="{this.button_registertravel}" name="enabled" value="true" />
+			<mx:AddChild relativeTo="{specbox}">
+				<transport:ticket id="plane" travelspecifications="{travelspecifications}" ticketIsAirplane="true" />
 			</mx:AddChild>
 		</mx:State>
 		

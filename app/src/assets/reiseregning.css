@@ -372,6 +372,11 @@ Label.form
 	fontSize: 11;
 	color: #494949;
 }
+CheckBox.form
+{
+	fontFamily: Verdana;
+	fontSize: 11;
+}
 
 TitleWindow
 {
