@@ -47,6 +47,8 @@ namespace MakingWaves.TravelExp.Impl.TravelExpense.DataStructures
         public double from_timezone;
         public double to_timezone;
 
+        public bool intermediate_landing;
+
         #region IValidateValues Members
 
         public bool ValidateValues()
