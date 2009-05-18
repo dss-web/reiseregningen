@@ -60,7 +60,7 @@
 						if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
 							this.travelspecifications.from_country = prevDistance.to_country;
 							this.travelspecifications.from_city = prevDistance.to_city;
-							this.travelspecifications.from_timezone = prevDistance.from_timezone;
+							this.travelspecifications.from_timezone = prevDistance.to_timezone;
 							this.travelspecifications.to_country = prevDistance.to_country;
 							this.travelspecifications.to_city = prevDistance.to_city;
 							this.travelspecifications.to_timezone = prevDistance.to_timezone;
