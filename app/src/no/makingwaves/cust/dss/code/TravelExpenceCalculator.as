@@ -200,6 +200,7 @@ package no.makingwaves.cust.dss.code
 				// for each 24-hour day, check which international rate that should be used
 				if (num24hours == 0) { num24hours = 1; }
 				for (var i:int=0; i < num24hours; i++) {
+					trace("UTREGNING FOR DØGN NR " + (i+1) + " av " + num24hours);
 					//trace("check between " + Util.formatDate(dateStart) + " - " + Util.formatDate(dateStop));
 					var timeFrameSpecs:ArrayCollection = new ArrayCollection();
 					// get spesifications within current timeframe
@@ -424,7 +425,7 @@ package no.makingwaves.cust.dss.code
 					dateStart.setTime(dateStop.getTime());
 					dateStop.setTime(dateStart.getTime() + msPerDay);
 					if (locationList.length > 0) {
-						lastLocationObject = locationList.getItemAt(locationList.length-1);
+						lastLocationObject = maxTimeframeObject; //locationList.getItemAt(locationList.length-1);
 					}
 				}
 	
