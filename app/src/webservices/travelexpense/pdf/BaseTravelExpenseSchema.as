@@ -122,6 +122,7 @@ package webservices.travelexpense.pdf
             <s:element minOccurs="0" name="cost" type="tns:CostVO"/>
             <s:element name="from_timezone" type="s:double"/>
             <s:element name="to_timezone" type="s:double"/>
+            <s:element name="intermediate_landing" type="s:boolean"/>
         </s:sequence>
     </s:complexType>
     <s:complexType name="AnySpecificationAggregateVO">

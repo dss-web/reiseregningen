@@ -335,8 +335,8 @@
 			<text id="departurelocation_listlabel" value="Stad"/>
 			<text id="arrivaldate_listlabel" value="Framkomst"/>
 			<text id="cost_listlabel" value="Utlegg"/>
-			<text id="intermediate_landing" value="Dette er en mellomlanding" />
-			<text id="intermediate_landing_info" value="Du må spesifisere om dette er en mellomlanding for å sørge for at du får beregnet riktig kostgodtgjørelse basert på oppdragsstedet ditt." />
+			<text id="intermediate_landing" value="Mellomlanding utan overnatting" />
+			<text id="intermediate_landing_info" value="Denne ruta skal hakast av om det ikkje er gjort overnatting i samband med mellomlanding, dette fordi kost skal reknast etter satsen for oppdragsstaden om ein ikkje har overnatting i samband med mellomlanding." />
 			<text id="accomodation_intro_help" value="Fyll ut informasjon om overnattingsstad for delar av eller heile reisa."/>
 			<text id="accomodationtype_label" value="Vel overnattingsstad"/>
 			<text id="accomodationtype_help" value="Hjelpetekst om legitimert/ulegitimert kjem..."/>

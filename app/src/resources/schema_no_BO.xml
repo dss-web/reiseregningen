@@ -449,8 +449,8 @@ Se %SPH7%, kommentar 1." />
 			<text id="arrivaldate_listlabel" value="Ankomst" />
 			<text id="cost_listlabel" value="Utlegg" />
 			
-			<text id="intermediate_landing" value="Dette er en mellomlanding" />
-			<text id="intermediate_landing_info" value="Du må spesifisere om dette er en mellomlanding for å sørge for at du får beregnet riktig kostgodtgjørelse basert på oppdragsstedet ditt." />
+			<text id="intermediate_landing" value="Mellomlanding uten overnatting" />
+			<text id="intermediate_landing_info" value="Denne ruten skal hakes av hvis det ikke er foretatt overnatting i forbindelse med mellomlanding, dette fordi kost skal beregnes etter satsen for oppdragsstedet med mindre man har overnatting i forbindelse med mellomlanding." />
 
 			<!-- OVERNATTING -->
 			<text id="accomodation_intro_help" value="Fyll ut informasjon om overnattingssted for deler av eller hele reisen." />

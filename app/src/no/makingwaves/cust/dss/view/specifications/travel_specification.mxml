@@ -143,7 +143,13 @@
             	if (this.ticket != null) {
             		if (_activeStateContainer == this.ticket) {
             			this.ticket.init(this.travelspecifications);
-            		}	
+            		} else {
+            			if (this.plane != null) {
+            				if (_activeStateContainer == this.plane) {
+		            			this.plane.init(this.travelspecifications);
+		            		}
+            			}
+            		}
             	} else if (this.plane != null) {
             		if (_activeStateContainer == this.plane) {
             			this.plane.init(this.travelspecifications);

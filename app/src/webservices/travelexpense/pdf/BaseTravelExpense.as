@@ -5,19 +5,28 @@
  */
 package webservices.travelexpense.pdf
 {
-	import flash.utils.ByteArray;
-	
-	import mx.collections.ArrayCollection;
-	import mx.messaging.ChannelSet;
-	import mx.messaging.channels.DirectHTTPChannel;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
+	import mx.controls.treeClasses.DefaultDataDescriptor;
+	import mx.utils.ObjectUtil;
+	import mx.utils.ObjectProxy;
 	import mx.messaging.events.MessageFaultEvent;
+	import mx.messaging.MessageResponder;
 	import mx.messaging.messages.SOAPMessage;
+	import mx.messaging.messages.ErrorMessage;
+   	import mx.messaging.ChannelSet;
+	import mx.messaging.channels.DirectHTTPChannel;
 	import mx.rpc.*;
 	import mx.rpc.events.*;
 	import mx.rpc.soap.*;
-	import mx.rpc.soap.types.*;
 	import mx.rpc.wsdl.*;
 	import mx.rpc.xml.*;
+	import mx.rpc.soap.types.*;
+	import mx.collections.ArrayCollection;
 	
 	import no.makingwaves.cust.dss.model.ModelLocator;
 	
@@ -412,7 +421,7 @@ BaseTravelExpenseService = new WSDLService("BaseTravelExpenseService");
 		 * @return Asynchronous token
 		 */
 		public function getTravelObjectFromXml(xmlFileBytes:flash.utils.ByteArray):AsyncToken
-		{ 
+		{
 			var headerArray:Array = new Array();
             var out:Object = new Object();
             out["xmlFileBytes"] = xmlFileBytes;

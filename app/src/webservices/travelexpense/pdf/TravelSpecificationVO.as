@@ -36,5 +36,6 @@ package webservices.travelexpense.pdf
 		public var cost:webservices.travelexpense.pdf.CostVO;
 		public var from_timezone:Number;
 		public var to_timezone:Number;
+		public var intermediate_landing:Boolean;
 	}
 }
