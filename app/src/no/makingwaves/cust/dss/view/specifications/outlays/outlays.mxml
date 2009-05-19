@@ -25,7 +25,7 @@
 			
 			private function initForm():void {
 				// set valid start date for outlay to six months ago
-				validStartDate = model.activeTravel.travel_date_out;
+				validStartDate = new Date(model.activeTravel.travel_date_out);
 				validStartDate.time -= ((1000 * 60 * 60 * 24) * (365/2));
 				outlay_date.selectableRange = {rangeStart : validStartDate, rangeEnd : model.activeTravel.travel_date_in};
 				// add validators

@@ -47,7 +47,7 @@
 					// find automatic insertion of accomodation date
 					if (model.travelAccomodationList.length == 0) {
 						// first accomodation to register - insert journey start date as from date
-						travelaccomodations.fromdate = model.activeTravel.travel_date_out;
+						travelaccomodations.fromdate = new Date(model.activeTravel.travel_date_out);
 					} else {
 						// not first accomodations registration - get date from last registration
 						travelaccomodations.fromdate = TravelAccomodationVO(model.travelAccomodationList.getItemAt(model.travelAccomodationList.length-1)).todate;

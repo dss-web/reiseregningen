@@ -191,7 +191,7 @@ package no.makingwaves.cust.dss.code
 				var dateStop:Date = new Date();
 				dateStop.setTime(dateStart.getTime() + msPerDay);
 				// set dates to UTC-time
-				var timezoneDefault:Number = new Date().timezoneOffset / 60;
+				var timezoneDefault:Number = ModelLocator.getInstance().activeTravel.travel_date_out.timezoneOffset / 60;
 				dateStart.setTime(dateStart.getTime() + (timezoneDefault*msPerHour));
 				dateStop.setTime(dateStop.getTime() + (timezoneDefault*msPerHour));
 				
@@ -425,7 +425,11 @@ package no.makingwaves.cust.dss.code
 					dateStart.setTime(dateStop.getTime());
 					dateStop.setTime(dateStart.getTime() + msPerDay);
 					if (locationList.length > 0) {
-						lastLocationObject = maxTimeframeObject; //locationList.getItemAt(locationList.length-1);
+						if (maxTimeframeObject != null) {
+							lastLocationObject = maxTimeframeObject;
+						} else {
+							lastLocationObject = locationList.getItemAt(locationList.length-1);
+						}
 					}
 				}
 	
