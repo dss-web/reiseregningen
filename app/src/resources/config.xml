@@ -9,13 +9,13 @@
 	
 	<resource id="previous_app_version" url="https://skjema.reiseregningen.no/v2" />
 	
-	<!--resource id="webservices" url="https://skjema.reiseregningen.no/TravelExpWS/TravelExpense.asmx" />
+	<resource id="webservices" url="https://skjema.reiseregningen.no/TravelExpWS/TravelExpense.asmx" />
 	<resource id="cross-domain-policy" url="https://skjema.reiseregningen.no/crossdomain.xml" />
 	<resource id="ws_connection" url="https://skjema.reiseregningen.no/TravelExpWS/GetStoredData.aspx" />
-	<resource id="ws_xml_uploader" url="https://skjema.reiseregningen.no/TravelExpWS/Uploader.ashx" /-->
+	<resource id="ws_xml_uploader" url="https://skjema.reiseregningen.no/TravelExpWS/Uploader.ashx" />
 	
-	<resource id="webservices" url="http://reisetest.makingwaves.no/TravelExpWS/TravelExpense.asmx" />
+	<!--resource id="webservices" url="http://reisetest.makingwaves.no/TravelExpWS/TravelExpense.asmx" />
 	<resource id="cross-domain-policy" url="http://reisetest.makingwaves.no/crossdomain.xml" />
 	<resource id="ws_connection" url="http://reisetest.makingwaves.no/TravelExpWS/GetStoredData.aspx" />
-	<resource id="ws_xml_uploader" url="http://reisetest.makingwaves.no/TravelExpWS/Uploader.ashx" />
+	<resource id="ws_xml_uploader" url="http://reisetest.makingwaves.no/TravelExpWS/Uploader.ashx" /-->
 </resources>

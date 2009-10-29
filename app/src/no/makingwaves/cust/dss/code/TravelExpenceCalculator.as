@@ -268,7 +268,7 @@ package no.makingwaves.cust.dss.code
 								activeLocation = new Object();
 								activeLocation.country = spec.to_country.split("#")[0];
 								activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
-								activeLocation..intermediate_landing = spec.intermediate_landing;
+								activeLocation.intermediate_landing = spec.intermediate_landing;
 								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 								testTravelEnd = false;
@@ -321,14 +321,15 @@ package no.makingwaves.cust.dss.code
 							locationList.getItemAt(l).total_min = ranger.total_min;
 							locationList.getItemAt(l).overnight = ranger.overnight;
 							for (var n:int=0; n < newLocationList.length; n++) {
-								if (locationList.getItemAt(l).country == newLocationList.getItemAt(n).country) {
+								if (locationList.getItemAt(l).country == newLocationList.getItemAt(n).country && locationList.getItemAt(l).city == newLocationList.getItemAt(n).city) {
 									newLocationList.getItemAt(n).total_min += locationList.getItemAt(l).total_min;
 									if (!newLocationList.getItemAt(n).overnight) {
 										newLocationList.getItemAt(n).overnight = locationList.getItemAt(l).overnight 
 									}
-									if (!newLocationList.getItemAt(n).intermediate_landing) {
-										newLocationList.getItemAt(n).intermediate_landing = locationList.getItemAt(l).intermediate_landing
-									}
+									//if (!locationList.getItemAt(l).intermediate_landing) {
+									// last distance counts, update any intermediate landing parameter
+									newLocationList.getItemAt(n).intermediate_landing = locationList.getItemAt(l).intermediate_landing;
+									//}
 									add = false;
 									break;
 								}
