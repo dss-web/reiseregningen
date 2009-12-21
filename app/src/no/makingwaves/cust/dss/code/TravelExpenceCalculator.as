@@ -4,7 +4,7 @@ package no.makingwaves.cust.dss.code
 	import mx.core.IFlexDisplayObject;
 	import mx.managers.PopUpManager;
 	import mx.resources.ResourceManager;
-	
+
 	import no.makingwaves.cust.dss.model.ModelLocator;
 	import no.makingwaves.cust.dss.view.components.custom_alert;
 	import no.makingwaves.cust.dss.vo.CarSpecificationVO;
@@ -22,15 +22,15 @@ package no.makingwaves.cust.dss.code
 	import no.makingwaves.cust.dss.vo.TravelVO;
 	import no.makingwaves.util.Util;
 	import no.makingwaves.util.date.DateRanger;
-	
+
 	public class TravelExpenceCalculator
 	{
 		[Bindable]
 		public var totalExpense : Number = 0.0;
-		
+
 		public function TravelExpenceCalculator() {
 		}
-		
+
 		// kalkuler alle kostnader ===========================================================
 		public function calculate():Number {
 			var totAmount : Number = 0.0;
@@ -43,10 +43,10 @@ package no.makingwaves.cust.dss.code
 			this.totalExpense = totAmount;
 			// update allowances-model
 			ModelLocator.getInstance().travelAllowance.netamount = Number(totAmount.toFixed(2));
-			
+
 			return totalExpense;
 		}
-		
+
 		// kalkuler kostgodtgjørelse =========================================================
 		public function calculateAllowances():Number {
 			var amount:Number = 0.0;
@@ -56,11 +56,11 @@ package no.makingwaves.cust.dss.code
 			var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
 			var days:Number = 1;
 			var dailyAllowance:Number;
-			
+
 			ModelLocator.getInstance().travelAllowance.allowance_other.removeAll();
 			// update travelallowance accomodation setting
 			ModelLocator.getInstance().travelAllowance.accomodation = (travelDateInfo.overnight);
-			
+
 			// domestic or international travel
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				// DOMESTIC TRAVEL
@@ -85,7 +85,7 @@ package no.makingwaves.cust.dss.code
 						allowance_28days = Number(((dailyAllowance*0.75) * (days-28)).toFixed(2));
 						amount += allowance_28days;
 					}
-					
+
 					// update travelallowance
 					ModelLocator.getInstance().travelAllowance.domestic = true;
 					var allowance:RateVO = new RateVO();
@@ -101,13 +101,13 @@ package no.makingwaves.cust.dss.code
 						ModelLocator.getInstance().travelAllowance.allowance_28days = allowance28;
 					}
 				}
-								
+
 			} else {
 				// INTERNATIONAL TRAVEL
 				rateRule = this.getAllowanceRate(travelInfo, travelDateInfo);
 				// search and find destinations and period of time on this/these destinations
 				amount += calculateInternationalAllowance(rateRule);
-				
+
 				// new rule from 01.03.2009, additonal compensation for travelling abroad
 				if (travelDateInfo.total_hours > 12) {
 					if (travelDateInfo.total_hours > 24) { 
@@ -118,23 +118,23 @@ package no.makingwaves.cust.dss.code
 					} else if (travelDateInfo.total_24hours == 0) {
 						days = 1;
 					}
-						
+
 					// add additional allowance for international travels
 					var compensationRule:TravelRateRuleVO = this.getRate("allowance_international");
-					
+
 					var compensation:RateVO = new RateVO();
 					compensation.num = days;
 					compensation.rate = compensationRule.cost;
 					compensation.amount = days * compensationRule.cost;
 					ModelLocator.getInstance().travelAllowance.allowance_other.addItem(compensation);
-					
+
 					amount += compensation.amount;					
 				}
 			}
-			
-			
+
+
 			// search and add amounts for admin. allowances
-			if (travelDateInfo.total_hours > 24) {
+			if (travelDateInfo.total_hours >= 24) {
 				var adminNum:Number = 0;
 				var deductionList:ArrayCollection = ModelLocator.getInstance().travelDeductionList;
 				for (var i:Number = 0; i < deductionList.length; i++) {
@@ -154,14 +154,14 @@ package no.makingwaves.cust.dss.code
 					}
 					admin_allowance.amount = admin_allowance.num * admin_allowance.rate;
 					ModelLocator.getInstance().travelAllowance.adm_allowance = admin_allowance;
-					
+
 					amount += admin_allowance.amount;
 				}
 			}
-			
+
 			return amount;
 		}
-		
+
 		private function calculateInternationalAllowance(rateRule:TravelRateRuleVO, date:Date=null):Number {
 			var amount:Number = 0.0;
 			var days:Number = 1;
@@ -174,12 +174,12 @@ package no.makingwaves.cust.dss.code
 			var nextDistance:TravelSpecificationVO;
 			var allowancesInternational:ArrayCollection = new ArrayCollection();
 			var allowancesOver28days:RateVO = new RateVO();
-			
+
 			// get travel length and add one day if last day exceeds 6 hours
 			var travelPeriode:DateRanger = ModelLocator.getInstance().travelLength;
 			var num24hours:Number = travelPeriode.total_24hours;
 			if (num24hours > 0 && travelPeriode.hours >= 6) { num24hours++; }
-			
+
 			if (travelPeriode.total_min != 0 && specificationList.length > 0) {
 				// set start date and first periode
 				var msPerDay:int = 1000 * 60 * 60 * 24;
@@ -194,7 +194,7 @@ package no.makingwaves.cust.dss.code
 				var timezoneDefault:Number = ModelLocator.getInstance().activeTravel.travel_date_out.timezoneOffset / 60;
 				dateStart.setTime(dateStart.getTime() + (timezoneDefault*msPerHour));
 				dateStop.setTime(dateStop.getTime() + (timezoneDefault*msPerHour));
-				
+
 				var lastLocationObject:Object;
 				var daysCalculated:int = 0;
 				// for each 24-hour day, check which international rate that should be used
@@ -210,7 +210,7 @@ package no.makingwaves.cust.dss.code
 						var toDate:Date = new Date()
 						fromDate.setTime(spec.from_date.getTime() + (spec.from_timezone*msPerHour));
 						toDate.setTime(spec.to_date.getTime() + (spec.to_timezone*msPerHour));
-						
+
 						if (fromDate >= dateStart && fromDate < dateStop) {
 							timeFrameSpecs.addItem(spec);
 
@@ -237,7 +237,7 @@ package no.makingwaves.cust.dss.code
 							activeLocation.intermediate_landing = spec.intermediate_landing;
 							specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 							activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
-							
+
 						} else {
 							activeCity = activeLocation.city;
 							specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
@@ -256,7 +256,7 @@ package no.makingwaves.cust.dss.code
 								activeLocation.intermediate_landing = spec.intermediate_landing;
 								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
-								
+
 							} else if (activeLocation.country != spec.to_country.split("#")[0] || activeCity != specToCity) {
 								specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
 								activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;
@@ -272,14 +272,14 @@ package no.makingwaves.cust.dss.code
 								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
 								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 								testTravelEnd = false;
-								
+
 							}
 						}
-						
+
 						specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
 						specToCity = (spec.to_city == "-") ? "" : spec.to_city;
 						if ((activeLocation != null && testTravelEnd && (spec.from_country.split("#")[0] != spec.to_country.split("#")[0] || specFromCity != specToCity)) ||
-						    (activeLocation != null && t == (timeFrameSpecs.length-1))) {
+							(activeLocation != null && t == (timeFrameSpecs.length-1))) {
 							// current country rate has reached its end - register it
 							specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
 							activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;
@@ -295,8 +295,8 @@ package no.makingwaves.cust.dss.code
 									locationList.addItem(activeLocation);
 								}														
 							}								
-							
-							
+
+
 							//trace(" -> location added: " + activeLocation.country + ", " + activeLocation.city);
 							specStartDate = new Date();
 							specStopDate = new Date();
@@ -316,7 +316,7 @@ package no.makingwaves.cust.dss.code
 						for (var l:int=0; l < locationList.length; l++) {
 							var ranger:DateRanger = new DateRanger();
 							ranger.getDateRange(locationList.getItemAt(l).startDate, locationList.getItemAt(l).stopDate);
-							
+
 							var add:Boolean = true;
 							locationList.getItemAt(l).total_min = ranger.total_min;
 							locationList.getItemAt(l).overnight = ranger.overnight;
@@ -344,8 +344,8 @@ package no.makingwaves.cust.dss.code
 							if (newLocationList.getItemAt(l).total_min > maxTimeframe) {
 								// check wether new total time is domestic
 								if ( (this.getInternationalRate(newLocationList.getItemAt(l).country, newLocationList.getItemAt(l).city) != null || newLocationList.getItemAt(l).overnight)
-								  && (!newLocationList.getItemAt(l).intermediate_landing)) {
-								  	
+									&& (!newLocationList.getItemAt(l).intermediate_landing)) {
+
 									maxTimeframe = newLocationList.getItemAt(l).total_min;
 									maxTimeframeObject = newLocationList.getItemAt(l);
 								}
@@ -363,10 +363,10 @@ package no.makingwaves.cust.dss.code
 						var localRate:TravelRateRuleVO;
 						if (travelInfo.total_hours >= 12 && travelInfo.overnight) {
 							localRate = getRate("allowance_04b"); 
-							
+
 						} else if (travelInfo.total_hours > 12) {
 							localRate = getRate("allowance_04a");
-							 
+
 						} else {
 							localRate = getRate("allowance_03");
 						}
@@ -376,20 +376,20 @@ package no.makingwaves.cust.dss.code
 					}
 					dailyAllowance = Number(((intRate.allowance * rateRule.percent) / 100).toFixed(2));
 					daysCalculated++;
-					
+
 					if (daysCalculated > 28) {
 						// calculation for over 28 days - reduce allowance with 25%
 						dailyAllowance = Number((dailyAllowance*0.75).toFixed(2));
 					}
 					trace("Allowance for day " + daysCalculated + ": " + Util.formatDate(dateStart) + "-" + Util.formatDate(dateStop) + ": " + dailyAllowance + ",- (" + maxTimeframeObject.country + ", " + maxTimeframeObject.city + ")");
-					
+
 					if (date != null) {
 						// if date is specified in method - return only value for this date
 						if (Util.formatDate(date) == Util.formatDate(dateStart)) {
 							return dailyAllowance;
 						}
 					}
-					
+
 					// add/update to the allowance model
 					var added:Boolean = false;
 					if (daysCalculated > 28) {
@@ -397,7 +397,7 @@ package no.makingwaves.cust.dss.code
 						allowancesOver28days.num = daysCalculated - 28;
 						allowancesOver28days.rate = dailyAllowance;
 						allowancesOver28days.amount += dailyAllowance;
-						
+
 					} else {
 						// normal calculation
 						for (var m:int=0; m < allowancesInternational.length; m++) {
@@ -421,7 +421,7 @@ package no.makingwaves.cust.dss.code
 							allowancesInternational.addItem(allowance);
 						}
 					}
-					
+
 					// get ready to find rates for the next 24-hour day
 					dateStart.setTime(dateStop.getTime());
 					dateStop.setTime(dateStart.getTime() + msPerDay);
@@ -433,23 +433,23 @@ package no.makingwaves.cust.dss.code
 						}
 					}
 				}
-	
+
 				// update allowance model if this is not a 'date only' calculation
 				if (date == null) {
 					ModelLocator.getInstance().travelAllowance.allowance_international = allowancesInternational;
 					ModelLocator.getInstance().travelAllowance.allowance_28days = allowancesOver28days;					
 				}
-				
+
 				// calculate amount
 				for (var a:int = 0; a < allowancesInternational.length; a++) {
 					amount += RateVO(allowancesInternational.getItemAt(a)).amount;
 					amount += allowancesOver28days.amount;
 				}
 			}
-			
+
 			return amount;
 		}
-		
+
 		private function getAllowanceRate(travelInfo:TravelVO, travelDateInfo:DateRanger, forDeduction:Boolean=false):TravelRateRuleVO {
 			var rateName:String = "allowance";
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
@@ -457,30 +457,30 @@ package no.makingwaves.cust.dss.code
 				if ((travelDateInfo.total_hours >= 12 && travelDateInfo.overnight) || (travelDateInfo.total_hours > 0 && forDeduction)) {
 					// travel longer than 12 hours ( with accomodation ) OR if over 12 hours when getting allowance for deductions
 					rateName += "_04b";
-					
+
 				} else if (travelDateInfo.total_hours >= 12) {
 					// travel longer than 12 hours
 					rateName += "_04a";
-					
+
 				} else if (travelDateInfo.total_hours >= 9 && travelDateInfo.total_hours < 12) {
 					// travel periode between 9 and 12 hours
 					rateName += "_03";
-					
+
 				} else if (travelDateInfo.total_hours >= 5 && travelDateInfo.total_hours < 9) {
 					// travel periode between 5 and 9 hours
 					rateName += "_02";
-					
+
 				} else if (travelDateInfo.total_hours < 5) {
 					// travel time less than 5 hours
 					rateName += "_01";
 				}
-				
+
 			} else {
 				// INTERNATIONAL TRAVEL
 				if (travelDateInfo.total_hours >= 6 && travelDateInfo.total_hours < 12 && !forDeduction) {
 					// travel periode between 6 and 12 hours
 					rateName += "_05";
-			
+
 				} else if (travelDateInfo.total_hours >= 12 || forDeduction) {
 					// travel longer than 12 hours or when calculation deductions
 					rateName += "_06";
@@ -488,12 +488,12 @@ package no.makingwaves.cust.dss.code
 			}
 			return getRate(rateName);
 		}
-		
+
 		public function getDailyAllowance(date:Date, forDeduction:Boolean=false):Number {
 			var amount:Number = 0.0;
 			var travelInfo:TravelVO = ModelLocator.getInstance().activeTravel;
 			var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
-			
+
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				// domestic travel, calculate daily allowance based on travellength and totalt allowance
 				var days:Number = 1;
@@ -505,16 +505,16 @@ package no.makingwaves.cust.dss.code
 					if (travelDateInfo.hours >= 6) { days++; }
 				}
 				amount = totaltAllowance / days;
-				
+
 			} else {
 				// internation travel, calculation must check period of time and location
 				var rateRule:TravelRateRuleVO = this.getAllowanceRate(travelInfo, travelDateInfo, forDeduction);
 				amount = this.calculateInternationalAllowance(rateRule, date);
 			}
-			
+
 			return amount;
 		}
-		
+
 		// kalkuler reisespesifikasjoner og reiseutlegg ======================================
 		public function calculateSpecifications():Number {
 			var amount:Number = 0.0;
@@ -522,13 +522,13 @@ package no.makingwaves.cust.dss.code
 			for (var i:Number = 0; i < specificationList.length; i++) {
 				amount += calculateSpecification(TravelSpecificationVO(specificationList.getItemAt(i)));
 			}
-			
+
 			// update allowance parameters for car specifications
 			calculateCarAllowances();
-			
+
 			return amount;
 		}
-		
+
 		public function calculateSpecification(specification:TravelSpecificationVO):Number {
 			var cost:Number = 0.0;
 			var type:String = (specification.specification != null) ? specification.specification.type : "ticket";
@@ -543,10 +543,10 @@ package no.makingwaves.cust.dss.code
 					cost = Number(specification.cost.getCost());
 					break;
 			}
-			
+
 			return cost;
 		}
-		
+
 		private function calculateOwnVehicle(specification:TravelSpecificationVO):Number {
 			var cost:Number = 0.0;
 			var distance:Number;
@@ -558,21 +558,21 @@ package no.makingwaves.cust.dss.code
 				case "other":
 					var otherSpec:OtherSpecificationVO = OtherSpecificationVO(specification.specification);
 					switch(otherSpec.other_type) {
-						case otherSpec.TYPE_EL_CAR:
-							rateRuleName += "el-car_01"; break;
-						case otherSpec.TYPE_SNOWMOBILE:
-							rateRuleName += "snowmobile_01"; break;
-						case otherSpec.TYPE_OTHER:
-							rateRuleName += "other_01"; break;
-					}
+					case otherSpec.TYPE_EL_CAR:
+						rateRuleName += "el-car_01"; break;
+					case otherSpec.TYPE_SNOWMOBILE:
+						rateRuleName += "snowmobile_01"; break;
+					case otherSpec.TYPE_OTHER:
+						rateRuleName += "other_01"; break;
+				}
 					distance = otherSpec.distance;
 					break;
-						
+
 				default:
 					rateRuleName += specification.specification.type;
 					break;
 			}
-			
+
 			if (specification.specification.type == "car") {
 				var detailsCar:CarSpecificationVO = CarSpecificationVO(specification.specification);
 				distance = detailsCar.distance;
@@ -581,7 +581,7 @@ package no.makingwaves.cust.dss.code
 				} else if (detailsCar.distance_calender == detailsCar.TYPE_BELOW_9000KM) {
 					rateRuleName += "_01";
 				}
-				
+
 				// check for additional car rates
 				if (detailsCar.additional_workplace) {
 					var workplaceRate:TravelRateRuleVO = getRate("transport_car_extra_01");
@@ -599,7 +599,7 @@ package no.makingwaves.cust.dss.code
 					var forrestRate:TravelRateRuleVO = getRate("transport_car_extra_04");
 					cost += detailsCar.distance * forrestRate.cost;
 				}
-					
+
 			} else if (specification.specification.type == "motorcycle") {
 				var detailsMotorcycle:MotorcycleSpecificationVO = MotorcycleSpecificationVO(specification.specification);
 				distance = detailsMotorcycle.distance;
@@ -608,12 +608,12 @@ package no.makingwaves.cust.dss.code
 				} else if (detailsMotorcycle.motorcycle_type == detailsMotorcycle.TYPE_BELOW_125CC) {
 					rateRuleName += "_02";
 				}
-				
+
 				// check for additional transport rates
 				if (detailsMotorcycle.passengers > 0) {
 					cost += (distance * passengerGeneralRate.cost) * detailsMotorcycle.passengers;
 				}
-				
+
 			} else if (specification.specification.type == "motorboat") {
 				var detailsMotorboat:MotorboatSpecificationVO = MotorboatSpecificationVO(specification.specification);
 				distance = detailsMotorboat.distance;
@@ -622,31 +622,31 @@ package no.makingwaves.cust.dss.code
 				} else if (detailsMotorboat.motorboat_type == detailsMotorboat.TYPE_BELOW_50HK) {
 					rateRuleName += "_02";
 				}
-				
+
 				// check for additional transport rates
 				if (detailsMotorboat.passengers > 0) {
 					cost += (distance * passengerGeneralRate.cost) * detailsMotorboat.passengers;
 				}
-				
+
 			}
 			// calculate main rate
 			rateRule = this.getRate(rateRuleName);
 			cost += distance * rateRule.cost;
 			/*
-			if (specification.specification.type == "car") {
-				// update specification with correct rate
-				detailsCar.rate = rateRule.cost;
-				detailsCar.cost.cost = rateRule.cost * detailsCar.distance; 
-			}
-			*/
+			   if (specification.specification.type == "car") {
+			   // update specification with correct rate
+			   detailsCar.rate = rateRule.cost;
+			   detailsCar.cost.cost = rateRule.cost * detailsCar.distance;
+			   }
+			 */
 			// main specification update
 			specification.cost.cost = cost;
 			specification.cost.cost_currency_rate = 1;
 			specification.cost.update();
-			
+
 			return cost;
 		}
-		
+
 		private function calculateCarAllowances():void {
 			// init calculation variables
 			var car_distance1:RateVO = new RateVO();	// below 9000 km
@@ -657,12 +657,12 @@ package no.makingwaves.cust.dss.code
 			car_distance2.init();
 			car_passengers.init();
 			car_otherrates.init();
-			
+
 			// collect needed rates
 			var passengerGeneralRate:TravelRateRuleVO = getRate("transport_passenger_extra_01");
 			var distanceBelow9000:TravelRateRuleVO = getRate("transport_car_01");
 			var distanceAbove9000:TravelRateRuleVO = getRate("transport_car_02");
-			
+
 			// start calculation
 			var specificationList:ArrayCollection = ModelLocator.getInstance().travelSpecsList;
 			for (var i:Number = 0; i < specificationList.length; i++) {
@@ -681,9 +681,9 @@ package no.makingwaves.cust.dss.code
 						car_distance1.num += detailsCar.distance;
 						car_distance1.rate = distanceBelow9000.cost;
 						car_distance1.amount += newAllowance1;
-					
+
 					}
-					
+
 					// more rates
 					if (detailsCar.additional_workplace) {
 						var workplaceRate:TravelRateRuleVO = getRate("transport_car_extra_01");
@@ -698,7 +698,7 @@ package no.makingwaves.cust.dss.code
 						car_passengers.num += (detailsCar.distance * detailsCar.passengers);
 						car_passengers.rate = passengerRate.cost;
 						car_passengers.amount += passAllowance;
-					
+
 					}
 					if (detailsCar.additional_trailer) {
 						var trailerRate:TravelRateRuleVO = getRate("transport_car_extra_03");
@@ -716,14 +716,14 @@ package no.makingwaves.cust.dss.code
 					}
 				}
 			}
-			
+
 			// update model
 			ModelLocator.getInstance().travelAllowance.car_distance1 = car_distance1;
 			ModelLocator.getInstance().travelAllowance.car_distance2 = car_distance2;
 			ModelLocator.getInstance().travelAllowance.car_passengers = car_passengers;
 			ModelLocator.getInstance().travelAllowance.car_otherrates = car_otherrates;
 		}
-		
+
 		public function getVisitedCountries(onDate:Date=null):ArrayCollection {
 			var country:String;
 			var lastCountry:String = "";
@@ -734,7 +734,7 @@ package no.makingwaves.cust.dss.code
 				var valid:Boolean = true;
 				if (onDate != null) {
 					if ((specification.from_date.time < onDate.time && specification.to_date.time < onDate.time) ||
-					 	(specification.from_date.time > onDate.time && specification.to_date.time > onDate.time) ) {
+						(specification.from_date.time > onDate.time && specification.to_date.time > onDate.time) ) {
 						// specification dates are before of after accomodation occours
 						valid = false;
 					}
@@ -755,7 +755,7 @@ package no.makingwaves.cust.dss.code
 			}
 			return visited;
 		}
-		
+
 		// kalkuler overnattinger ===========================================================
 		public function calculateAccomodations():Number {
 			var amount:Number = 0.0;
@@ -776,12 +776,12 @@ package no.makingwaves.cust.dss.code
 				var distanceRange:DateRanger = new DateRanger();
 				distanceRange.getDateRange(accomodation.fromdate, accomodation.todate);
 				daysCount += distanceRange.days;
-				
+
 			}
-			
+
 			return amount;
 		}
-		
+
 		public function calculateAccomodation(accomodation:TravelAccomodationVO, earlierNightsNum:Number=0, alertUser:Boolean=true):Number {
 			var amount:Number = 0.0;
 			var days:Number = 1;
@@ -796,27 +796,27 @@ package no.makingwaves.cust.dss.code
 				// accomodation unauthorized - travel by rate
 				// domestic accomodation rules apply because all international travel is covered 'by bill'
 				dailyAllowance = rateRule.cost;
-				
+
 				// find how long period of time this accomodation lasted
 				var distanceRange:DateRanger = new DateRanger();
 				distanceRange.getDateRange(accomodation.fromdate, accomodation.todate);
-				
+
 				nighttariff.rate = dailyAllowance;
 				nighttariff.num = distanceRange.days;
 				nighttariff.amount = Number((dailyAllowance * distanceRange.days).toFixed(2));
-							
+
 				// calculate allowance for this distance
 				var totalDays:Number = earlierNightsNum + distanceRange.days;
 				if (totalDays <= 28) {
 					amount += Number((dailyAllowance * distanceRange.days).toFixed(2));
-					
+
 					// update allowance model
 					if (accomodation.type == accomodation.TYPE_UNATHORIZED_HOTEL) {
 						ModelLocator.getInstance().travelAllowance.nighttariff_domestic_hotel = nighttariff;
 					} else {
 						ModelLocator.getInstance().travelAllowance.nighttariff_domestic = nighttariff;
 					}
-				
+
 				} else {
 					// one or all parts of accomodation should be reduced
 					if (earlierNightsNum >= 28) {
@@ -830,27 +830,27 @@ package no.makingwaves.cust.dss.code
 						amount += Number(((dailyAllowance * 0.75) * reducedDays).toFixed(2));
 					}
 				}
-				
+
 				// main specification update
 				accomodation.cost.cost = amount;
 				accomodation.cost.cost_currency_rate = 1;
 				accomodation.cost.update();
-				
+
 			} else {
 				// accomodation authorized - 'travel by bill'
 				accomodation.actual_cost.update();
 				var actualCost:Number = Number(accomodation.actual_cost.getCost());
-				
+
 				var distanceRange:DateRanger = new DateRanger();
 				distanceRange.getDateRange(accomodation.fromdate, accomodation.todate);
 				// distanceRange.days;
-				
+
 				var costCovered:Number = actualCost;
 				var maxCover:Number = 0;
 				if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 					// get max cover for domestic accomodation
 					maxCover = this.getRate("accomodation_maxcover").cost;
-					
+
 				} else {
 					// get max cover for international travel
 					var intRate:TravelRateInternationalVO = this.getInternationalRate(accomodation.country.split("#")[0], accomodation.city);
@@ -867,23 +867,23 @@ package no.makingwaves.cust.dss.code
 						var model:ModelLocator = ModelLocator.getInstance();
 						var alertWindow:mx.core.IFlexDisplayObject;
 						alertWindow = PopUpManager.createPopUp(model.applicationReference, custom_alert, true);
-						
+
 						var alertTitle:String = ResourceManager.getInstance().getString(model.resources.bundleName, "error_warning");
 						var alertText:String = ResourceManager.getInstance().getString(model.resources.bundleName, "alert_maxcost_accomodation");
 						custom_alert(alertWindow).title = alertTitle;
 						custom_alert(alertWindow).alertText = alertText;
 					}
-					//accomodation.actual_cost.cost = costCovered;
+						//accomodation.actual_cost.cost = costCovered;
 				}
-				
+
 				amount += costCovered;
 			}
-			
-			
+
+
 			return Number(amount.toFixed(2));
 		}
-		
-		
+
+
 		// kalkuler trekk ===================================================================
 		public function calculateDeductions(only_deduction:TravelDeductionVO=null):Number {
 			// init vars and find different rates
@@ -891,7 +891,7 @@ package no.makingwaves.cust.dss.code
 			//var days:Number = 1;
 			var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
 			var travelInfo:TravelVO = ModelLocator.getInstance().activeTravel;
-			
+
 			var rateName:String = "redraw";
 			var breakfastRate:TravelRateRuleVO;
 			var lunchRate:TravelRateRuleVO;
@@ -920,7 +920,7 @@ package no.makingwaves.cust.dss.code
 				dinnerRate = this.getRate(rateName + "_06");
 			}
 			extraRate = this.getRate(rateName + "_extra");
-					
+
 			if (only_deduction == null) {	
 				var deductionList:ArrayCollection = ModelLocator.getInstance().travelDeductionList;
 				for (var i:Number = 0; i < deductionList.length; i++) {
@@ -932,7 +932,7 @@ package no.makingwaves.cust.dss.code
 			}
 			return amount;
 		}
-		
+
 		public function calculateDeduction(deduction:TravelDeductionVO, breakfastRate:TravelRateRuleVO, lunchRate:TravelRateRuleVO, dinnerRate:TravelRateRuleVO, extraRate:TravelRateRuleVO, allowance:Number=0, realAllowance:Number=0):Number {
 			var amount:Number = 0.0;
 			var dailyAllowance:Number = allowance;
@@ -962,24 +962,24 @@ package no.makingwaves.cust.dss.code
 				}
 			}
 			/* additional allowance when all meals are coverd - temp removed
-			if (deduction.breakfast && deduction.lunch && deduction.dinner) {
-				amount += extraRate.cost;
-			}
-			*/
-			
+			   if (deduction.breakfast && deduction.lunch && deduction.dinner) {
+			   amount += extraRate.cost;
+			   }
+			 */
+
 			// if deduction gets larger than the real allowance for this day - reduce deduction
 			if (Math.abs(amount) > realAllowance && realAllowance != 0) {
 				amount = -realAllowance;
 			}
-			
+
 			// update deduction VO
 			deduction.cost.cost = amount;
 			deduction.cost.update();
-			
+
 			return amount;
 		}
-		
-		
+
+
 		// kalkuler diverse utlegg ==========================================================
 		public function calculateOutlays():Number {
 			var amount:Number = 0.0;
@@ -989,13 +989,13 @@ package no.makingwaves.cust.dss.code
 			}
 			return amount;
 		}
-		
+
 		public function calculateOutlay(outlay:TravelOutlayVO):Number {
 			outlay.cost.update();
 			return Number(outlay.cost.local_cost);
 		}
-		
-		
+
+
 		// kalkuler reiseforskudd ===========================================================
 		public function calculateTraveladvances():Number {
 			var amount:Number = 0.0;
@@ -1005,14 +1005,14 @@ package no.makingwaves.cust.dss.code
 			}
 			return amount;
 		}
-		
+
 		public function calculateTraveladvance(advance:TravelAdvanceVO):Number {
 			return -(Number(advance.cost.toFixed(2)));
 		}
-		
-		
-		
-		
+
+
+
+
 		// collect correct rate =============================================================
 		public function getRate(rateName:String):TravelRateRuleVO {
 			var rateList:ArrayCollection = ModelLocator.getInstance().travelRateRulesList;
@@ -1023,7 +1023,7 @@ package no.makingwaves.cust.dss.code
 			}
 			return null;
 		}
-		
+
 		public function getInternationalRate(countryCode:String, city:String=""):TravelRateInternationalVO {
 			if (countryCode.indexOf("#") != -1) { countryCode = countryCode.split("#")[0]; }
 			var rateList:ArrayCollection = ModelLocator.getInstance().travelRatesInternationalList;
@@ -1038,3 +1038,4 @@ package no.makingwaves.cust.dss.code
 
 	}
 }
+

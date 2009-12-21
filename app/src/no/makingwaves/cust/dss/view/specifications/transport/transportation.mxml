@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code:BasicFormBase
-			xmlns:code="no.makingwaves.cust.dss.code.*"
-			xmlns:view="no.makingwaves.cust.dss.view.*"
-			xmlns:mx="http://www.adobe.com/2006/mxml"
-			creationComplete="init()">
+					xmlns:code="no.makingwaves.cust.dss.code.*"
+					xmlns:view="no.makingwaves.cust.dss.view.*"
+					xmlns:mx="http://www.adobe.com/2006/mxml"
+					creationComplete="init()">
 
 	<mx:Script>
 		<![CDATA[
@@ -16,25 +16,25 @@
 			import mx.events.ValidationResultEvent;
 			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;
 			import no.makingwaves.cust.dss.view.specifications.travel_specification;
-			
+
 			[Bindable]
 			public var travelspecifications : TravelSpecificationVO;
-			
+
 			public var reference : travel_specification;
-			
+
 			private var _editMode : Boolean = false;
-			
+
 			private var _introIntervaller : Number;
-			
+
 			[Bindable]
 			private var _countryList : ArrayCollection = new ArrayCollection();
 			[Bindable]
 			private var _cityFromList : ArrayCollection = new ArrayCollection();
 			[Bindable]
 			private var _cityToList : ArrayCollection = new ArrayCollection();
-			
+
 			private function init():void {}
-			
+
 			public function initForm():void {
 				if (!_editMode) {
 					// collect previous travel distance, if exists
@@ -42,7 +42,7 @@
 					var prevDistance : TravelSpecificationVO;
 					if (model.activeSpecification != null) {
 						prevDistance = model.activeSpecification;
-						
+
 					} else {
 						var travelDistancesNum : Number = model.travelSpecsList.length;
 						if (travelDistancesNum > 0)
@@ -51,11 +51,11 @@
 					if (prevDistance != null) {
 						// add prev locationtext
 						this.locationfrom.text = prevDistance.to_destination;
-						
+
 						// add prev date info
 						this.travelspecifications.from_date = prevDistance.to_date;
 						this.travelspecifications.to_date = prevDistance.to_date;
-							
+
 						// if international travel - collect previous destination country/city
 						if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
 							this.travelspecifications.from_country = prevDistance.to_country;
@@ -67,34 +67,34 @@
 						}
 					}
 				}
-				
+
 				// if international travel, build country list
 				if (model.activeTravel.travel_type == model.activeTravel.ABROAD)
 					this.buildInternationalTravelSources();
-				
+
 				// init timezone
 				initTimeZone();
 				// add accessibility
-                model.accessibility.addAccessibility(locationfrom, resourceManager.getString(model.resources.bundleName, locationfrom.id+'_label'));
-                model.accessibility.addAccessibility(fromdate_text, resourceManager.getString(model.resources.bundleName, fromdate.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
-                model.accessibility.addAccessibility(fromtime, resourceManager.getString(model.resources.bundleName, fromtime.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_time'));
-                model.accessibility.addAccessibility(locationto, resourceManager.getString(model.resources.bundleName, locationto.id+'_label'));
-                model.accessibility.addAccessibility(todate_text, resourceManager.getString(model.resources.bundleName, todate.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
-                model.accessibility.addAccessibility(totime, resourceManager.getString(model.resources.bundleName, totime.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_time'));
-                if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
-                	model.accessibility.addAccessibility(cmb_countryfrom, resourceManager.getString(model.resources.bundleName, 'countryfrom_help'));
-                	model.accessibility.addAccessibility(cmb_cityfrom, resourceManager.getString(model.resources.bundleName, 'cityfrom_help'));
-                	model.accessibility.addAccessibility(cmb_countryto, resourceManager.getString(model.resources.bundleName, 'countryto_help'));
-                	model.accessibility.addAccessibility(cmb_cityto, resourceManager.getString(model.resources.bundleName, 'cityto_help'));
-                	model.accessibility.addAccessibility(cmb_timezoneto, resourceManager.getString(model.resources.bundleName, 'timezoneto_help'));
-                	model.accessibility.addAccessibility(cmb_timezonefrom, resourceManager.getString(model.resources.bundleName, 'timezonefrom_help'));
-                }
-                // add validators
-               	this.addValidationField(locationfrom);
-               	this.addValidationField(locationto);
-               	travelTimeController();
-   			}
-			
+				model.accessibility.addAccessibility(locationfrom, resourceManager.getString(model.resources.bundleName, locationfrom.id+'_label'));
+				model.accessibility.addAccessibility(fromdate_text, resourceManager.getString(model.resources.bundleName, fromdate.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+				model.accessibility.addAccessibility(fromtime, resourceManager.getString(model.resources.bundleName, fromtime.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_time'));
+				model.accessibility.addAccessibility(locationto, resourceManager.getString(model.resources.bundleName, locationto.id+'_label'));
+				model.accessibility.addAccessibility(todate_text, resourceManager.getString(model.resources.bundleName, todate.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_date'));
+				model.accessibility.addAccessibility(totime, resourceManager.getString(model.resources.bundleName, totime.id+'_label') + " " + resourceManager.getString(model.resources.bundleName, 'fieldhelp_time'));
+				if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
+					model.accessibility.addAccessibility(cmb_countryfrom, resourceManager.getString(model.resources.bundleName, 'countryfrom_help'));
+					model.accessibility.addAccessibility(cmb_cityfrom, resourceManager.getString(model.resources.bundleName, 'cityfrom_help'));
+					model.accessibility.addAccessibility(cmb_countryto, resourceManager.getString(model.resources.bundleName, 'countryto_help'));
+					model.accessibility.addAccessibility(cmb_cityto, resourceManager.getString(model.resources.bundleName, 'cityto_help'));
+					model.accessibility.addAccessibility(cmb_timezoneto, resourceManager.getString(model.resources.bundleName, 'timezoneto_help'));
+					model.accessibility.addAccessibility(cmb_timezonefrom, resourceManager.getString(model.resources.bundleName, 'timezonefrom_help'));
+				}
+				// add validators
+				this.addValidationField(locationfrom);
+				this.addValidationField(locationto);
+				travelTimeController();
+			}
+
 			private function buildInternationalTravelSources():void {
 				_countryList = new ArrayCollection();
 				for (var i:Number = 0; i < model.travelRatesInternationalList.length; i++) {
@@ -104,22 +104,22 @@
 						_countryList.addItem({label: countryName, data: countryCode});
 					}
 				}
-				
-				 // add default country
-			    var defaultCountry:String = resourceManager.getString(model.resources.bundleName, "country_default");
-			    _countryList.addItem({label: defaultCountry, data: defaultCountry});
-			    
+
+				// add default country
+				var defaultCountry:String = resourceManager.getString(model.resources.bundleName, "country_default");
+				_countryList.addItem({label: defaultCountry, data: defaultCountry});
+
 				// add combo info
-			    var defaultMsg:String = resourceManager.getString(model.resources.bundleName, "country_choose");
-			    _countryList.addItem({label: defaultMsg, data: ""});
-			    
-			    // sort list
+				var defaultMsg:String = resourceManager.getString(model.resources.bundleName, "country_choose");
+				_countryList.addItem({label: defaultMsg, data: ""});
+
+				// sort list
 				var sort:Sort = new Sort();
-			    sort.fields = [new SortField("label", true)];
-			    _countryList.sort = sort;
-			    _countryList.refresh();
-			    
-			    // set initial country as seleceted
+				sort.fields = [new SortField("label", true)];
+				_countryList.sort = sort;
+				_countryList.refresh();
+
+				// set initial country as seleceted
 				if (this.travelspecifications.from_country != "") {
 					setInitialCountryCombo(this.travelspecifications.from_country, this.cmb_countryfrom);
 				} else {
@@ -130,11 +130,11 @@
 				} else {
 					setInitialCountryCombo(defaultMsg, this.cmb_countryto);
 				}
-			    
-			    buildInternationalCitySources(this.cmb_countryfrom.selectedItem.data, this.cmb_cityfrom);
-			    buildInternationalCitySources(this.cmb_countryto.selectedItem.data, this.cmb_cityto);
+
+				buildInternationalCitySources(this.cmb_countryfrom.selectedItem.data, this.cmb_cityfrom);
+				buildInternationalCitySources(this.cmb_countryto.selectedItem.data, this.cmb_cityto);
 			}
-			
+
 			private function countryExists(countryName:String):Boolean {
 				for (var i:Number = 0; i < _countryList.length; i++) {
 					if (_countryList.getItemAt(i).label == countryName) {
@@ -143,7 +143,7 @@
 				}
 				return false;
 			} 
-						
+
 			private function countryChanged(event:ListEvent):void {
 				var targetStatus:String;
 				if (event.currentTarget == this.cmb_countryfrom) {
@@ -155,7 +155,7 @@
 				}
 				autoAdjustTimezone(targetStatus);
 			}
-			
+
 			private function buildInternationalCitySources(countryName:String, combobox:ComboBox):void {
 				var buildList:ArrayCollection = ArrayCollection(combobox.dataProvider);
 				buildList.removeAll();
@@ -169,20 +169,20 @@
 					}
 				}
 				// add combo info value
-			    var defaultValue:String = resourceManager.getString(model.resources.bundleName, "city_other");
+				var defaultValue:String = resourceManager.getString(model.resources.bundleName, "city_other");
 				buildList.addItemAt({label: defaultValue, data: "-"}, 0);
-				
+
 				var sort:Sort = new Sort();
-			    sort.fields = [new SortField("label", true)];
-			    buildList.sort = sort;
-			    buildList.refresh();
-			    
-			    combobox.dataProvider = buildList;
-			    
-			    // add default value
-			    var defaultMsg:String = resourceManager.getString(model.resources.bundleName, "city_choose");
+				sort.fields = [new SortField("label", true)];
+				buildList.sort = sort;
+				buildList.refresh();
+
+				combobox.dataProvider = buildList;
+
+				// add default value
+				var defaultMsg:String = resourceManager.getString(model.resources.bundleName, "city_choose");
 				buildList.addItemAt({label: defaultMsg, data: ""}, 0);
-				
+
 				// set initial selected value
 				if (combobox == this.cmb_cityfrom && this.travelspecifications.from_city != "") {
 					setInitialCityCombo(this.travelspecifications.from_city, combobox);
@@ -196,60 +196,60 @@
 							break;
 						}
 					}
-					
+
 				}
 
 				// enable citylist?
 				enableCityList(Boolean(buildList.length > 2), combobox);
 			}
-			
+
 			private function enableCityList(enable:Boolean, combobox:ComboBox):void {
 				combobox.enabled = enable;
 			}
-			
+
 			private function setInitialCountryCombo(countryName:String, comboBox:ComboBox):void {
 				for (var i:Number = 0; i < _countryList.length; i++) {
-            		if ((_countryList.getItemAt(i).data + "#" + _countryList.getItemAt(i).label) == countryName) {
-            			comboBox.selectedIndex = i;
-            			break;           			
-            		}
-            	} 
+					if ((_countryList.getItemAt(i).data + "#" + _countryList.getItemAt(i).label) == countryName) {
+						comboBox.selectedIndex = i;
+						break;           			
+					}
+				} 
 			}
-			
+
 			private function setInitialCityCombo(cityName:String, comboBox:ComboBox):void {
 				var cityList:ArrayCollection = ArrayCollection(comboBox.dataProvider);
 				for (var i:Number = 0; i < cityList.length; i++) {
-            		if (cityList.getItemAt(i).data == cityName) {
-            			comboBox.selectedIndex = i;
-            			break;           			
-            		}
-            	}
+					if (cityList.getItemAt(i).data == cityName) {
+						comboBox.selectedIndex = i;
+						break;           			
+					}
+				}
 			}
-			
+
 			private function initTimeZone():void {
 				// set timezone
-            	for (var toZ:Number = 0; toZ < ArrayCollection(this.cmb_timezoneto.dataProvider).length; toZ++) {
-        			if (ArrayCollection(this.cmb_timezoneto.dataProvider).getItemAt(toZ).data == travelspecifications.to_timezone) {
-        				this.cmb_timezoneto.selectedIndex = toZ;
-        				break;
-        			}
-        		}
-        		for (var fromZ:Number = 0; fromZ < ArrayCollection(this.cmb_timezonefrom.dataProvider).length; fromZ++) {
-        			if (ArrayCollection(this.cmb_timezonefrom.dataProvider).getItemAt(fromZ).data == travelspecifications.from_timezone) {
-        				this.cmb_timezonefrom.selectedIndex = fromZ;
-        				break;
-        			}
-        		}
+				for (var toZ:Number = 0; toZ < ArrayCollection(this.cmb_timezoneto.dataProvider).length; toZ++) {
+					if (ArrayCollection(this.cmb_timezoneto.dataProvider).getItemAt(toZ).data == travelspecifications.to_timezone) {
+						this.cmb_timezoneto.selectedIndex = toZ;
+						break;
+					}
+				}
+				for (var fromZ:Number = 0; fromZ < ArrayCollection(this.cmb_timezonefrom.dataProvider).length; fromZ++) {
+					if (ArrayCollection(this.cmb_timezonefrom.dataProvider).getItemAt(fromZ).data == travelspecifications.from_timezone) {
+						this.cmb_timezonefrom.selectedIndex = fromZ;
+						break;
+					}
+				}
 			}
-			
+
 			private function autoAdjustTimezone(target:String):void {
 				var targetCombobox:ComboBox = (target == "from") ? this.cmb_countryfrom : this.cmb_countryto;
 				var code:String = targetCombobox.selectedItem.data;
-				
+
 				var dateToCheck:Date = (target == "from") ? this.fromdate.selectedDate : this.todate.selectedDate;
 				var useDaylightSaving:Boolean = false;
 				useDaylightSaving = (Math.abs(dateToCheck.timezoneOffset / 60) == 2);
-				
+
 				var timezoneInfo:Object = model.getTimeZoneInfoFromCountryCode(code);
 				if (timezoneInfo == null) {
 					timezoneInfo = new Object();
@@ -260,7 +260,7 @@
 					// added later in this method. This should only apply for travels to/from Norway
 					if (timezoneInfo.daylightsaving) { timezoneInfo.timezone--; }
 				}
-				
+
 				var timezone:String = "";
 				var zoneNum:int = timezoneInfo.timezone;				
 				if (useDaylightSaving && timezoneInfo.daylightsaving) {
@@ -269,156 +269,156 @@
 				timezone += (zoneNum > 0) ? "+" : "";
 				timezone += (zoneNum < 0) ? "-" : "";
 				timezone += Math.abs(zoneNum).toString();
-				
+
 				var timezoneCombo:ComboBox = (target == "from") ? this.cmb_timezonefrom : this.cmb_timezoneto;
-        		for (var i:Number = 0; i < ArrayCollection(timezoneCombo.dataProvider).length; i++) {
-        			if (ArrayCollection(timezoneCombo.dataProvider).getItemAt(i).data == timezone) {
-        				timezoneCombo.selectedIndex = i;
-        				break;
-        			}
-        		}
+				for (var i:Number = 0; i < ArrayCollection(timezoneCombo.dataProvider).length; i++) {
+					if (ArrayCollection(timezoneCombo.dataProvider).getItemAt(i).data == timezone) {
+						timezoneCombo.selectedIndex = i;
+						break;
+					}
+				}
 			}
-			
+
 			public function activate():void {}
-						
+
 			override public function autoFillIn(editMode:Boolean=false):void {
 				if (!editMode) {
 					_editMode = true;
 					this.continueTravel = false;
-	            	locationfrom.text = travelspecifications.from_destination;
-	            	fromdate.selectedDate = travelspecifications.from_date;
-	            	fromdate_text.text = this.getFormattedDate(travelspecifications.from_date);
-	            	fromtime.text = travelspecifications.from_time;
-	            	locationto.text = travelspecifications.to_destination;
-	            	todate.selectedDate = travelspecifications.to_date;
-	            	todate_text.text = this.getFormattedDate(travelspecifications.to_date);
-	            	totime.text = travelspecifications.to_time;
-	            	initTimeZone();
-	   			}
-            }
-             
+					locationfrom.text = travelspecifications.from_destination;
+					fromdate.selectedDate = travelspecifications.from_date;
+					fromdate_text.text = this.getFormattedDate(travelspecifications.from_date);
+					fromtime.text = travelspecifications.from_time;
+					locationto.text = travelspecifications.to_destination;
+					todate.selectedDate = travelspecifications.to_date;
+					todate_text.text = this.getFormattedDate(travelspecifications.to_date);
+					totime.text = travelspecifications.to_time;
+					initTimeZone();
+				}
+			}
+
 			override public function submitData(specifications:*):* {
 				//var specifications : TravelSpecificationVO = travelspecifications;
 				specifications = TravelSpecificationVO(specifications);
-            	if (this.validateDetailsForm()) {
-	            	specifications.from_destination = locationfrom.text;
-	            	specifications.from_date = fromdate.selectedDate;
-	            	specifications.from_time = fromtime.text;
-	            	specifications.from_date.setHours(Number(fromtime.text.substr(0,2)), Number(fromtime.text.substr(2,2)));
+				if (this.validateDetailsForm()) {
+					specifications.from_destination = locationfrom.text;
+					specifications.from_date = fromdate.selectedDate;
+					specifications.from_time = fromtime.text;
+					specifications.from_date.setHours(Number(fromtime.text.substr(0,2)), Number(fromtime.text.substr(2,2)));
 
-	            	specifications.from_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezonefrom.selectedItem.data : -(specifications.from_date.timezoneOffset / 60);
-	            	specifications.to_destination = locationto.text;
-	            	specifications.to_date = todate.selectedDate;
-	            	specifications.to_time = totime.text;
-	            	specifications.to_date.setHours(Number(totime.text.substr(0,2)), Number(totime.text.substr(2,2)));
-	            	
-	            	specifications.to_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezoneto.selectedItem.data : -(specifications.to_date.timezoneOffset / 60);
-	            	specifications.from_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryfrom.selectedItem.data + "#" + this.cmb_countryfrom.selectedItem.label : "";
-	            	specifications.from_city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_cityfrom.selectedItem.data : "";
-	            	specifications.to_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryto.selectedItem.data + "#" + this.cmb_countryto.selectedItem.label : "";
-	            	specifications.to_city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_cityto.selectedItem.data : "";
-	            	return specifications;
-	           } else {
-	           		return null;
-	           }
-	           
-            }
-            
-            override public function validateDetailsForm():Boolean {
-            	if (super.validateDetailsForm()) {
-            		var valid:Boolean = true;            		
-            		// check country/city selections
-            		if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
-            			if (this.cmb_countryfrom.selectedItem.data == "") {
-            				this.showValidationError(this.cmb_countryfrom, resourceManager.getString(model.resources.bundleName, "countryfrom_validator"));
-            				valid = false;
-            			} else if (this.cmb_cityfrom.selectedItem.data == "" && this.cmb_cityfrom.enabled) {
-            				this.showValidationError(this.cmb_cityfrom, resourceManager.getString(model.resources.bundleName, "cityfrom_validator"));
-            				valid = false;
-            			} else if (this.cmb_countryto.selectedItem.data == "") {
-            				this.showValidationError(this.cmb_countryto, resourceManager.getString(model.resources.bundleName, "countryto_validator"));
-            				valid = false;
-            			} else if (this.cmb_cityto.selectedItem.data == "" && this.cmb_cityto.enabled) {
-            				this.showValidationError(this.cmb_cityto, resourceManager.getString(model.resources.bundleName, "cityto_validator"));
-            				valid = false;
-            			}
-            		}
-            		return valid;
-            	}
-            	return false;
-            }
-            
-            // enable/disable date and time for start or end of travel, incl its validation
-            private function travelTimeController():void {
-           		// from fields
-           		this.addValidationField(fromdate_text, this.STRING, true, 8, 8);
-    			this.addCustomStringValidation(fromdate_text, false, false, this.DATE);            				
-    			this.addCustomStringValidation(fromtime, false, true, this.VALIDATOR_FORMAT_TIME, 2359);
-	            this.addCustomTimeValidation(fromtime, fromdate, fromtime, todate, totime);
+					specifications.from_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezonefrom.selectedItem.data : -(specifications.from_date.timezoneOffset / 60);
+					specifications.to_destination = locationto.text;
+					specifications.to_date = todate.selectedDate;
+					specifications.to_time = totime.text;
+					specifications.to_date.setHours(Number(totime.text.substr(0,2)), Number(totime.text.substr(2,2)));
+
+					specifications.to_timezone = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_timezoneto.selectedItem.data : -(specifications.to_date.timezoneOffset / 60);
+					specifications.from_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryfrom.selectedItem.data + "#" + this.cmb_countryfrom.selectedItem.label : "";
+					specifications.from_city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_cityfrom.selectedItem.data : "";
+					specifications.to_country = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_countryto.selectedItem.data + "#" + this.cmb_countryto.selectedItem.label : "";
+					specifications.to_city = (model.activeTravel.travel_type == model.activeTravel.ABROAD) ? this.cmb_cityto.selectedItem.data : "";
+					return specifications;
+				} else {
+					return null;
+				}
+
+			}
+
+			override public function validateDetailsForm():Boolean {
+				if (super.validateDetailsForm()) {
+					var valid:Boolean = true;            		
+					// check country/city selections
+					if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
+						if (this.cmb_countryfrom.selectedItem.data == "") {
+							this.showValidationError(this.cmb_countryfrom, resourceManager.getString(model.resources.bundleName, "countryfrom_validator"));
+							valid = false;
+						} else if (this.cmb_cityfrom.selectedItem.data == "" && this.cmb_cityfrom.enabled) {
+							this.showValidationError(this.cmb_cityfrom, resourceManager.getString(model.resources.bundleName, "cityfrom_validator"));
+							valid = false;
+						} else if (this.cmb_countryto.selectedItem.data == "") {
+							this.showValidationError(this.cmb_countryto, resourceManager.getString(model.resources.bundleName, "countryto_validator"));
+							valid = false;
+						} else if (this.cmb_cityto.selectedItem.data == "" && this.cmb_cityto.enabled) {
+							this.showValidationError(this.cmb_cityto, resourceManager.getString(model.resources.bundleName, "cityto_validator"));
+							valid = false;
+						}
+					}
+					return valid;
+				}
+				return false;
+			}
+
+			// enable/disable date and time for start or end of travel, incl its validation
+			private function travelTimeController():void {
+				// from fields
+				this.addValidationField(fromdate_text, this.STRING, true, 8, 8);
+				this.addCustomStringValidation(fromdate_text, false, false, this.DATE);            				
+				this.addCustomStringValidation(fromtime, false, true, this.VALIDATOR_FORMAT_TIME, 2359);
+				this.addCustomTimeValidation(fromtime, fromdate, fromtime, todate, totime);
 				this.addValidationField(fromtime, this.STRING, !(travelspecifications.is_travel_start), 4, 4);
-           		this.addCustomDateValidation(fromdate, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in,null,null,fromdate_text);            				
-        		// enable fromdate and fromtime
-    			fromdate.selectedDate = (model.travelSpecsList.length == 0 && travelspecifications.from_date == null) ? model.activeTravel.travel_date_out : travelspecifications.from_date;
-    			fromdate_text.text = this.getFormattedDate(fromdate.selectedDate);
-    			fromtime.text = (model.travelSpecsList.length == 0 && travelspecifications.from_time == "") ? model.activeTravel.travel_time_out : travelspecifications.from_time;
-    			fromdate.enabled = true;
-    			fromdate_text.enabled = true;
-    			fromtime.enabled = true;
-            			
-            	// to fields
-    			this.addValidationField(todate_text, this.STRING, true, 8, 8);
-    			this.addCustomStringValidation(todate_text, false, false, this.DATE);	         				
-    			// enable todate and totime and validation of these fields
+				this.addCustomDateValidation(fromdate, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in,null,null,fromdate_text);            				
+				// enable fromdate and fromtime
+				fromdate.selectedDate = (model.travelSpecsList.length == 0 && travelspecifications.from_date == null) ? model.activeTravel.travel_date_out : travelspecifications.from_date;
+				fromdate_text.text = this.getFormattedDate(fromdate.selectedDate);
+				fromtime.text = (model.travelSpecsList.length == 0 && travelspecifications.from_time == "") ? model.activeTravel.travel_time_out : travelspecifications.from_time;
+				fromdate.enabled = true;
+				fromdate_text.enabled = true;
+				fromtime.enabled = true;
+
+				// to fields
+				this.addValidationField(todate_text, this.STRING, true, 8, 8);
+				this.addCustomStringValidation(todate_text, false, false, this.DATE);	         				
+				// enable todate and totime and validation of these fields
 				this.addValidationField(totime, this.STRING, true, 4, 4);        				
 				this.addCustomDateValidation(todate, model.activeTravel.travel_date_out, model.activeTravel.travel_date_in, fromdate, null, todate_text);
-               	this.addCustomStringValidation(totime, false, true, this.VALIDATOR_FORMAT_TIME, 2359);
-           		this.addCustomTimeValidation(totime, fromdate, fromtime, todate, totime);
-           		// enable and set date and time
-           		todate.selectedDate = (model.travelSpecsList.length == 0 && travelspecifications.from_date == null) ? model.activeTravel.travel_date_out : travelspecifications.to_date;
-        		todate_text.text = this.getFormattedDate(todate.selectedDate);
-        		//totime.text = (model.travelSpecsList.length == 0 && travelspecifications.to_time == "") ? model.activeTravel.travel_time_in : travelspecifications.to_time;
-           		todate.enabled = true;
-    			todate_text.enabled = true;
-            	totime.enabled = true;
-            }
+				this.addCustomStringValidation(totime, false, true, this.VALIDATOR_FORMAT_TIME, 2359);
+				this.addCustomTimeValidation(totime, fromdate, fromtime, todate, totime);
+				// enable and set date and time
+				todate.selectedDate = (model.travelSpecsList.length == 0 && travelspecifications.from_date == null) ? model.activeTravel.travel_date_out : travelspecifications.to_date;
+				todate_text.text = this.getFormattedDate(todate.selectedDate);
+				//totime.text = (model.travelSpecsList.length == 0 && travelspecifications.to_time == "") ? model.activeTravel.travel_time_in : travelspecifications.to_time;
+				todate.enabled = true;
+				todate_text.enabled = true;
+				totime.enabled = true;
+			}
 
-            private function getDistanceStartDateTime():Date {
-            	var globalEndDate:Date = model.activeTravel.travel_date_in;
-            	var travelDistancesNum : Number = model.travelSpecsList.length-1;
+			private function getDistanceStartDateTime():Date {
+				var globalEndDate:Date = model.activeTravel.travel_date_in;
+				var travelDistancesNum : Number = model.travelSpecsList.length-1;
 				var prevDistance : TravelSpecificationVO;
 				var activeFound : Boolean = !this._editMode;
 				for (var i:Number = travelDistancesNum; i >= 0; i--) { 
 					prevDistance = TravelSpecificationVO(model.travelSpecsList.getItemAt(i));
 					if (this.travelspecifications == prevDistance)
 						activeFound = true;
-					
+
 					if (activeFound && this.travelspecifications.is_travel_start)
 						return this.fromdate.selectedDate;
-						
+
 					if (activeFound && prevDistance.is_travel_start)
 						return prevDistance.from_date;						
-					
+
 				}
-				
+
 				if (model.travelSpecsList.length == 0) {
 					// this is the first registration
 					return this.fromdate.selectedDate;
 				}
-				
+
 				return null;
-            }
-            
-            override public function clearFields():void {
-            	super.clearFields();
-            	// reset references/bindings
-            	var specifications:TravelSpecificationVO = new TravelSpecificationVO();
-            	this.autoFillIn();
-            	continueTravel = true;
-            	_editMode = false;
-            	
-            	init();
-            }
-			
+			}
+
+			override public function clearFields():void {
+				super.clearFields();
+				// reset references/bindings
+				var specifications:TravelSpecificationVO = new TravelSpecificationVO();
+				this.autoFillIn();
+				continueTravel = true;
+				_editMode = false;
+
+				init();
+			}
+
 			private function textDatefieldChanged(e:FocusEvent):void {
 				var targetStatus:String;
 				var textField:TextInput = TextInput(e.currentTarget);
@@ -431,10 +431,11 @@
 						targetStatus = "from";
 						this.fromdate.selectedDate = new Date(Number("20"+dateValues[2]), (Number(dateValues[1])-1), Number(dateValues[0]));
 					}
-					this.autoAdjustTimezone(targetStatus);
+					if (model.activeTravel.travel_type == model.activeTravel.ABROAD)
+						this.autoAdjustTimezone(targetStatus);
 				}
 			}
-			
+
 			private function dateFieldChangedHandler(e:Event):void {
 				var targetStatus:String;
 				if (e.currentTarget == this.fromdate) {
@@ -444,11 +445,12 @@
 					targetStatus = "to";
 					todate_text.text = this.getFormattedDate(todate.selectedDate);
 				}
-				this.autoAdjustTimezone(targetStatus);
+				if (model.activeTravel.travel_type == model.activeTravel.ABROAD)
+					this.autoAdjustTimezone(targetStatus);
 			}
 		]]>
 	</mx:Script>
-	
+
 	<mx:Model id="timezone_model">
 		<obj>
 			<item label="UTC -12" data="-12"/>
@@ -478,117 +480,117 @@
 			<item label="UTC +12" data="12"/>
 		</obj>
 	</mx:Model>
-	
+
 	<mx:ArrayCollection id="timezones" source="{timezone_model.item}"/>
-		
+
 	<mx:HBox id="departure_box" width="100%" paddingTop="10">
 		<mx:Label id="locationfrom_label" width="30" styleName="form"
-					text="{resourceManager.getString(model.resources.bundleName, locationfrom_label.id)}"/>
+				  text="{resourceManager.getString(model.resources.bundleName, locationfrom_label.id)}"/>
 		<mx:TextInput id="locationfrom" tabIndex="1605"
-						text="{travelspecifications.from_destination}" />
-		
+					  text="{travelspecifications.from_destination}" />
+
 		<mx:VBox id="country_city_from" 
-					visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
-					enabled="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"  
-					added="{if(model.activeTravel.travel_type != model.activeTravel.ABROAD){country_city_from.width=0;country_city_from.height=0}}">
-					
+				 visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
+				 enabled="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"  
+				 added="{if(model.activeTravel.travel_type != model.activeTravel.ABROAD){country_city_from.width=0;country_city_from.height=0}}">
+
 			<mx:HBox id="country_from">
 				<mx:Label id="countryfrom_label" styleName="form" enabled="{cmb_countryfrom.enabled}"
-							text="{resourceManager.getString(model.resources.bundleName, countryfrom_label.id)}"/>
+						  text="{resourceManager.getString(model.resources.bundleName, countryfrom_label.id)}"/>
 				<mx:ComboBox id="cmb_countryfrom" tabIndex="1606"
 							 change="{countryChanged(event)}"
 							 dataProvider="{_countryList}" />
-								 		
+
 			</mx:HBox>
 			<mx:HBox id="city_from" enabled="{cmb_cityfrom.enabled}">
 				<mx:Label id="cityfrom_label" styleName="form" width="{countryfrom_label.width}" enabled="{cmb_cityfrom.enabled}"
-							text="{resourceManager.getString(model.resources.bundleName, cityfrom_label.id)}"/>
+						  text="{resourceManager.getString(model.resources.bundleName, cityfrom_label.id)}"/>
 				<mx:ComboBox id="cmb_cityfrom" tabIndex="1607"
-							  dataProvider="{_cityFromList}" />
-				
+							 dataProvider="{_cityFromList}" />
+
 			</mx:HBox>
 		</mx:VBox>
 
 	</mx:HBox>
-	
+
 	<mx:HBox id="departure_date_box" width="100%" paddingBottom="10" paddingLeft="30">
 		<mx:Label id="fromdate_label" styleName="form" enabled="{fromdate_text.enabled}" 
-						text="{resourceManager.getString(model.resources.bundleName, fromdate_label.id)}" />
+				  text="{resourceManager.getString(model.resources.bundleName, fromdate_label.id)}" />
 		<mx:TextInput id="fromdate_text" width="70" maxChars="8" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1609" />
 		<mx:DateField id="fromdate" creationComplete="{dateField_init(fromdate)}" editable="true" width="17" visible="{!model.screenreader}" tabIndex="1610" 
-						change="{dateFieldChangedHandler(event)}" tabEnabled="{!model.screenreader}"
-						selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}" />
+					  change="{dateFieldChangedHandler(event)}" tabEnabled="{!model.screenreader}"
+					  selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}" />
 		<mx:Text id="date_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
-						
+
 		<mx:Label id="fromtime_label" enabled="{fromtime.enabled}"  
-					text="{resourceManager.getString(model.resources.bundleName, fromtime_label.id)}" styleName="form" />
+				  text="{resourceManager.getString(model.resources.bundleName, fromtime_label.id)}" styleName="form" />
 		<mx:TextInput id="fromtime" maxChars="4" width="50" tabIndex="1611"
-						text="{travelspecifications.from_time}" />
+					  text="{travelspecifications.from_time}" />
 		<mx:Text id="time_help" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_time')}" />
-						
+
 		<mx:ComboBox id="cmb_timezonefrom" tabIndex="1612" 
-						enabled="{fromdate_text.enabled}"
-						visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
-						change="{travelspecifications.from_timezone = cmb_timezonefrom.selectedItem.label}"
-						dataProvider="{timezones}" />
+					 enabled="{fromdate_text.enabled}"
+					 visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
+					 change="{travelspecifications.from_timezone = cmb_timezonefrom.selectedItem.label}"
+					 dataProvider="{timezones}" />
 
 	</mx:HBox>
-	
+
 	<mx:HRule width="100%" />
-						
+
 	<mx:HBox id="arrival_box" width="100%" paddingTop="10">
 		<mx:Label id="locationto_label" width="30" styleName="form"
-					text="{resourceManager.getString(model.resources.bundleName, locationto_label.id)}" />
+				  text="{resourceManager.getString(model.resources.bundleName, locationto_label.id)}" />
 		<mx:TextInput id="locationto" tabIndex="1613"
-						text="{travelspecifications.to_destination}" />
-		
+					  text="{travelspecifications.to_destination}" />
+
 		<mx:VBox id="country_city_to" 
-					visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}" 
-					enabled="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
-					added="{if(model.activeTravel.travel_type != model.activeTravel.ABROAD){country_city_to.width=0;country_city_to.height=0}}">
-					
+				 visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}" 
+				 enabled="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
+				 added="{if(model.activeTravel.travel_type != model.activeTravel.ABROAD){country_city_to.width=0;country_city_to.height=0}}">
+
 			<mx:HBox id="country_to">
 				<mx:Label id="countryto_label" styleName="form" enabled="{cmb_countryto.enabled}"
-							text="{resourceManager.getString(model.resources.bundleName, countryto_label.id)}"/>
+						  text="{resourceManager.getString(model.resources.bundleName, countryto_label.id)}"/>
 				<mx:ComboBox id="cmb_countryto" tabIndex="1614"
 							 change="{countryChanged(event)}"
 							 dataProvider="{_countryList}" />
-					
+
 			</mx:HBox>
 			<mx:HBox id="city_to" enabled="{cmb_cityto.enabled}">
 				<mx:Label id="cityto_label" styleName="form" width="{countryto_label.width}" enabled="{cmb_cityto.enabled}"
-							text="{resourceManager.getString(model.resources.bundleName, cityto_label.id)}"/>
+						  text="{resourceManager.getString(model.resources.bundleName, cityto_label.id)}"/>
 				<mx:ComboBox id="cmb_cityto" tabIndex="1615"
 							 dataProvider="{_cityToList}" />
-				
+
 			</mx:HBox>
 		</mx:VBox>
-						
+
 	</mx:HBox>
-	
+
 	<mx:HBox id="arrival_date_box" width="100%" paddingBottom="10" paddingLeft="30">
 		<mx:Label id="todate_label" enabled="{todate_text.enabled}"   
-					text="{resourceManager.getString(model.resources.bundleName, todate_label.id)}" styleName="form" />
+				  text="{resourceManager.getString(model.resources.bundleName, todate_label.id)}" styleName="form" />
 		<mx:TextInput id="todate_text" width="70" maxChars="8" focusOut="{this.textDatefieldChanged(event)}" tabIndex="1616" />
 		<mx:DateField id="todate" creationComplete="{this.dateField_init(todate)}" tabIndex="1617" 
-						editable="true" width="17" visible="{!model.screenreader}"  tabEnabled="{!model.screenreader}"
-						selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}"
-						change="{dateFieldChangedHandler(event)}"
-						enabled="true" />
+					  editable="true" width="17" visible="{!model.screenreader}"  tabEnabled="{!model.screenreader}"
+					  selectableRange="{{rangeStart : model.activeTravel.travel_date_out, rangeEnd : model.activeTravel.travel_date_in}}"
+					  change="{dateFieldChangedHandler(event)}"
+					  enabled="true" />
 		<mx:Text id="date_help2" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_date')}" />
-						
+
 		<mx:Label id="totime_label" enabled="{totime.enabled}"    
-					text="{resourceManager.getString(model.resources.bundleName, totime_label.id)}" styleName="form" />
+				  text="{resourceManager.getString(model.resources.bundleName, totime_label.id)}" styleName="form" />
 		<mx:TextInput id="totime" maxChars="4" width="50" enabled="true" tabIndex="1618"
-						text="{travelspecifications.to_time}" />
+					  text="{travelspecifications.to_time}" />
 		<mx:Text id="time_help2" text="{resourceManager.getString(model.resources.bundleName, 'fieldhelp_time')}" />
-						
+
 		<mx:ComboBox id="cmb_timezoneto" tabIndex="1619"
-						enabled="{todate_text.enabled}"
-						visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
-						change="{travelspecifications.to_timezone = cmb_timezoneto.selectedItem.label}"
-						dataProvider="{timezones}" />
+					 enabled="{todate_text.enabled}"
+					 visible="{(model.activeTravel.travel_type == model.activeTravel.ABROAD)}"
+					 change="{travelspecifications.to_timezone = cmb_timezoneto.selectedItem.label}"
+					 dataProvider="{timezones}" />
 	</mx:HBox>
-	
+
 	<mx:HRule width="100%" />
 </code:BasicFormBase>
