@@ -326,7 +326,15 @@
 
 			override public function validateDetailsForm():Boolean {
 				if (super.validateDetailsForm()) {
-					var valid:Boolean = true;            		
+					var valid:Boolean = true;
+					// if timezones are not the same, remove validation of to-time
+					if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
+						if (this.cmb_timezonefrom.selectedItem.data != this.cmb_timezoneto.selectedItem.data) {
+							this.removeCustomTimeValidation( totime );
+							this.removeCustomTimeValidation( fromtime );
+						}
+					}
+
 					// check country/city selections
 					if (model.activeTravel.travel_type == model.activeTravel.ABROAD) {
 						if (this.cmb_countryfrom.selectedItem.data == "") {

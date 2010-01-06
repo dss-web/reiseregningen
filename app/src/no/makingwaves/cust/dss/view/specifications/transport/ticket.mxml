@@ -1,87 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code:BasicFormBase
-			xmlns:code="no.makingwaves.cust.dss.code.*"
-			xmlns:view="no.makingwaves.cust.dss.view.*"
-			xmlns:comp="no.makingwaves.cust.dss.view.components.*"
-			xmlns:transport="no.makingwaves.cust.dss.view.specifications.transport.*"
-			xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
-			xmlns:mx="http://www.adobe.com/2006/mxml">
-	
+					xmlns:code="no.makingwaves.cust.dss.code.*"
+					xmlns:view="no.makingwaves.cust.dss.view.*"
+					xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+					xmlns:transport="no.makingwaves.cust.dss.view.specifications.transport.*"
+					xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+					xmlns:mx="http://www.adobe.com/2006/mxml">
+
 	<mx:Script>
 		<![CDATA[
 			import no.makingwaves.cust.dss.vo.CostVO;
 			import no.makingwaves.cust.dss.vo.TicketSpecificationVO;
 			import no.makingwaves.cust.dss.vo.TravelSpecificationVO;			
-			
+
 			[Bindable]
 			public var travelspecifications : TravelSpecificationVO;
 			[Bindable]
 			public var onlyAsPassenger : Boolean = false;
 			[Bindable]
 			public var ticketIsAirplane : Boolean = false;
-			
+
 			public function init(specs:TravelSpecificationVO):void {
 				this.travelspecifications = specs;
 				this.travelspecifications.specification = new TicketSpecificationVO();
-				trace("onlyAsPassenger: " + onlyAsPassenger);
 				if (!onlyAsPassenger) {
-					trace("init costform");
 					costform.init(travelspecifications.cost);
 				} else {
-					trace("hide costform");
 					costform.includeInLayout = false;
 					costform.visible = false;
 				}
-				// no need to show intermediate landing checkbox on domestic travels
-				if (model.activeTravel.travel_type == model.activeTravel.DOMESTIC) {
-					intermediate_landing.includeInLayout = false;
-					intermediate_landing.visible = false;
-					
-					intermediate_landing_infobtn.includeInLayout = false;
-					intermediate_landing_infobtn.visible = false;
-				}
 			}
-			
+
 			override public function submitData(specifications:*):* {
 				TravelSpecificationVO(specifications).cost = (!onlyAsPassenger) ? costform.getCost() : new CostVO();
 				TravelSpecificationVO(specifications).cost.update();
-				if (ticketIsAirplane) {
-					TravelSpecificationVO(specifications).intermediate_landing = intermediate_landing.selected;
-				}
 				return TravelSpecificationVO(specifications);
 			}
-			
+
 			override public function clearFields():void {
 				super.clearFields();
 				if (!onlyAsPassenger) {
 					costform.clearFields();
 				}
 			}
-			
+
 			override public function validateCustomFields():Boolean {
 				return (super.validateCustomFields() && costform.validateAll());
 			}
-			
+
 			override public function autoFillIn(editMode:Boolean=false):void {
 				costform.autoFillIn(editMode);
 			}
-			
+
 		]]>
 	</mx:Script>	
-	
-	<mx:HBox width="100%">
-		<mx:CheckBox id="intermediate_landing" styleName="form" tabIndex="1690"
-					 selected="{travelspecifications.intermediate_landing}" 
-					 label="{resourceManager.getString(model.resources.bundleName, 'intermediate_landing')}"
-					 visible="{ticketIsAirplane}" includeInLayout="{ticketIsAirplane}" />
-					 
-		<mx:Box paddingTop="3">
-			<comp:infobutton id="intermediate_landing_infobtn" buttonTabIndex="1691"
-							 textReference="intermediate_landing_info"
-							 visible="{ticketIsAirplane}" includeInLayout="{ticketIsAirplane}"/>
-		</mx:Box>
-	</mx:HBox>
-	
+
+	<!--mx:HBox width="100%">
+		 <mx:CheckBox id="intermediate_landing" styleName="form" tabIndex="1690"
+		 selected="{travelspecifications.intermediate_landing}"
+		 label="{resourceManager.getString(model.resources.bundleName, 'intermediate_landing')}"
+		 visible="{ticketIsAirplane}" includeInLayout="{ticketIsAirplane}" />
+
+		 <mx:Box paddingTop="3">
+		 <comp:infobutton id="intermediate_landing_infobtn" buttonTabIndex="1691"
+		 textReference="intermediate_landing_info"
+		 visible="{ticketIsAirplane}" includeInLayout="{ticketIsAirplane}"/>
+		 </mx:Box>
+		 </mx:HBox-->
+
 	<common:cost id="costform" paddingTop="10" width="100%" />
-	
+
 </code:BasicFormBase>

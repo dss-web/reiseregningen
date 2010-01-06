@@ -18,6 +18,7 @@
 	<type>no_BO</type>
 	<media>
 		<texts>
+			<text id="truncationIndicator" value="..." />
 			<text id="site_header" value="Viktig informasjon om reiseregningen" />
 			<text id="site_intro" value="Ved reiser som innehelder eit stort antall postar anbefaler vi å bruke den Windows-baserte reiseregninga, eller dele opp reiseregninga i fleire delar." />
 			<text id="header_personal" value="Personleg informasjon og jobbdetaljar"/>

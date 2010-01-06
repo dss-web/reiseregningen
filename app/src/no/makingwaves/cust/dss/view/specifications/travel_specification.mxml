@@ -3,15 +3,15 @@
 <!-- SHORT DESC: BASE FORM INPUT VIEW FOR TRAVEL SPECIFICATIONS -->
 
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
-		xmlns:transport="no.makingwaves.cust.dss.view.specifications.transport.*"
-		xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
-		xmlns:comp="no.makingwaves.cust.dss.view.components.*"
-		creationComplete="init();" move="{removeHelpScreens()}"
-	    creationPolicy="auto" close="{this.parentApplication.visible = true;}" 
-		title="{resourceManager.getString(model.resources.getResourceBundleName(), 'traveldetails_label')}">
-	
+				xmlns:transport="no.makingwaves.cust.dss.view.specifications.transport.*"
+				xmlns:common="no.makingwaves.cust.dss.view.specifications.common.*"
+				xmlns:comp="no.makingwaves.cust.dss.view.components.*"
+				creationComplete="init();" move="{removeHelpScreens()}"
+				creationPolicy="auto" close="{this.parentApplication.visible = true;}" 
+				title="{resourceManager.getString(model.resources.getResourceBundleName(), 'traveldetails_label')}">
+
 	<!-- <mx:Style source="assets/reiseregning.css"/> -->
-	
+
 	<mx:Script>
 		<![CDATA[
 			import mx.events.CloseEvent;
@@ -32,87 +32,87 @@
 			import no.makingwaves.util.keycontroller.KeyCombo;
 			import no.makingwaves.util.keycontroller.KeyController;
 			import no.makingwaves.util.keycontroller.KeyControllerEvent;
-			
+
 			[Bindable]
 			public var model : ModelLocator = ModelLocator.getInstance();
-			
+
 			[Bindable]
 			public var travelspecifications : TravelSpecificationVO;
-			
+
 			public var continueTravel : Boolean = true;
-			
+
 			private var _editMode : Boolean = false;
-			
+
 			private var _insertInbetween : Boolean = false;
-			
+
 			private var _activeStateContainer : BasicFormBase;
-			
+
 			private var _introIntervaller : Number;
-			
-		
+
+
 			private function init():void {
-                //PopUpManager.centerPopUp(this);
-                this.x = (this.stage.width / 2) - (this.width / 2);
+				//PopUpManager.centerPopUp(this);
+				this.x = (this.stage.width / 2) - (this.width / 2);
 				this.y += 20;//(model.positionParameter) - (this.height / 2);
-				
+
 				var tranSort:Sort = new Sort();
-			    tranSort.fields = [new SortField("label",true)];
-			    transports.sort = tranSort;
-		       	transports.refresh();
-		       					
+				tranSort.fields = [new SortField("label",true)];
+				transports.sort = tranSort;
+				transports.refresh();
+
 				// initialize help text for this section
 				model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help'));
-                
-                // check for active/editable specification
-                if (model.activeSpecification != null) {
-                	travelspecifications = model.activeSpecification;
-                	_editMode = true;
-                	autoFillIn();
-                } else {
-                	travelspecifications = new TravelSpecificationVO();
-                	_editMode = false;
-                	// activate focus controller
-                	activate();
-                }
-                //cmb_traveltype.enabled = !_editMode;
-                model.accessibility.addAccessibility(cmb_traveltype, resourceManager.getString(model.resources.bundleName, 'transportationtype_label'));
-                // short-cuts
-                registerKeyCombos();
-                
-                if (model.screenreader)
-                	this.parentApplication.visible = false;      
-            
+
+				// check for active/editable specification
+				if (model.activeSpecification != null) {
+					travelspecifications = model.activeSpecification;
+					_editMode = true;
+					autoFillIn();
+				} else {
+					travelspecifications = new TravelSpecificationVO();
+					_editMode = false;
+					// activate focus controller
+					activate();
+				}
+				//cmb_traveltype.enabled = !_editMode;
+				model.accessibility.addAccessibility(cmb_traveltype, resourceManager.getString(model.resources.bundleName, 'transportationtype_label'));
+				// short-cuts
+				registerKeyCombos();
+
+				if (model.screenreader)
+					this.parentApplication.visible = false;      
+
 				initAccessibility();       
-				
-            }
-			
+
+			}
+
 			private function initAccessibility():void {
 				if (!model.screenreader) {
 					try {
 						accessibilitytext.removeChild(this.accessibility_introtext);
 						accessibilitytext.height = 0;
-						
+
 					} catch (e:Error) { trace("travel_specifications.initAccessibility: " + e.message);}
 					finally {
 						this.focusManager.setFocus(this.cmb_traveltype);
 					}
-					
+
 				} else {
 					this.accessibility_introtext.savelocal_infobtn.setFocus();
-					//model.accessibility.addAccessibility(this.accessibility_introtext, model.helpTextPopUp);
+						//model.accessibility.addAccessibility(this.accessibility_introtext, model.helpTextPopUp);
 				}
 			}
-            
-            private function autoFillIn():void {
-            	for (var i:Number = 0; i < transports.length; i++) {
-            		if (transports.getItemAt(i).label == travelspecifications.transportation_type) {
-            			cmb_traveltype.selectedIndex = i;
-            			setTransportState(Number(cmb_traveltype.selectedItem.data));
-            			break;           			
-            		}
-            	}
-            }
-			
+
+			private function autoFillIn():void {
+				for (var i:Number = 0; i < transports.length; i++) {
+					if (transports.getItemAt(i).data == travelspecifications.transportation_type) {
+						cmb_traveltype.selectedIndex = i;
+						setTransportState(cmb_traveltype.selectedItem.data);
+						break;           			
+					}
+				}
+			}
+
 			private function registerKeyCombos():void {
 				var keyController:KeyController = new KeyController(this);
 				// set keyboard shortcuts
@@ -120,215 +120,215 @@
 				keyController.setKeyWatch(27); 					// ESC
 				keyController.addEventListener(KeyControllerEvent.KEYCOMBO_PRESSED, keyComboPressed);
 			}
-		
+
 			private function keyComboPressed(event:KeyControllerEvent):void {
 				var pressedCombo:KeyCombo = event.keyCombo;
 				if (!pressedCombo.ctrl && !pressedCombo.shift && !pressedCombo.alt) {
 					if (pressedCombo.keyCode == 13) {
 						this.continueClicked(true);
-						
+
 					} else if (pressedCombo.keyCode == 27) {
 						this.close();
 					}
 				}
 			}
-            
-            private function stateListener(event:FlexEvent):void {
-            	if (this._editMode) {
-            		// autofillin transportation form chosen
-	            	this.transportation.autoFillIn();
-	            	_activeStateContainer.autoFillIn();
-            	}
-            	this.transportation.initForm();
-            	if (this.ticket != null) {
-            		if (_activeStateContainer == this.ticket) {
-            			this.ticket.init(this.travelspecifications);
-            		} else {
-            			if (this.plane != null) {
-            				if (_activeStateContainer == this.plane) {
-		            			this.plane.init(this.travelspecifications);
-		            		}
-            			}
-            		}
-            	} else if (this.plane != null) {
-            		if (_activeStateContainer == this.plane) {
-            			this.plane.init(this.travelspecifications);
-            		}	
-            	}
-            	activate();
-            }
-			
-			
+
+			private function stateListener(event:FlexEvent):void {
+				if (this._editMode) {
+					// autofillin transportation form chosen
+					this.transportation.autoFillIn();
+					_activeStateContainer.autoFillIn();
+				}
+				this.transportation.initForm();
+				if (this.ticket != null) {
+					if (_activeStateContainer == this.ticket) {
+						this.ticket.init(this.travelspecifications);
+					} else {
+						if (this.plane != null) {
+							if (_activeStateContainer == this.plane) {
+								this.plane.init(this.travelspecifications);
+							}
+						}
+					}
+				} else if (this.plane != null) {
+					if (_activeStateContainer == this.plane) {
+						this.plane.init(this.travelspecifications);
+					}	
+				}
+				activate();
+			}
+
+
 			// FOCUS INITIALIZERS ===============================================
 			public function activate():void {
 				//this.cmb_traveltype.setFocus();
 				this.focusManager.setFocus(this.cmb_traveltype);
-/*
-				intro.enabled = true;
-				intro.visible = true;
-            	try { intro.setFocus();
-            	} catch (e:Error) { trace("intro " + e.message); }
-			}
-			
-			private function introIn(e:FocusEvent):void {
-				if (e.target) {
-					_introIntervaller = setInterval(introInit, 500);
-				} else {
-					try { focusManager.getNextFocusManagerComponent(true).setFocus();
-					} catch (e:Error) { trace("Focus trouble " + e.message); }
-				}
-			}
-			
-			private function introOut(e:FocusEvent):void {
-				clearInterval(_introIntervaller);
-				intro.enabled = false;
-				intro.visible = false;
-			}
-			
-			private function introInit():void {
-				clearInterval(_introIntervaller);
-				if (cmb_traveltype.enabled) {
-					try { cmb_traveltype.setFocus();
-					} catch (e:Error) { trace(e.message); }
-				}
-*/					
+			/*
+			   intro.enabled = true;
+			   intro.visible = true;
+			   try { intro.setFocus();
+			   } catch (e:Error) { trace("intro " + e.message); }
+			   }
+
+			   private function introIn(e:FocusEvent):void {
+			   if (e.target) {
+			   _introIntervaller = setInterval(introInit, 500);
+			   } else {
+			   try { focusManager.getNextFocusManagerComponent(true).setFocus();
+			   } catch (e:Error) { trace("Focus trouble " + e.message); }
+			   }
+			   }
+
+			   private function introOut(e:FocusEvent):void {
+			   clearInterval(_introIntervaller);
+			   intro.enabled = false;
+			   intro.visible = false;
+			   }
+
+			   private function introInit():void {
+			   clearInterval(_introIntervaller);
+			   if (cmb_traveltype.enabled) {
+			   try { cmb_traveltype.setFocus();
+			   } catch (e:Error) { trace(e.message); }
+			   }
+			 */					
 			}
 			// end of focusinitializers ==========================================
-			
-						
-            
-            private function setTransportState(stateNum:Number):void {
-            	if (!_editMode) { this.travelspecifications.specification = undefined; }
-            	var newState:String = "";
-            	switch (stateNum) {
-            		case 0:
-            			newState = "state_other";
-            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
-            								  resourceManager.getString(model.resources.bundleName, 'transportation_other_help'));
-            			break;
-            		case 1: // car
-            			newState = "state_car";
-            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
-            								  resourceManager.getString(model.resources.bundleName, 'transportation_car_help'));
-            			break;
-            		case 2:
-            			newState = "state_boat";
-            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help'));
-            			break;
-            		case 3:
-            			newState = "state_motorcycle";
-            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help'));
-            			break;
-            		case 8:
-            			newState = "state_ticket";
-            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
-            								  resourceManager.getString(model.resources.bundleName, 'transportation_taxi_help'));
-            			break;
-            		case 6:
-            			newState = "state_plane";
-            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
-            								  resourceManager.getString(model.resources.bundleName, 'transportation_ticket_help'));
-            			break;
-            		case 4:
-            		case 5:
-            		case 7:
-            		case 9:
-            			newState = "state_ticket";
-            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
-            								  resourceManager.getString(model.resources.bundleName, 'transportation_ticket_help'));
-            			break;
-            		case 10: // passenger
-            			newState = "state_passenger";
-            			model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
-            								  resourceManager.getString(model.resources.bundleName, 'transportation_car_help'));
-            			break;
-            	}
-            	
-            	this.setCurrentState(newState, true);
-            	
-            	initAccessibility();
-            }
-            
-            public function continueClicked(registerAndCloseTravel:Boolean):void {
-            	if (validateForm()) {
-            		//travelspecifications = new TravelSpecificationVO();
-	            	this.travelspecifications.transportation_type = cmb_traveltype.selectedLabel;
-	            	
-	            	// submit data from the chosen transportationform
-	            	travelspecifications = transportation.submitData(travelspecifications);
-	            	travelspecifications = _activeStateContainer.submitData(travelspecifications);
-					
+
+
+
+			private function setTransportState(stateNum:String):void {
+				if (!_editMode) { this.travelspecifications.specification = undefined; }
+				var newState:String = "";
+				switch (stateNum) {
+					case TravelSpecificationVO.TRANSPORT_OTHER:
+						newState = "state_other";
+						model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
+																 resourceManager.getString(model.resources.bundleName, 'transportation_other_help'));
+						break;
+					case TravelSpecificationVO.TRANSPORT_CAR: // car
+						newState = "state_car";
+						model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
+																 resourceManager.getString(model.resources.bundleName, 'transportation_car_help'));
+						break;
+					case TravelSpecificationVO.TRANSPORT_BOAT:
+						newState = "state_boat";
+						model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help'));
+						break;
+					case TravelSpecificationVO.TRANSPORT_MOTORCYCLE:
+						newState = "state_motorcycle";
+						model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help'));
+						break;
+					case TravelSpecificationVO.TRANSPORT_TAXI:
+						newState = "state_ticket";
+						model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
+																 resourceManager.getString(model.resources.bundleName, 'transportation_taxi_help'));
+						break;
+					case TravelSpecificationVO.TRANSPORT_AIRPLANE:
+						newState = "state_plane";
+						model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
+																 resourceManager.getString(model.resources.bundleName, 'transportation_ticket_help'));
+						break;
+					case TravelSpecificationVO.TRANSPORT_BUS:
+					case TravelSpecificationVO.TRANSPORT_FERRIE:
+					case TravelSpecificationVO.TRANSPORT_TRAIN:
+					case TravelSpecificationVO.TRANSPORT_RENTAL:
+						newState = "state_ticket";
+						model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
+																 resourceManager.getString(model.resources.bundleName, 'transportation_ticket_help'));
+						break;
+					case TravelSpecificationVO.TRANSPORT_PASSENGER: // passenger
+						newState = "state_passenger";
+						model.helpTextPopUp = Util.checkForLinks(resourceManager.getString(model.resources.bundleName, 'transportation_intro_help') + "\n\n" +
+																 resourceManager.getString(model.resources.bundleName, 'transportation_car_help'));
+						break;
+				}
+
+				this.setCurrentState(newState, true);
+
+				initAccessibility();
+			}
+
+			public function continueClicked(registerAndCloseTravel:Boolean):void {
+				if (validateForm()) {
+					//travelspecifications = new TravelSpecificationVO();
+					this.travelspecifications.transportation_type = cmb_traveltype.selectedItem.data;
+
+					// submit data from the chosen transportationform
+					travelspecifications = transportation.submitData(travelspecifications);
+					travelspecifications = _activeStateContainer.submitData(travelspecifications);
+
 					if (travelspecifications != null) {
 						// calculate this spesifications cost
 						model.calculator.calculateSpecification(travelspecifications);
 						// check next step
-		            	if (!_editMode) {
-		            		model.travelSpecsList.addItem(travelspecifications);		            		
-		            		model.activeSpecification = travelspecifications;
-		            		model.travelSpecsList.refresh();
-		            	}
-		            	
-		            	if (!registerAndCloseTravel) {
-		            		clearFields();
-		            	} else {
-		            		close();
-		            	}
-		   			}	
-	           }
-            }
-            
-            private function validateForm():Boolean {
-            	var validMain : Boolean = this.transportation.validateDetailsForm();
-            	var validActive : Boolean = _activeStateContainer.validateDetailsForm();
-            	if (validMain) {
-            		validMain = this.transportation.validateCustomFields();
-            	}
-            	if (validMain && validActive) {
-            		validActive = _activeStateContainer.validateCustomFields();
-            	}
-            	return (validMain && validActive);
-            }
+						if (!_editMode) {
+							model.travelSpecsList.addItem(travelspecifications);		            		
+							model.activeSpecification = travelspecifications;
+							model.travelSpecsList.refresh();
+						}
 
-            public function close():void {
-            	if (model.screenreader)
-                	this.parentApplication.visible = true;
-                		
-            	// remove validators
-            	this.transportation.disableValidation();
-            	// reset model reference
-            	if (_activeStateContainer != null) {
-            		_activeStateContainer.disableValidation();
-            	}
-            	
-            	// remove pop-up
-            	this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
-            	//PopUpManager.removePopUp(this);
-            }
-            
-            private function clearFields():void {
-            	// reset references/bindings
-            	travelspecifications = null;
-            	travelspecifications = new TravelSpecificationVO();
-            	
-            	cmb_traveltype.selectedIndex = 0;
+						if (!registerAndCloseTravel) {
+							clearFields();
+						} else {
+							close();
+						}
+					}	
+				}
+			}
+
+			private function validateForm():Boolean {
+				var validMain : Boolean = this.transportation.validateDetailsForm();
+				var validActive : Boolean = _activeStateContainer.validateDetailsForm();
+				if (validMain) {
+					validMain = this.transportation.validateCustomFields();
+				}
+				if (validMain && validActive) {
+					validActive = _activeStateContainer.validateCustomFields();
+				}
+				return (validMain && validActive);
+			}
+
+			public function close():void {
+				if (model.screenreader)
+					this.parentApplication.visible = true;
+
+				// remove validators
+				this.transportation.disableValidation();
+				// reset model reference
+				if (_activeStateContainer != null) {
+					_activeStateContainer.disableValidation();
+				}
+
+				// remove pop-up
+				this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE));
+				//PopUpManager.removePopUp(this);
+			}
+
+			private function clearFields():void {
+				// reset references/bindings
+				travelspecifications = null;
+				travelspecifications = new TravelSpecificationVO();
+
+				cmb_traveltype.selectedIndex = 0;
 				continueTravel = false;
-            	transportation.clearFields();
-            	_activeStateContainer.clearFields();
-            	
-            	// reset state
-            	setCurrentState("", model.runTransitions);
-            	
-            	// set focus for new transportation distance
-            	this.activate();
-            }
-            
-            private function removeHelpScreens():void {
-            	try {
-            		transportation.undisplayAllValidators();
-            		_activeStateContainer.undisplayAllValidators();
-            	} catch (e:Error) { trace("travel_specifications.removeHelpScreens: " + e.message); }
-            }
-			
+				transportation.clearFields();
+				_activeStateContainer.clearFields();
+
+				// reset state
+				setCurrentState("", model.runTransitions);
+
+				// set focus for new transportation distance
+				this.activate();
+			}
+
+			private function removeHelpScreens():void {
+				try {
+					transportation.undisplayAllValidators();
+					_activeStateContainer.undisplayAllValidators();
+				} catch (e:Error) { trace("travel_specifications.removeHelpScreens: " + e.message); }
+			}
+
 			private function buttonClicked(event:MouseEvent):void {
 				var regAndCloseDialog:Boolean = false;
 				switch(event.currentTarget) {
@@ -339,58 +339,58 @@
 						break;
 					case button_cancel:
 						close();
-						break;
+						break; TravelSpecificationVO.TRANSPORT_OTHER
 				}
 			}
 
-/*            
-            public function changeButtonStates():void {
-            	if (!this.transportation.continueTravel) {
-            		this.navigation.setButtonStates(this.navigation.LAST);
-            		
-            	} else {
-            		this.navigation.setButtonStates(this.navigation.prevState);
-            		
-            	}
-            }
-*/
+			/*
+			   public function changeButtonStates():void {
+			   if (!this.transportation.continueTravel) {
+			   this.navigation.setButtonStates(this.navigation.LAST);
+
+			   } else {
+			   this.navigation.setButtonStates(this.navigation.prevState);
+
+			   }
+			   }
+			 */
 		]]>
 	</mx:Script>
-	
+
 	<mx:Model id="transportationtypes">
 		<obj>
 			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_choose')}" data="-2"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_other')}" data="0"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_bus')}" data="4"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_car')}" data="1"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_ferrie')}" data="5"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_plain')}" data="6"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_boat')}" data="2"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_rental')}" data="9"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_motorcycle')}" data="3"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_train')}" data="7"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_taxi')}" data="8"/>
-			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_passenger')}" data="10"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_other')}" data="{TravelSpecificationVO.TRANSPORT_OTHER}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_bus')}" data="{TravelSpecificationVO.TRANSPORT_BUS}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_car')}" data="{TravelSpecificationVO.TRANSPORT_CAR}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_ferrie')}" data="{TravelSpecificationVO.TRANSPORT_FERRIE}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_plain')}" data="{TravelSpecificationVO.TRANSPORT_AIRPLANE}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_boat')}" data="{TravelSpecificationVO.TRANSPORT_BOAT}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_rental')}" data="{TravelSpecificationVO.TRANSPORT_RENTAL}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_motorcycle')}" data="{TravelSpecificationVO.TRANSPORT_MOTORCYCLE}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_train')}" data="{TravelSpecificationVO.TRANSPORT_TRAIN}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_taxi')}" data="{TravelSpecificationVO.TRANSPORT_TAXI}"/>
+			<item label="{resourceManager.getString(model.resources.getResourceBundleName(), 'transportationtype_combo_passenger')}" data="{TravelSpecificationVO.TRANSPORT_PASSENGER}"/>
 		</obj>
 	</mx:Model>
-	
+
 	<mx:ArrayCollection id="transports" source="{transportationtypes.item}" />
-	
+
 	<!-- TRANSITIONS ================================================================= -->
-	
+
 	<mx:transitions>
-    	<mx:Transition fromState="*" toState="*">
-    		<mx:Parallel id="t1" targets="{[specbox, this]}">
-    			<mx:Blur blurXFrom="10" blurXTo="0" blurYFrom="10" blurYTo="0" duration="500" easingFunction="Exponential.easeOut" />
-    			<mx:Resize duration="500" easingFunction="Exponential.easeOut"/>
+		<mx:Transition fromState="*" toState="*">
+			<mx:Parallel id="t1" targets="{[specbox, this]}">
+				<mx:Blur blurXFrom="10" blurXTo="0" blurYFrom="10" blurYTo="0" duration="500" easingFunction="Exponential.easeOut" />
+				<mx:Resize duration="500" easingFunction="Exponential.easeOut"/>
 			</mx:Parallel>
-    	</mx:Transition>
-    </mx:transitions>
-    
+		</mx:Transition>
+	</mx:transitions>
+
 	<!-- STATES FOR DIFFERENT TRANSPORTATIONS ======================================== -->
-	
+
 	<mx:states>
-	
+
 		<mx:State id="state_other" name="state_other" enterState="{_activeStateContainer = other; stateListener(event)}">
 			<mx:SetProperty target="{transportation}" name="enabled" value="true" />
 			<mx:SetProperty target="{transportation}" name="visible" value="true" />
@@ -400,7 +400,7 @@
 				<transport:other id="other" travelspecifications="{travelspecifications}" />
 			</mx:AddChild>
 		</mx:State>
-		
+
 		<mx:State id="state_car" name="state_car" enterState="{_activeStateContainer = car; stateListener(event)}">
 			<mx:SetProperty target="{transportation}" name="enabled" value="true" />
 			<mx:SetProperty target="{transportation}" name="visible" value="true" />
@@ -410,7 +410,7 @@
 				<transport:car id="car" travelspecifications="{travelspecifications}" />
 			</mx:AddChild>
 		</mx:State>
-		
+
 		<mx:State id="state_passenger" name="state_passenger" enterState="{_activeStateContainer = passenger; stateListener(event)}">
 			<mx:SetProperty target="{transportation}" name="enabled" value="true" />
 			<mx:SetProperty target="{transportation}" name="visible" value="true" />
@@ -420,7 +420,7 @@
 				<transport:ticket id="passenger" travelspecifications="{travelspecifications}" onlyAsPassenger="true" />
 			</mx:AddChild>
 		</mx:State>
-		
+
 		<mx:State id="state_boat" name="state_boat" enterState="{_activeStateContainer = boat; stateListener(event)}">
 			<mx:SetProperty target="{transportation}" name="enabled" value="true" />
 			<mx:SetProperty target="{transportation}" name="visible" value="true" />
@@ -430,7 +430,7 @@
 				<transport:motorboat id="boat" travelspecifications="{travelspecifications}" />
 			</mx:AddChild>
 		</mx:State>
-		
+
 		<mx:State id="state_motorcycle" name="state_motorcycle" enterState="{_activeStateContainer = motorcycle; stateListener(event)}">
 			<mx:SetProperty target="{transportation}" name="enabled" value="true" />
 			<mx:SetProperty target="{transportation}" name="visible" value="true" />
@@ -440,7 +440,7 @@
 				<transport:motorcycle id="motorcycle" travelspecifications="{travelspecifications}" />
 			</mx:AddChild>
 		</mx:State>
-		
+
 		<mx:State id="state_plane" name="state_plane" enterState="{_activeStateContainer = plane; stateListener(event)}">
 			<mx:SetProperty target="{transportation}" name="enabled" value="true" />
 			<mx:SetProperty target="{transportation}" name="visible" value="true" />
@@ -450,7 +450,7 @@
 				<transport:ticket id="plane" travelspecifications="{travelspecifications}" ticketIsAirplane="true" />
 			</mx:AddChild>
 		</mx:State>
-		
+
 		<mx:State id="state_ticket" name="state_ticket" enterState="{_activeStateContainer = ticket; stateListener(event)}">
 			<mx:SetProperty target="{transportation}" name="enabled" value="true" />
 			<mx:SetProperty target="{transportation}" name="visible" value="true" />
@@ -460,64 +460,64 @@
 				<transport:ticket id="ticket" travelspecifications="{travelspecifications}" />
 			</mx:AddChild>
 		</mx:State>
-		
+
 	</mx:states>
 
 	<!-- CONTENT ====================================================================== -->
-	
+
 	<mx:VBox paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" backgroundColor="#FFFFFF">
 		<mx:Box id="accessibilitytext" width="100%">
 			<comp:infobutton id="accessibility_introtext" buttonTabIndex="1600" textReference="{model.helpTextPopUp}" />				  
 		</mx:Box>
-		
+
 		<mx:HBox>
-<!--
-			<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="{introIn(event)}" focusOut="{introOut(event)}" tabIndex="1601" />
--->
+			<!--
+				 <mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="{introIn(event)}" focusOut="{introOut(event)}" tabIndex="1601" />
+			-->
 			<mx:Label id="transportationtype_label" text="{resourceManager.getString(model.resources.getResourceBundleName(), transportationtype_label.id)}"/>
 			<mx:ComboBox id="cmb_traveltype" tabIndex="1602"
-							dataProvider="{transports}" rowCount="{transports.length}"
-							change="{setTransportState(cmb_traveltype.selectedItem.data)}"  />
+						 dataProvider="{transports}" rowCount="{transports.length}"
+						 change="{setTransportState(cmb_traveltype.selectedItem.data)}"  />
 		</mx:HBox>
-		
+
 		<mx:HRule width="100%" />
-				
+
 		<mx:HBox width="100%">
-	    	<mx:VBox id="boxTransportation" width="100%">
-	    		<transport:transportation id="transportation" enabled="false" visible="false"
-											travelspecifications="{travelspecifications}" reference="{this}" />
-											
+			<mx:VBox id="boxTransportation" width="100%">
+				<transport:transportation id="transportation" enabled="false" visible="false"
+										  travelspecifications="{travelspecifications}" reference="{this}" />
+
 				<mx:Box id="specbox" width="100%"/>
 			</mx:VBox>
-			
+
 			<mx:VRule height="100%" />
-			
+
 			<mx:VBox id="helpText" width="150" height="{boxTransportation.height}" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 				<mx:Text htmlText="{model.helpTextPopUp}" width="100%" />   			
 			</mx:VBox>
 		</mx:HBox>	
-		
+
 	</mx:VBox>
-	
+
 	<mx:Canvas width="100%">
-			
+
 		<mx:HBox right="0">
-				
+
 			<mx:Button id="button_cancel" styleName="secondary" tabIndex="1802"
-					enabled="true"
-					click="{buttonClicked(event)}"
-					label="{resourceManager.getString(model.resources.bundleName, 'button_cancel')}" height="22"/>
-					
+					   enabled="true"
+					   click="{buttonClicked(event)}"
+					   label="{resourceManager.getString(model.resources.bundleName, 'button_cancel')}" height="22"/>
+
 			<mx:Button id="button_continuetravel" styleName="secondary" tabIndex="1800" 
-					enabled="false"
-					click="{buttonClicked(event)}"
-					label="{resourceManager.getString(model.resources.bundleName, 'button_continuetravel')}" height="22"/>
-		
+					   enabled="false"
+					   click="{buttonClicked(event)}"
+					   label="{resourceManager.getString(model.resources.bundleName, 'button_continuetravel')}" height="22"/>
+
 			<mx:Button id="button_registertravel" styleName="secondary" tabIndex="1801"
-					enabled="false"
-					click="{buttonClicked(event)}"
-					label="{resourceManager.getString(model.resources.bundleName, 'button_registertravel')}"  height="22"/>
-			
+					   enabled="false"
+					   click="{buttonClicked(event)}"
+					   label="{resourceManager.getString(model.resources.bundleName, 'button_registertravel')}"  height="22"/>
+
 		</mx:HBox>
 	</mx:Canvas>
 	<!--common:transportation_navigation id="navigation" styleName="WindowedNavigation" reference="{this}" width="100%" /-->

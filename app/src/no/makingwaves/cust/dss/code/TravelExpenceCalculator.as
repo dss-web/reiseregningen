@@ -119,16 +119,19 @@ package no.makingwaves.cust.dss.code
 						days = 1;
 					}
 
-					// add additional allowance for international travels
-					var compensationRule:TravelRateRuleVO = this.getRate("allowance_international");
+					// check the use of the compensation rule
+					var nonCompensationDays:int = getNonCompensationDays();
+					if (nonCompensationDays < days) {
+						// add additional allowance for international travels
+						var compensationRule:TravelRateRuleVO = this.getRate("allowance_international");
+						var compensation:RateVO = new RateVO();
+						compensation.num = days - nonCompensationDays;
+						compensation.rate = compensationRule.cost;
+						compensation.amount = compensation.num * compensationRule.cost;
+						ModelLocator.getInstance().travelAllowance.allowance_other.addItem(compensation);
 
-					var compensation:RateVO = new RateVO();
-					compensation.num = days;
-					compensation.rate = compensationRule.cost;
-					compensation.amount = days * compensationRule.cost;
-					ModelLocator.getInstance().travelAllowance.allowance_other.addItem(compensation);
-
-					amount += compensation.amount;					
+						amount += compensation.amount;					
+					}
 				}
 			}
 
@@ -162,18 +165,40 @@ package no.makingwaves.cust.dss.code
 			return amount;
 		}
 
-		private function calculateInternationalAllowance(rateRule:TravelRateRuleVO, date:Date=null):Number {
+
+		/*
+		 *	Travels from a non-Norway country to Norway should not recieve compensation for international travels
+		 *	ticket:60 (https://www.coderesort.com/p/reiseregningen/ticket/60)
+		 */
+		private function getNonCompensationDays():int {
+			var nonDays:int = 0;
+			var model:ModelLocator = ModelLocator.getInstance();
+			var specificationList:ArrayCollection = model.travelSpecsList;
+			var firstSpec:TravelSpecificationVO = specificationList.getItemAt(0) as TravelSpecificationVO;
+			var defaultCountry:String = ResourceManager.getInstance().getString(model.resources.bundleName, 'country_default');
+			if (firstSpec.from_country.indexOf(defaultCountry) == -1) {
+				// travel starts outside Norway, check wether the travel goes to Norway
+				var accomodationList:ArrayCollection = model.travelAccomodationList;
+				for (var i:int = 0; i < accomodationList.length; i++) {
+					var acc:TravelAccomodationVO = accomodationList.getItemAt(i) as TravelAccomodationVO;
+					if (acc.country.indexOf(defaultCountry) != -1) {
+						// accomocation has occoured in Norway - compensation rule does not apply for these days
+						var days:DateRanger = new DateRanger();
+						days.getDateRange(acc.fromdate, acc.todate);
+						nonDays += days.total_24hours;
+					}
+				} 
+			}
+			return nonDays;
+		}
+
+		//*******************************************************
+		// NEW METHODS FOR CALCULTING INTERNATIONAL ALLOWANCES //
+		//*******************************************************
+
+		private function newCalculateInternationalAllowance(rateRule:TravelRateRuleVO, date:Date=null):Number {
 			var amount:Number = 0.0;
-			var days:Number = 1;
-			var dailyAllowance:Number;
-			var intRate:TravelRateInternationalVO;
-			var prevIntRate:TravelRateInternationalVO;
 			var specificationList:ArrayCollection = ModelLocator.getInstance().travelSpecsList;
-			var startDistance:TravelSpecificationVO;
-			var endDistance:TravelSpecificationVO;
-			var nextDistance:TravelSpecificationVO;
-			var allowancesInternational:ArrayCollection = new ArrayCollection();
-			var allowancesOver28days:RateVO = new RateVO();
 
 			// get travel length and add one day if last day exceeds 6 hours
 			var travelPeriode:DateRanger = ModelLocator.getInstance().travelLength;
@@ -181,255 +206,127 @@ package no.makingwaves.cust.dss.code
 			if (num24hours > 0 && travelPeriode.hours >= 6) { num24hours++; }
 
 			if (travelPeriode.total_min != 0 && specificationList.length > 0) {
-				// set start date and first periode
+				// get 24-hour periodes based on start and end dates 
+				var periodes:ArrayCollection;
 				var msPerDay:int = 1000 * 60 * 60 * 24;
 				var msPerHour:int = 1000 * 60 * 60;
+				var timezoneDefault:Number = ModelLocator.getInstance().activeTravel.travel_date_out.timezoneOffset / 60;
+
 				var timeStart:String = ModelLocator.getInstance().activeTravel.travel_time_out;
 				var dateStart:Date = new Date();
 				dateStart.setTime(ModelLocator.getInstance().activeTravel.travel_date_out.getTime());
 				dateStart.setHours(timeStart.substr(0,2), timeStart.substr(2,2));
+				dateStart = getUTCTime(dateStart, timezoneDefault);
+
+				var timeStop:String = ModelLocator.getInstance().activeTravel.travel_time_in;
 				var dateStop:Date = new Date();
-				dateStop.setTime(dateStart.getTime() + msPerDay);
-				// set dates to UTC-time
-				var timezoneDefault:Number = ModelLocator.getInstance().activeTravel.travel_date_out.timezoneOffset / 60;
-				dateStart.setTime(dateStart.getTime() + (timezoneDefault*msPerHour));
-				dateStop.setTime(dateStop.getTime() + (timezoneDefault*msPerHour));
+				dateStop.setTime(ModelLocator.getInstance().activeTravel.travel_date_in.getTime());
+				dateStop.setHours(timeStop.substr(0,2), timeStop.substr(2,2));
+				dateStop = getUTCTime(dateStop, timezoneDefault);
 
-				var lastLocationObject:Object;
+				trace("Total travel period from/to:");
+				traceDateAndTime(dateStart)
+				traceDateAndTime(dateStop);
+
+				// collect actual 24 hour periodes
+				periodes = getPeriodes(dateStart, dateStop);
+
+				// collect travel time on each location
+				var travelTime:ArrayCollection = getTravelTimeAtLocations();
+
+				// get the length of each location within each periode
+				var locationInPeriodes:ArrayCollection = getLocationForPeriodes(periodes, travelTime);
+
+				// find and calculate rates for each periode
 				var daysCalculated:int = 0;
-				// for each 24-hour day, check which international rate that should be used
-				if (num24hours == 0) { num24hours = 1; }
-				for (var i:int=0; i < num24hours; i++) {
-					trace("UTREGNING FOR DØGN NR " + (i+1) + " av " + num24hours);
-					//trace("check between " + Util.formatDate(dateStart) + " - " + Util.formatDate(dateStop));
-					var timeFrameSpecs:ArrayCollection = new ArrayCollection();
-					// get spesifications within current timeframe
-					for (var s:int = 0; s < specificationList.length; s++) {
-						var spec:TravelSpecificationVO = specificationList.getItemAt(s) as TravelSpecificationVO;
-						var fromDate:Date = new Date();
-						var toDate:Date = new Date()
-						fromDate.setTime(spec.from_date.getTime() + (spec.from_timezone*msPerHour));
-						toDate.setTime(spec.to_date.getTime() + (spec.to_timezone*msPerHour));
+				var allowancesOver28days:RateVO = new RateVO();
+				var allowancesInternational:ArrayCollection = new ArrayCollection();
+				for (var i:int = 0; i < locationInPeriodes.length; i++) {
+					var periode:Object = locationInPeriodes.getItemAt(i) as Object;
+					var useForRates:Object = null;
+					if (periode.locations.length > 1) {
+						for (var r:int = 0; r < periode.locations.length; r++) {
+							if (periode.locations[r].intermediate_landing != true) {
+								if (useForRates == null) {
+									useForRates = periode.locations[r];
+								} else {
+									if (periode.locations[r].time > useForRates.time) {
+										useForRates = periode.locations[r];
+									}
+								}
+							}
+						}
+					} else {
+						useForRates = periode.locations[0];
+					}
+					if (useForRates == null) {
+						// all periodes are marked as intermediate landings, use last registered periode for rates
+						useForRates = periode.locations[periode.locations.length-1];
+					}
 
-						if (fromDate >= dateStart && fromDate < dateStop) {
-							timeFrameSpecs.addItem(spec);
+					var allowanceToday:Number = getAllowanceForLocation(useForRates, rateRule);
+					//daysCalculated++;
 
-						} else if (toDate >= dateStart && toDate <= dateStop) {
-							timeFrameSpecs.addItem(spec);
+					var allowanceToAdd:ArrayCollection = new ArrayCollection();
+					allowanceToAdd.addItem(allowanceToday);
+
+					// check for last periode, may not be included in location-loop due to not a full 24 hour periode
+					if ((i+1) == locationInPeriodes.length && periodes.length > locationInPeriodes.length) {
+						if (travelPeriode.total_24hours == locationInPeriodes.length && travelPeriode.hours >= 12) {
+							allowanceToAdd.addItem(allowanceToday);
 						}
 					}
-					// get each country timeframe based on specs between timeframe
-					var activeLocation:Object = null;
-					var locationList:ArrayCollection = new ArrayCollection();
-					var specStartDate:Date = new Date();
-					var specStopDate:Date = new Date();
-					var activeCity:String = "";
-					var specFromCity:String = "";
-					var specToCity:String = "";
-					for (var t:int = 0; t < timeFrameSpecs.length; t++) {
-						var spec:TravelSpecificationVO = timeFrameSpecs.getItemAt(t) as TravelSpecificationVO;
-						var testTravelEnd:Boolean = true;
-						if (activeLocation == null) {
-							activeLocation = null;
-							activeLocation = new Object();
-							activeLocation.country = spec.from_country.split("#")[0];
-							activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
-							activeLocation.intermediate_landing = spec.intermediate_landing;
-							specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
-							activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
 
-						} else {
-							activeCity = activeLocation.city;
-							specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
-							specToCity = (spec.to_city == "-") ? "" : spec.to_city;
-							if (activeLocation.country != spec.from_country.split("#")[0] || (activeCity != specFromCity)) {
-								specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
-								activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;;
-								locationList.addItem(activeLocation);
-								//trace(" -> location added: " + activeLocation.country + ", " + activeLocation.city);
-								specStartDate = new Date();
-								specStopDate = new Date();
-								activeLocation = null;
-								activeLocation = new Object();
-								activeLocation.country = spec.from_country.split("#")[0];
-								activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
-								activeLocation.intermediate_landing = spec.intermediate_landing;
-								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
-								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
+					// add allowance(s)
+					for (var a:int = 0; a < allowanceToAdd.length; a++) {
+						daysCalculated++;
+						var dailyAllowance:Number = allowanceToAdd.getItemAt(a) as Number;
+						if (daysCalculated > 28) {
+							// calculation for over 28 days - reduce allowance with 25%
+							dailyAllowance = Number((dailyAllowance*0.75).toFixed(2));
+						}
+						trace("Allowance for day " + daysCalculated + ": " + Util.formatDate(dateStart) + "-" + Util.formatDate(dateStop) + ": " + dailyAllowance + ",- (" + useForRates.country + ", " + useForRates.city + ")");
 
-							} else if (activeLocation.country != spec.to_country.split("#")[0] || activeCity != specToCity) {
-								specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
-								activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;
-								locationList.addItem(activeLocation);
-								//trace(" -> location added: " + activeLocation.country + ", " + activeLocation.city);
-								specStartDate = new Date();
-								specStopDate = new Date();
-								activeLocation = null;
-								activeLocation = new Object();
-								activeLocation.country = spec.to_country.split("#")[0];
-								activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
-								activeLocation.intermediate_landing = spec.intermediate_landing;
-								specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
-								activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
-								testTravelEnd = false;
-
+						if (date != null) {
+							date = getUTCTime(date, timezoneDefault);
+							// if date is specified in method - return only value for this date
+							//if (Util.formatDate(date) == Util.formatDate(periode.start)) {
+							if (date.getTime() > periode.start.getTime() && date.getTime() < periode.end.getTime()) {
+								trace("Allowance for " + Util.formatDate(date) + " is " + dailyAllowance);
+								return dailyAllowance;
 							}
 						}
 
-						specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
-						specToCity = (spec.to_city == "-") ? "" : spec.to_city;
-						if ((activeLocation != null && testTravelEnd && (spec.from_country.split("#")[0] != spec.to_country.split("#")[0] || specFromCity != specToCity)) ||
-							(activeLocation != null && t == (timeFrameSpecs.length-1))) {
-							// current country rate has reached its end - register it
-							specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
-							activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;
-							locationList.addItem(activeLocation);
-							if (t != (timeFrameSpecs.length)) {
-								if (specStopDate.getTime() < dateStop.getTime()) {
-									activeLocation = new Object();
-									activeLocation.country = spec.to_country.split("#")[0];
-									activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
-									activeLocation.intermediate_landing = spec.intermediate_landing;
-									activeLocation.startDate = specStopDate;
-									activeLocation.stopDate = dateStop;
-									locationList.addItem(activeLocation);
-								}														
-							}								
+						// add/update to the allowance model
+						var added:Boolean = false;
+						if (daysCalculated > 28) {
+							// calculation for over 28 days
+							allowancesOver28days.num = daysCalculated - 28;
+							allowancesOver28days.rate = dailyAllowance;
+							allowancesOver28days.amount += dailyAllowance;
 
-
-							//trace(" -> location added: " + activeLocation.country + ", " + activeLocation.city);
-							specStartDate = new Date();
-							specStopDate = new Date();
-							activeLocation = null;
-						}
-					}
-					// find the correct country/city based on the longest timeframe
-					var maxTimeframe:Number = 0;
-					var maxTimeframeObject:Object;
-					if ((locationList.length == 0 || (i+1) == num24hours) && lastLocationObject != null) {
-						// no specification in this timeframe, use last visited country
-						maxTimeframeObject = lastLocationObject;
-					} else {
-						// create new array that holds no duplicates
-						var newLocationList:ArrayCollection = new ArrayCollection();
-						// update locationlist with travel length
-						for (var l:int=0; l < locationList.length; l++) {
-							var ranger:DateRanger = new DateRanger();
-							ranger.getDateRange(locationList.getItemAt(l).startDate, locationList.getItemAt(l).stopDate);
-
-							var add:Boolean = true;
-							locationList.getItemAt(l).total_min = ranger.total_min;
-							locationList.getItemAt(l).overnight = ranger.overnight;
-							for (var n:int=0; n < newLocationList.length; n++) {
-								if (locationList.getItemAt(l).country == newLocationList.getItemAt(n).country && locationList.getItemAt(l).city == newLocationList.getItemAt(n).city) {
-									newLocationList.getItemAt(n).total_min += locationList.getItemAt(l).total_min;
-									if (!newLocationList.getItemAt(n).overnight) {
-										newLocationList.getItemAt(n).overnight = locationList.getItemAt(l).overnight 
-									}
-									//if (!locationList.getItemAt(l).intermediate_landing) {
-									// last distance counts, update any intermediate landing parameter
-									newLocationList.getItemAt(n).intermediate_landing = locationList.getItemAt(l).intermediate_landing;
-									//}
-									add = false;
+						} else {
+							// normal calculation
+							for (var m:int=0; m < allowancesInternational.length; m++) {
+								var allInt:RateVO = allowancesInternational.getItemAt(m) as RateVO;
+								if (allInt.rate == dailyAllowance) {
+									allInt.num++;
+									allInt.amount = Number((allInt.rate * allInt.num).toFixed(2));
+									added = true;
 									break;
 								}
 							}
-							if (add) {
-								newLocationList.addItem(locationList.getItemAt(l));
-							}
-						}
-						// find area with the longest stay
-						for (l = 0; l < newLocationList.length; l++) {
-							trace(newLocationList.getItemAt(l).country + ", (" + newLocationList.getItemAt(l).city + "): " + newLocationList.getItemAt(l).total_min + " minutes");
-							if (newLocationList.getItemAt(l).total_min > maxTimeframe) {
-								// check wether new total time is domestic
-								if ( (this.getInternationalRate(newLocationList.getItemAt(l).country, newLocationList.getItemAt(l).city) != null || newLocationList.getItemAt(l).overnight)
-									&& (!newLocationList.getItemAt(l).intermediate_landing)) {
-
-									maxTimeframe = newLocationList.getItemAt(l).total_min;
-									maxTimeframeObject = newLocationList.getItemAt(l);
+							if (!added) {
+								var allowance:RateVO = new RateVO();
+								allowance.rate = dailyAllowance;
+								if (!travelPeriode.overnight) {
+									allowance.num = travelPeriode.total_hours;
+								} else {
+									allowance.num = 1;
 								}
+								allowance.amount = dailyAllowance;
+								allowancesInternational.addItem(allowance);
 							}
-						}
-					}
-					// get the rate
-					try {
-						intRate = this.getInternationalRate(maxTimeframeObject.country, maxTimeframeObject.city);
-					} catch (e:Error) { intRate = null; }
-					if (intRate == null) {
-						// active 'rate' is in home country - find domestic rate 
-						intRate = new TravelRateInternationalVO();
-						var travelInfo:DateRanger = ModelLocator.getInstance().travelLength;
-						var localRate:TravelRateRuleVO;
-						if (travelInfo.total_hours >= 12 && travelInfo.overnight) {
-							localRate = getRate("allowance_04b"); 
-
-						} else if (travelInfo.total_hours > 12) {
-							localRate = getRate("allowance_04a");
-
-						} else {
-							localRate = getRate("allowance_03");
-						}
-						intRate.country = maxTimeframeObject.country;
-						intRate.city = maxTimeframeObject.city;
-						intRate.allowance = localRate.cost;
-					}
-					dailyAllowance = Number(((intRate.allowance * rateRule.percent) / 100).toFixed(2));
-					daysCalculated++;
-
-					if (daysCalculated > 28) {
-						// calculation for over 28 days - reduce allowance with 25%
-						dailyAllowance = Number((dailyAllowance*0.75).toFixed(2));
-					}
-					trace("Allowance for day " + daysCalculated + ": " + Util.formatDate(dateStart) + "-" + Util.formatDate(dateStop) + ": " + dailyAllowance + ",- (" + maxTimeframeObject.country + ", " + maxTimeframeObject.city + ")");
-
-					if (date != null) {
-						// if date is specified in method - return only value for this date
-						if (Util.formatDate(date) == Util.formatDate(dateStart)) {
-							return dailyAllowance;
-						}
-					}
-
-					// add/update to the allowance model
-					var added:Boolean = false;
-					if (daysCalculated > 28) {
-						// calculation for over 28 days
-						allowancesOver28days.num = daysCalculated - 28;
-						allowancesOver28days.rate = dailyAllowance;
-						allowancesOver28days.amount += dailyAllowance;
-
-					} else {
-						// normal calculation
-						for (var m:int=0; m < allowancesInternational.length; m++) {
-							var allInt:RateVO = allowancesInternational.getItemAt(m) as RateVO;
-							if (allInt.rate == dailyAllowance) {
-								allInt.num++;
-								allInt.amount = Number((allInt.rate * allInt.num).toFixed(2));
-								added = true;
-								break;
-							}
-						}
-						if (!added) {
-							var allowance:RateVO = new RateVO();
-							allowance.rate = dailyAllowance;
-							if (!travelPeriode.overnight) {
-								allowance.num = travelPeriode.total_hours;
-							} else {
-								allowance.num = 1;
-							}
-							allowance.amount = dailyAllowance;
-							allowancesInternational.addItem(allowance);
-						}
-					}
-
-					// get ready to find rates for the next 24-hour day
-					dateStart.setTime(dateStop.getTime());
-					dateStop.setTime(dateStart.getTime() + msPerDay);
-					if (locationList.length > 0) {
-						if (maxTimeframeObject != null) {
-							lastLocationObject = maxTimeframeObject;
-						} else {
-							lastLocationObject = locationList.getItemAt(locationList.length-1);
 						}
 					}
 				}
@@ -448,6 +345,589 @@ package no.makingwaves.cust.dss.code
 			}
 
 			return amount;
+		}
+
+		private function getAllowanceForLocation(location:Object, rateRule:TravelRateRuleVO):Number {
+			var intRate:TravelRateInternationalVO;
+			try {
+				intRate = this.getInternationalRate(location.country, location.city);
+			} catch (e:Error) { intRate = null; }
+			if (intRate == null) {
+				// active 'rate' is in home country - find domestic rate 
+				intRate = new TravelRateInternationalVO();
+				var travelInfo:DateRanger = ModelLocator.getInstance().travelLength;
+				var localRate:TravelRateRuleVO;
+				if (travelInfo.total_hours >= 12 && travelInfo.overnight) {
+					localRate = getRate("allowance_04b"); 
+
+				} else if (travelInfo.total_hours > 12) {
+					localRate = getRate("allowance_04a");
+
+				} else {
+					localRate = getRate("allowance_03");
+				}
+				intRate.country = location.country;
+				intRate.city = location.city;
+				intRate.allowance = localRate.cost;
+			}
+			return Number(((intRate.allowance * rateRule.percent) / 100).toFixed(2));
+		}
+
+		private function getLocationForPeriodes(periodes:ArrayCollection, travelTimes:ArrayCollection):ArrayCollection {
+			var locations:ArrayCollection = new ArrayCollection();
+			var totalTripTime:Number = 0;
+			var travelInfo:DateRanger = ModelLocator.getInstance().travelLength;
+			var timePer24:Number = 60 * 24 // minutes in 24 hours
+
+			var rememberLocation:Object;
+			var periodeLocation:Object = new Object();
+			periodeLocation.time = 0;
+			// prepare to register locations within a periode
+			for (var i:int = 0; i < periodes.length; i++) {
+				trace("----------------------------------------");
+				var timeSpent:Number = periodeLocation.time;
+				var periode:Object = periodes.getItemAt(i);
+				periode.locations = new Array();
+
+				for (var t:int = 0; t < travelTimes.length; t++) {
+					var loc:Object = travelTimes.getItemAt(t) as Object;
+					var addTime:Boolean = false;
+
+					if (periodeLocation.country == null && loc.time > 0) {
+						// no location is registered
+						if (t == 0 && i == 0) {
+							// first location - use destination as location
+							periodeLocation.country = loc.stopCountry;
+							periodeLocation.city = loc.stopCity;
+							periodeLocation.intermediate_landing = loc.periodeLocation;
+
+						} else {
+							// any other location - use departure as location
+							periodeLocation.country = loc.startCountry;
+							periodeLocation.city = loc.startCity;
+							periodeLocation.intermediate_landing = loc.intermediate_landing;
+						}
+						addTime = true;
+
+					} else if (periodeLocation.country != null && loc.time > 0) {
+						// registration has started - continue registering time
+						if ( loc.startCountry == periodeLocation.country &&
+							loc.startCity == periodeLocation.city ) {
+
+							if (loc.intermediate_landing) {
+								periodeLocation.intermediate_landing = loc.intermediate_landing;
+							}
+							// location is still the same - just add time
+							addTime = true;
+
+						} else {
+							// new location spotted -> save last location
+							trace("PERIOD " + (i+1) + ": " + periodeLocation.country + "/" + periodeLocation.city + ": " + periodeLocation.time + " min - (mellomlanding: " + periodeLocation.intermediate_landing + ")");
+							periode.locations.push(periodeLocation);
+							// reset and start new location
+							periodeLocation = new Object();
+							periodeLocation.time = 0;
+							periodeLocation.country = loc.startCountry;
+							periodeLocation.city = loc.startCity;
+							periodeLocation.intermediate_landing = loc.intermediate_landing;
+							addTime = true;
+						}
+
+					}
+					if (addTime) {
+						// add time to spent on location
+						var timeToAdd:Number;
+						if ((timeSpent+loc.time) > timePer24) {
+							timeToAdd = timePer24 - timeSpent;
+						} else {
+							timeToAdd = loc.time;
+						}
+						timeSpent += timeToAdd;
+						totalTripTime += timeToAdd;
+						periodeLocation.time += timeToAdd;
+						loc.time -= timeToAdd;
+
+					}
+
+					// check if period is completely registered
+					if (timeSpent == timePer24) {
+						// this 24-hours periode is registered - add it to periode list
+						trace("PERIOD " + (i+1) + ": " + periodeLocation.country + "/" + periodeLocation.city + ": " + periodeLocation.time + " min - (mellomlanding: " + periodeLocation.intermediate_landing + ")");
+						var regPeriode:Object = periodeLocation;
+						periode.locations.push(regPeriode);
+						locations.addItem(periode);
+						if (rememberLocation != null) {
+							loc = rememberLocation;
+							rememberLocation = null;
+						}
+						if (loc.time > 0) {
+							rememberLocation = loc;
+							// register time for next periode							
+							var nextPerTime:Number = (loc.time > timePer24) ? timePer24 : loc.time;
+							periodeLocation = new Object();
+							periodeLocation.time = nextPerTime;
+							periodeLocation.country = regPeriode.country;
+							periodeLocation.city = regPeriode.city;
+							timeSpent = nextPerTime;
+							totalTripTime += timeToAdd;
+
+							rememberLocation.time -= nextPerTime;
+
+						} else {
+							periodeLocation = new Object();
+							periodeLocation.time = 0;
+						}
+						// break out of loop to continue on next 24-hour period
+						break;
+
+					} else if (travelInfo.total_min == totalTripTime) {
+						locations.addItem(periode);
+					}
+				}
+			}
+
+			return locations;
+		}
+
+		private function getTravelTimeAtLocations():ArrayCollection {
+			var specificationList:ArrayCollection
+				= ModelLocator.getInstance().travelSpecsList;
+			var timeTable:ArrayCollection = new ArrayCollection();
+			var location:Object = new Object();
+			var currentLocation:Object = new Object();
+			var intermediate_landing:Boolean = false;
+			for (var i:int = 0; i < specificationList.length; i++) {
+				// get specification
+				var spec:TravelSpecificationVO = specificationList.getItemAt(i) as TravelSpecificationVO;
+
+				// collect and convert date and time
+				var startDate:Date = new Date(spec.from_date);
+				startDate.setHours( Number(spec.from_time.substr(0,2)), Number(spec.from_time.substr(2,2)) );
+				startDate = this.getUTCTime(startDate, spec.from_timezone);
+
+				var stopDate:Date = new Date(spec.to_date);
+				stopDate.setHours( Number(spec.to_time.substr(0,2)), Number(spec.to_time.substr(2,2)) );
+				stopDate = this.getUTCTime(stopDate, spec.to_timezone);
+
+				// find time spent on location
+				if (currentLocation.startTime == null) {
+					// no time registered - look for start time
+					currentLocation.startCountry = spec.from_country;
+					currentLocation.startCity = spec.from_city;
+					currentLocation.startTime = startDate.getTime();
+				}
+
+				// check if current stoptime is on other location
+				if ((currentLocation.startTime != null) && (currentLocation.startCountry != spec.to_country || currentLocation.startCity != spec.to_city || spec.intermediate_landing)) {
+					currentLocation.stopCountry = spec.to_country;
+					currentLocation.stopCity = spec.to_city;
+					currentLocation.stopTime = stopDate.getTime();
+					currentLocation.time = (currentLocation.stopTime - currentLocation.startTime) / 1000 / 60; // in minutes
+					//currentLocation.intermediate_landing = false;
+
+					if (spec.transportation_type == TravelSpecificationVO.TRANSPORT_AIRPLANE) {
+						// check wether this could be a intermediate landing connection
+						if (i < (specificationList.length-1)) {
+							// this is not the last specification - check wether next specification is using a plane
+							var nextSpec:TravelSpecificationVO = specificationList.getItemAt(i+1) as TravelSpecificationVO;
+							if (nextSpec.transportation_type == TravelSpecificationVO.TRANSPORT_AIRPLANE) {
+								// next spec is also using plane - tag current as intermediate landing
+								intermediate_landing = true;
+							}
+						}
+					}
+
+					var debugIntermediateLandingStr:String = (currentLocation.intermediate_landing) ? "-> mellomlanding" : "";
+					trace(currentLocation.startCountry + "/" + currentLocation.startCity + ": " + currentLocation.time + " min " + debugIntermediateLandingStr);
+
+					// add location to timetable
+					timeTable.addItem(currentLocation);
+
+					// reset currentLocation and register start of new journey
+					currentLocation = new Object();
+					currentLocation.startCountry = spec.to_country;
+					currentLocation.startCity = spec.to_city;
+					currentLocation.startTime = stopDate.getTime();
+					currentLocation.intermediate_landing = intermediate_landing;
+
+					// reset intermediate landing checker
+					intermediate_landing = false;
+				}
+			}
+			return timeTable;
+		}
+
+		/*
+		 *	extends the periode object with a destination list .destinations
+		 *	the list concists of objects with .country, .city, .startDate, .endDate, .time variables
+		 */
+		private function addDestinationToPeriod(spec:TravelSpecificationVO, timeSpan:Number, periode:Object, fromDest:Boolean):Object {
+			if (periode.destinations == null)
+				periode.destinations = new Array();
+
+			// check wether destination has been registered before
+			var addedToExisting:Boolean = false;
+			for (var i:int = 0; i < periode.destinations.length; i++) {
+				var dest:Object = periode.destinations[i];
+				if ( (fromDest && dest.country == spec.from_country && dest.city == spec.from_city) ||
+					(!fromDest && dest.country == spec.to_country && dest.city == spec.to_city) ) {
+
+					dest.time += timeSpan;
+					addedToExisting = true;	
+				}
+			}	
+			if (!addedToExisting) {
+				var newDest:Object = new Object();
+				newDest.country = (fromDest) ? spec.from_country : spec.to_country;
+				newDest.city = (fromDest) ? spec.from_city : spec.to_city;
+				newDest.time = timeSpan;
+				periode.destinations.push(newDest);
+			}
+
+			return periode;
+		}
+
+		/*
+		 * 	return a list of period objects defined with a .start date and an .end date
+		 */
+		private function getPeriodes(startDate:Date, stopDate:Date):ArrayCollection {
+			var periodes:ArrayCollection = new ArrayCollection();
+			var msPerDay:int = 1000 * 60 * 60 * 24;
+			var msPerHour:int = 1000 * 60 * 60;
+
+			var startTime:Date = new Date(startDate);
+			var endTime:Date = new Date(startDate);
+			while (endTime.getTime() < stopDate.getTime()) {
+				var dateObj:Object = new Object();
+				dateObj.start = startTime;
+				endTime = new Date();
+				endTime.setTime(startTime.getTime() + msPerDay);
+				if (endTime.getTime() > stopDate.getTime())
+					endTime.setTime(stopDate.getTime());
+				dateObj.end = endTime;
+				periodes.addItem(dateObj);
+				trace("Period " + (periodes.length) + ": ");
+				traceDateAndTime(periodes[periodes.length-1].start);
+				traceDateAndTime(periodes[periodes.length-1].end);
+				startTime = endTime;
+			}
+
+			return periodes;
+		}
+
+		private function getUTCTime(date:Date, offset:Number):Date {
+			var msPerHour:int = 1000 * 60 * 60;
+			var utcDate:Date = new Date(date);
+			utcDate.setTime(utcDate.getTime() - (offset*msPerHour));
+			return utcDate;
+		}
+
+		private function traceDateAndTime(date:Date):void {
+			trace(date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " " + date.toTimeString());
+		}
+
+		//*******************************************************
+		//*******************************************************
+
+		private function calculateInternationalAllowance(rateRule:TravelRateRuleVO, date:Date=null):Number {
+
+			return newCalculateInternationalAllowance(rateRule, date);
+
+		/*
+		   var amount:Number = 0.0;
+		   var days:Number = 1;
+		   var dailyAllowance:Number;
+		   var intRate:TravelRateInternationalVO;
+		   var prevIntRate:TravelRateInternationalVO;
+		   var specificationList:ArrayCollection = ModelLocator.getInstance().travelSpecsList;
+		   var startDistance:TravelSpecificationVO;
+		   var endDistance:TravelSpecificationVO;
+		   var nextDistance:TravelSpecificationVO;
+		   var allowancesInternational:ArrayCollection = new ArrayCollection();
+		   var allowancesOver28days:RateVO = new RateVO();
+
+		   // get travel length and add one day if last day exceeds 6 hours
+		   var travelPeriode:DateRanger = ModelLocator.getInstance().travelLength;
+		   var num24hours:Number = travelPeriode.total_24hours;
+		   if (num24hours > 0 && travelPeriode.hours >= 6) { num24hours++; }
+
+		   if (travelPeriode.total_min != 0 && specificationList.length > 0) {
+		   // set start date and first periode
+		   var msPerDay:int = 1000 * 60 * 60 * 24;
+		   var msPerHour:int = 1000 * 60 * 60;
+		   var timeStart:String = ModelLocator.getInstance().activeTravel.travel_time_out;
+		   var dateStart:Date = new Date();
+		   dateStart.setTime(ModelLocator.getInstance().activeTravel.travel_date_out.getTime());
+		   dateStart.setHours(timeStart.substr(0,2), timeStart.substr(2,2));
+		   var dateStop:Date = new Date();
+		   dateStop.setTime(dateStart.getTime() + msPerDay);
+		   // set dates to UTC-time
+		   var timezoneDefault:Number = ModelLocator.getInstance().activeTravel.travel_date_out.timezoneOffset / 60;
+		   dateStart.setTime(dateStart.getTime() + (timezoneDefault*msPerHour));
+		   dateStop.setTime(dateStop.getTime() + (timezoneDefault*msPerHour));
+		   trace("Start time: " + dateStart.toDateString() + " " + dateStart.toTimeString());
+		   trace("Stop time : " + dateStop.toDateString() + " " + dateStop.toTimeString());
+
+		   var lastLocationObject:Object;
+		   var lastRateUsedObject:Object;
+		   var daysCalculated:int = 0;
+		   // for each 24-hour day, check which international rate that should be used
+		   if (num24hours == 0) { num24hours = 1; }
+		   for (var i:int=0; i < num24hours; i++) {
+		   trace("UTREGNING FOR DØGN NR " + (i+1) + " av " + num24hours);
+		   trace("fra: " + dateStart.toDateString() + " " + dateStart.toTimeString());
+		   trace("til: " + dateStop.toDateString() + " " + dateStop.toTimeString());
+		   //trace("check between " + Util.formatDate(dateStart) + " - " + Util.formatDate(dateStop));
+		   var timeFrameSpecs:ArrayCollection = new ArrayCollection();
+		   // get spesifications within current timeframe
+		   for (var s:int = 0; s < specificationList.length; s++) {
+		   var spec:TravelSpecificationVO = specificationList.getItemAt(s) as TravelSpecificationVO;
+		   var fromDate:Date = new Date();
+		   var toDate:Date = new Date()
+		   fromDate.setTime(spec.from_date.getTime() + (spec.from_timezone*msPerHour));
+		   toDate.setTime(spec.to_date.getTime() + (spec.to_timezone*msPerHour));
+
+		   if (fromDate >= dateStart && fromDate < dateStop) {
+		   timeFrameSpecs.addItem(spec);
+		   trace("--> add spec: from " + spec.from_city + " " + spec.to_city);
+
+		   } else if (toDate >= dateStart && toDate <= dateStop) {
+		   timeFrameSpecs.addItem(spec);
+		   trace("--> add spec: from " + spec.from_city + " " + spec.to_city);
+		   }
+		   }
+		   // get each country timeframe based on specs between timeframe
+		   var activeLocation:Object = null;
+		   var locationList:ArrayCollection = new ArrayCollection();
+		   var specStartDate:Date = new Date();
+		   var specStopDate:Date = new Date();
+		   var activeCity:String = "";
+		   var specFromCity:String = "";
+		   var specToCity:String = "";
+		   for (var t:int = 0; t < timeFrameSpecs.length; t++) {
+		   var spec:TravelSpecificationVO = timeFrameSpecs.getItemAt(t) as TravelSpecificationVO;
+		   var testTravelEnd:Boolean = true;
+		   if (activeLocation == null) {
+		   activeLocation = null;
+		   activeLocation = new Object();
+		   activeLocation.country = spec.from_country.split("#")[0];
+		   activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
+		   activeLocation.intermediate_landing = spec.intermediate_landing;
+		   specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
+		   activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
+
+		   } else {
+		   activeCity = activeLocation.city;
+		   specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
+		   specToCity = (spec.to_city == "-") ? "" : spec.to_city;
+		   if (activeLocation.country != spec.from_country.split("#")[0] || (activeCity != specFromCity)) {
+		   specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
+		   activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;;
+		   locationList.addItem(activeLocation);
+		   //trace(" -> location added: " + activeLocation.country + ", " + activeLocation.city);
+		   specStartDate = new Date();
+		   specStopDate = new Date();
+		   activeLocation = null;
+		   activeLocation = new Object();
+		   activeLocation.country = spec.from_country.split("#")[0];
+		   activeLocation.city = (spec.from_city == "-") ? "" : spec.from_city;
+		   activeLocation.intermediate_landing = spec.intermediate_landing;
+		   specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
+		   activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
+
+		   } else if (activeLocation.country != spec.to_country.split("#")[0] || activeCity != specToCity) {
+		   specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
+		   activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;
+		   locationList.addItem(activeLocation);
+		   //trace(" -> location added: " + activeLocation.country + ", " + activeLocation.city);
+		   specStartDate = new Date();
+		   specStopDate = new Date();
+		   activeLocation = null;
+		   activeLocation = new Object();
+		   activeLocation.country = spec.to_country.split("#")[0];
+		   activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
+		   activeLocation.intermediate_landing = spec.intermediate_landing;
+		   specStartDate.setTime(spec.from_date.getTime() - (spec.from_timezone*msPerHour));
+		   activeLocation.startDate = (specStartDate.getTime() > dateStart.getTime()) ? specStartDate : dateStart;
+		   testTravelEnd = false;
+
+		   }
+		   }
+
+		   specFromCity = (spec.from_city == "-") ? "" : spec.from_city;
+		   specToCity = (spec.to_city == "-") ? "" : spec.to_city;
+		   if ((activeLocation != null && testTravelEnd && (spec.from_country.split("#")[0] != spec.to_country.split("#")[0] || specFromCity != specToCity)) ||
+		   (activeLocation != null && t == (timeFrameSpecs.length-1))) {
+		   // current country rate has reached its end - register it
+		   specStopDate.setTime(spec.to_date.getTime() - (spec.to_timezone*msPerHour));
+		   activeLocation.stopDate = (specStopDate.getTime() < dateStop.getTime()) ? specStopDate : dateStop;
+		   locationList.addItem(activeLocation);
+		   if (t != (timeFrameSpecs.length)) {
+		   //if (specStopDate.getTime() < dateStop.getTime()) {
+		   activeLocation = new Object();
+		   activeLocation.country = spec.to_country.split("#")[0];
+		   activeLocation.city = (spec.to_city == "-") ? "" : spec.to_city;
+		   activeLocation.intermediate_landing = spec.intermediate_landing;
+		   activeLocation.startDate = specStopDate;
+		   activeLocation.stopDate = dateStop;
+		   locationList.addItem(activeLocation);
+		   //}
+		   }
+
+
+		   //trace(" -> location added: " + activeLocation.country + ", " + activeLocation.city);
+		   specStartDate = new Date();
+		   specStopDate = new Date();
+		   activeLocation = null;
+		   }
+		   }
+		   // find the correct country/city based on the longest timeframe
+		   var maxTimeframe:Number = 0;
+		   var maxTimeframeObject:Object;
+		   if ((locationList.length == 0 || (i+1) == num24hours) && (lastLocationObject != null || lastRateUsedObject != null)) {
+		   // no specification in this timeframe, use last visited country
+		   maxTimeframeObject = lastLocationObject;
+
+		   //}
+		   } else {
+		   // create new array that holds no duplicates
+		   var newLocationList:ArrayCollection = new ArrayCollection();
+		   // update locationlist with travel length
+		   for (var l:int=0; l < locationList.length; l++) {
+		   var ranger:DateRanger = new DateRanger();
+		   ranger.getDateRange(locationList.getItemAt(l).startDate, locationList.getItemAt(l).stopDate);
+
+		   var add:Boolean = true;
+		   locationList.getItemAt(l).total_min = ranger.total_min;
+		   locationList.getItemAt(l).overnight = ranger.overnight;
+		   for (var n:int=0; n < newLocationList.length; n++) {
+		   if (locationList.getItemAt(l).country == newLocationList.getItemAt(n).country && locationList.getItemAt(l).city == newLocationList.getItemAt(n).city) {
+		   newLocationList.getItemAt(n).total_min += locationList.getItemAt(l).total_min;
+		   if (!newLocationList.getItemAt(n).overnight) {
+		   newLocationList.getItemAt(n).overnight = locationList.getItemAt(l).overnight
+		   }
+		   //if (!locationList.getItemAt(l).intermediate_landing) {
+		   // last distance counts, update any intermediate landing parameter
+		   newLocationList.getItemAt(n).intermediate_landing = locationList.getItemAt(l).intermediate_landing;
+		   //}
+		   add = false;
+		   break;
+		   }
+		   }
+		   if (add) {
+		   newLocationList.addItem(locationList.getItemAt(l));
+		   }
+		   }
+		   // find area with the longest stay
+		   for (l = 0; l < newLocationList.length; l++) {
+		   trace(newLocationList.getItemAt(l).country + ", (" + newLocationList.getItemAt(l).city + "): " + newLocationList.getItemAt(l).total_min + " minutes");
+		   if (newLocationList.getItemAt(l).total_min > maxTimeframe) {
+		   // check wether new total time is domestic
+		   if ( (this.getInternationalRate(newLocationList.getItemAt(l).country, newLocationList.getItemAt(l).city) != null || newLocationList.getItemAt(l).overnight)
+		   && (!newLocationList.getItemAt(l).intermediate_landing)) {
+
+		   maxTimeframe = newLocationList.getItemAt(l).total_min;
+		   maxTimeframeObject = newLocationList.getItemAt(l);
+		   }
+		   }
+		   }
+		   }
+		   // get the rate
+		   try {
+		   intRate = this.getInternationalRate(maxTimeframeObject.country, maxTimeframeObject.city);
+		   } catch (e:Error) { intRate = null; }
+		   if (intRate == null) {
+		   // active 'rate' is in home country - find domestic rate
+		   intRate = new TravelRateInternationalVO();
+		   var travelInfo:DateRanger = ModelLocator.getInstance().travelLength;
+		   var localRate:TravelRateRuleVO;
+		   if (travelInfo.total_hours >= 12 && travelInfo.overnight) {
+		   localRate = getRate("allowance_04b");
+
+		   } else if (travelInfo.total_hours > 12) {
+		   localRate = getRate("allowance_04a");
+
+		   } else {
+		   localRate = getRate("allowance_03");
+		   }
+		   intRate.country = maxTimeframeObject.country;
+		   intRate.city = maxTimeframeObject.city;
+		   intRate.allowance = localRate.cost;
+		   }
+		   dailyAllowance = Number(((intRate.allowance * rateRule.percent) / 100).toFixed(2));
+		   daysCalculated++;
+
+		   if (daysCalculated > 28) {
+		   // calculation for over 28 days - reduce allowance with 25%
+		   dailyAllowance = Number((dailyAllowance*0.75).toFixed(2));
+		   }
+		   trace("Allowance for day " + daysCalculated + ": " + Util.formatDate(dateStart) + "-" + Util.formatDate(dateStop) + ": " + dailyAllowance + ",- (" + maxTimeframeObject.country + ", " + maxTimeframeObject.city + ")");
+
+		   if (date != null) {
+		   // if date is specified in method - return only value for this date
+		   if (Util.formatDate(date) == Util.formatDate(dateStart)) {
+		   return dailyAllowance;
+		   }
+		   }
+
+		   // add/update to the allowance model
+		   var added:Boolean = false;
+		   if (daysCalculated > 28) {
+		   // calculation for over 28 days
+		   allowancesOver28days.num = daysCalculated - 28;
+		   allowancesOver28days.rate = dailyAllowance;
+		   allowancesOver28days.amount += dailyAllowance;
+
+		   } else {
+		   // normal calculation
+		   for (var m:int=0; m < allowancesInternational.length; m++) {
+		   var allInt:RateVO = allowancesInternational.getItemAt(m) as RateVO;
+		   if (allInt.rate == dailyAllowance) {
+		   allInt.num++;
+		   allInt.amount = Number((allInt.rate * allInt.num).toFixed(2));
+		   added = true;
+		   break;
+		   }
+		   }
+		   if (!added) {
+		   var allowance:RateVO = new RateVO();
+		   allowance.rate = dailyAllowance;
+		   if (!travelPeriode.overnight) {
+		   allowance.num = travelPeriode.total_hours;
+		   } else {
+		   allowance.num = 1;
+		   }
+		   allowance.amount = dailyAllowance;
+		   allowancesInternational.addItem(allowance);
+		   }
+		   }
+
+		   // get ready to find rates for the next 24-hour day
+		   dateStart.setTime(dateStop.getTime());
+		   dateStop.setTime(dateStart.getTime() + msPerDay);
+		   if (locationList.length > 0) {
+		   if (maxTimeframeObject != null) {
+		   lastRateUsedObject = maxTimeframeObject;
+		   }
+		   lastLocationObject = locationList.getItemAt(locationList.length-1);
+		   }
+		   }
+
+		   // update allowance model if this is not a 'date only' calculation
+		   if (date == null) {
+		   ModelLocator.getInstance().travelAllowance.allowance_international = allowancesInternational;
+		   ModelLocator.getInstance().travelAllowance.allowance_28days = allowancesOver28days;
+		   }
+
+		   // calculate amount
+		   for (var a:int = 0; a < allowancesInternational.length; a++) {
+		   amount += RateVO(allowancesInternational.getItemAt(a)).amount;
+		   amount += allowancesOver28days.amount;
+		   }
+		   }
+
+		   return amount;
+		 */
 		}
 
 		private function getAllowanceRate(travelInfo:TravelVO, travelDateInfo:DateRanger, forDeduction:Boolean=false):TravelRateRuleVO {

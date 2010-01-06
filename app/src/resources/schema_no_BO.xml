@@ -17,6 +17,7 @@
 	<type>no_BO</type>
 	<media>
 		<texts>
+			<text id="truncationIndicator" value="..." />
 			<!-- HEADERS AND COMMON TEXTS -->
 			<text id="site_header" value="Viktig informasjon om reiseregningen" />
 			<text id="site_intro" value="Ved reiser som inneholder et stort antall poster anbefaler vi å bruke den Windows-baserte reiseregningen, eller dele opp reiseregningen i flere deler." />

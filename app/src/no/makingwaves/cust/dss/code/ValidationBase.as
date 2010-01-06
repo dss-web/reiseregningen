@@ -1,7 +1,7 @@
 package no.makingwaves.cust.dss.code
 {
 	import flash.geom.Point;
-	
+
 	import mx.collections.ArrayCollection;
 	import mx.containers.VBox;
 	import mx.controls.DateField;
@@ -13,17 +13,17 @@ package no.makingwaves.cust.dss.code
 	import mx.validators.DateValidator;
 	import mx.validators.StringValidator;
 	import mx.validators.Validator;
-	
+
 	import no.makingwaves.cust.dss.code.util.Util;
 	import no.makingwaves.cust.dss.model.ModelLocator;
 	import no.makingwaves.cust.dss.view.components.validationDisplayer;
-	
+
 	public class ValidationBase extends VBox
 	{
 		// attributes ============================
 		[Bindable]
 		protected var model : ModelLocator = ModelLocator.getInstance();
-		
+
 		// validator values
 		public const DEFAULT : String = "Validator";
 		public const STRING : String = "StringValidator";
@@ -31,28 +31,28 @@ package no.makingwaves.cust.dss.code
 		public const VALIDATOR_FORMAT_TIME : String = "time";
 		public const VALIDATOR_FORMAT_DOUBLE : String = "double";
 		public const VALIDATOR_FORMAT_INT : String = "int";
-		
+
 		public var validationSourceList : ArrayCollection = new ArrayCollection();
 		public var validationCustomSourceList : ArrayCollection = new ArrayCollection();
 		private var winValidationList : ArrayCollection = new ArrayCollection(); // of validationDisplayer;
-		
+
 		public var isValidating : Boolean = false;
-		
+
 		public function dateField_init(dateField:DateField):void {
 			dateField.formatString = ResourceManager.getInstance().getString(model.resources.getResourceBundleName(), 'DATE_FORMAT');
-            dateField.dayNames = ResourceManager.getInstance().getString(model.resources.getResourceBundleName(), 'DAYS_NAMES').split(",");
-            dateField.monthNames = ResourceManager.getInstance().getString(model.resources.getResourceBundleName(), 'MONTH_NAMES').split(",");
-            dateField.monthSymbol = "";
-            dateField.yearSymbol = "";
-            dateField.firstDayOfWeek = 1;
-            dateField.showToday = true;
-            dateField.maxYear = new Date().getFullYear();
-            if (dateField.selectableRange == null) {
-            	// set default range start date to 01.03.2009
-            	dateField.selectableRange = {rangeStart: new Date(2009,2,1), rangeEnd: new Date()};
-            }
-        }
-			
+			dateField.dayNames = ResourceManager.getInstance().getString(model.resources.getResourceBundleName(), 'DAYS_NAMES').split(",");
+			dateField.monthNames = ResourceManager.getInstance().getString(model.resources.getResourceBundleName(), 'MONTH_NAMES').split(",");
+			dateField.monthSymbol = "";
+			dateField.yearSymbol = "";
+			dateField.firstDayOfWeek = 1;
+			dateField.showToday = true;
+			dateField.maxYear = new Date().getFullYear();
+			if (dateField.selectableRange == null) {
+				// set default range start date to 01.03.2009
+				dateField.selectableRange = {rangeStart: new Date(2009,2,1), rangeEnd: new Date()};
+			}
+		}
+
 		public function setAssistance(id:String, type:String):void {
 			var fullAssistance:String = ResourceManager.getInstance().getString(model.resources.bundleName, id);
 			fullAssistance = Util.checkForLinks(fullAssistance);
@@ -66,10 +66,10 @@ package no.makingwaves.cust.dss.code
 				model.helpTextSettlement = (fullAssistance != null) ? fullAssistance : "";
 			}
 		}
-		
-		
+
+
 		// VALIDATION CODE =================================================================
-		
+
 		public function addValidationField(source:*, type:String="StringValidator", required:Boolean=true, minLength:Number=NaN, maxLength:Number=NaN):void {
 			switch(type) {
 				case "StringValidator":
@@ -109,7 +109,7 @@ package no.makingwaves.cust.dss.code
 					break;
 			}
 		}
-		
+
 		private function enableValidator(validator:*):void {
 			var found:Boolean = false;
 			for (var i:Number = 0; i < validationSourceList.length; i++) {
@@ -124,25 +124,25 @@ package no.makingwaves.cust.dss.code
 				validationSourceList.addItem(validator);
 			}
 		}
-		
+
 		public function validateAll():Boolean {
 			return (this.validateDetailsForm() && this.validateCustomFields()); 
 		}
-					
+
 		public function validateDetailsForm():Boolean {
 			undisplayAllValidators();
 			for (var i:Number = 0; i < validationSourceList.length; i++) {
 				if (validationSourceList.getItemAt(i).enabled && validationSourceList.getItemAt(i).source != null) {
 					var vResult:ValidationResultEvent;
-	            	vResult = validationSourceList.getItemAt(i).validate();
-	            	if (vResult.type==ValidationResultEvent.INVALID) {
-	            		return false; 
-	            	}
-	   			}
+					vResult = validationSourceList.getItemAt(i).validate();
+					if (vResult.type==ValidationResultEvent.INVALID) {
+						return false; 
+					}
+				}
 			}
 			return true;
 		}
-		
+
 		public function removeValidation(component:*):void {
 			// remove it from custom validation
 			var i:Number;
@@ -159,9 +159,9 @@ package no.makingwaves.cust.dss.code
 				}
 			}
 		}
-		
+
 		// CUSTOM VALIDATION CODE ===========================================================
-		
+
 		public function validateCustomField(component:UIComponent):Boolean {
 			var result:Boolean;
 			for (var i:Number = 0; i < validationCustomSourceList.length; i++) {
@@ -175,7 +175,7 @@ package no.makingwaves.cust.dss.code
 			}
 			return true;
 		}
-		
+
 		public function validateCustomFields():Boolean {
 			var result:Boolean;
 			for (var i:Number = 0; i < validationCustomSourceList.length; i++) {
@@ -192,24 +192,24 @@ package no.makingwaves.cust.dss.code
 						result = validateCustomTime(validationCustomSourceList.getItemAt(i));
 						if (!result) { return false; }
 						break;
-						
+
 				}
 			}
 			return true;
 		} 
-		
+
 		private function validateCustomDate(dateObject:Object, validateHours:Boolean=false):Boolean {
 			var minDate:Date = (dateObject.minRelatedField == null) ? dateObject.minDate : dateObject.minRelatedField.selectedDate;
 			var maxDate:Date = (dateObject.maxRelatedField == null) ? dateObject.maxDate : dateObject.maxRelatedField.selectedDate;
-			
+
 			if (!validateHours) {
 				if (minDate != null)
 					minDate.setHours(12,00,00,00);
-					
+
 				if (maxDate != null)
 					maxDate.setHours(12,00,00,00);
 			}
-			
+
 			var focusComponent:UIComponent = dateObject.component as UIComponent;
 			if (dateObject.txtcomponent != null) { focusComponent = dateObject.txtcomponent; }
 			var compareDate:Date = DateField(dateObject.component).selectedDate;
@@ -234,7 +234,7 @@ package no.makingwaves.cust.dss.code
 			}
 			return true;
 		} 
-		
+
 		private function validateCustomString(stringObject:Object):Boolean {
 			try {
 				var value:String = TextInput(stringObject.component).text;
@@ -256,19 +256,19 @@ package no.makingwaves.cust.dss.code
 							return false;
 						}
 					}
-					
+
 				} else if (Boolean(stringObject.numsOnly) || stringObject.format == this.VALIDATOR_FORMAT_TIME) {
 					if (stringObject.format == this.VALIDATOR_FORMAT_TIME) {
 						// format as time/clock value - collect format and actual values
-					    var nonValidChars:Boolean = false;
-					    var nonValidCharList:Array = [".", ",", ":", "-", "/", "\\", ";"];
-					    for (var l:int = 0; l < nonValidCharList.length; l++) {
-					        if (value.indexOf(nonValidCharList[l]) != -1) {
-						    	nonValidChars = true;
-						    	break;
-					        }
-					    }
-					    var maxHH:Number = Number(String(stringObject.numMaxFormat.toString()).substr(0,2));
+						var nonValidChars:Boolean = false;
+						var nonValidCharList:Array = [".", ",", ":", "-", "/", "\\", ";"];
+						for (var l:int = 0; l < nonValidCharList.length; l++) {
+							if (value.indexOf(nonValidCharList[l]) != -1) {
+								nonValidChars = true;
+								break;
+							}
+						}
+						var maxHH:Number = Number(String(stringObject.numMaxFormat.toString()).substr(0,2));
 						var maxMM:Number = Number(String(stringObject.numMaxFormat.toString()).substr(2,2));
 						var realHH:Number = Number(value.substr(0,2));
 						var realMM:Number = Number(value.substr(2,2));
@@ -281,7 +281,7 @@ package no.makingwaves.cust.dss.code
 							showValidationError(stringObject.component, errorMsg);
 							return false;
 						}
-						
+
 					} else {
 						// check for only numbers - charcodes between 48 and 57
 						var doubleAllowed:Boolean = false;
@@ -289,17 +289,17 @@ package no.makingwaves.cust.dss.code
 							doubleAllowed = true;
 							value = value.replace(",", ".");
 							TextInput(stringObject.component).text = value;
-							
+
 						} else if (stringObject.format == this.VALIDATOR_FORMAT_INT) {
 							value = value.replace(",", ".");
 						}
-						
+
 						if (isNaN(Number(value)) || (stringObject.format == this.VALIDATOR_FORMAT_INT && value.indexOf(".") != -1)) {
 							var componentId:String = UIComponent(stringObject.component).id + "_label";
 							var compLabel:String = ResourceManager.getInstance().getString(model.resources.bundleName, componentId);
 							var defaultMsgStart:String = ResourceManager.getInstance().getString(model.resources.bundleName, "error_field_description_default");
 							errorMsg = ResourceManager.getInstance().getString(model.resources.bundleName, "error_numbers");
-							
+
 							if (compLabel) {
 								errorMsg = errorMsg.replace("%1", compLabel);
 							} else {
@@ -309,8 +309,8 @@ package no.makingwaves.cust.dss.code
 							return false;
 						}
 					}
-					
-				// test date format if there is a date value inserted
+
+						// test date format if there is a date value inserted
 				} else if (stringObject.format == this.DATE && value != "") {
 					var valid:Boolean = true;
 					if (value.indexOf(".") == -1) {
@@ -344,7 +344,7 @@ package no.makingwaves.cust.dss.code
 			} catch (e:Error) { trace("validateCustomString: " + e.message);}
 			return true;
 		}
-		
+
 		private function validateCustomTime(timeObject:Object):Boolean {
 			var errorMsg:String = "";
 			if (Util.formatDate(DateField(timeObject.fromDate).selectedDate) == Util.formatDate(DateField(timeObject.toDate).selectedDate)) {
@@ -362,7 +362,7 @@ package no.makingwaves.cust.dss.code
 			}
 			return true;
 		}
-		
+
 		public function addCustomDateValidation(component:DateField, minDate:Date=null, maxDate:Date=null, minRelatedField:DateField=null, maxRelatedField:DateField=null, textReplacer:TextInput=null):void {
 			var dateObject:Object = new Object();
 			dateObject.type = "date";
@@ -374,7 +374,7 @@ package no.makingwaves.cust.dss.code
 			dateObject.maxRelatedField = maxRelatedField;
 			validationCustomSourceList.addItem(dateObject);
 		}
-		
+
 		public function addCustomStringValidation(component:TextInput, charsOnly:Boolean=true, numsOnly:Boolean=false, format:String="", numMaxFormat:Number=0):void {
 			var stringObject:Object = new Object();
 			stringObject.type = "string";
@@ -385,7 +385,7 @@ package no.makingwaves.cust.dss.code
 			stringObject.numMaxFormat = numMaxFormat;
 			validationCustomSourceList.addItem(stringObject);
 		}
-		
+
 		public function addCustomTimeValidation(component:TextInput, fromDate:DateField, fromTime:TextInput, toDate:DateField, toTime:TextInput):void {
 			var timeObject:Object = new Object();
 			timeObject.type = "time";
@@ -396,7 +396,7 @@ package no.makingwaves.cust.dss.code
 			timeObject.toTime = toTime;
 			validationCustomSourceList.addItem(timeObject);
 		}
-		
+
 		public function removeCustomTimeValidation(component:TextInput):void {
 			for (var i:Number = 0; i < validationCustomSourceList.length; i++) {
 				if (validationCustomSourceList.getItemAt(i).type == "time") {
@@ -407,14 +407,14 @@ package no.makingwaves.cust.dss.code
 				}
 			}
 		}
-		
+
 		// VALIDATION DISPLAY METHODS =======================================================
-		
+
 		/*
-		*  Validation event triggered
-		*  Shows validation error message except if user tabbed backwards or new focus component
-		*  has some connection with prev component
-		*/
+		 *  Validation event triggered
+		 *  Shows validation error message except if user tabbed backwards or new focus component
+		 *  has some connection with prev component
+		 */
 		public function displayValidation(e:ValidationResultEvent):void {
 			try {
 				var component:UIComponent = UIComponent(e.currentTarget.source);
@@ -429,41 +429,41 @@ package no.makingwaves.cust.dss.code
 				trace(e.message);
 			}
 		}
-		
+
 		public function showValidationError(component:UIComponent, customErrorMsg:String=""):void {
 			if (!isValidating && getValidationWindow(component) == null) {
 				// set validating on to avoid other components to validate at the same time
 				isValidating = true;
 				// open validation window
 				var validationObj : Object = new Object();				
-		        var winValidation : validationDisplayer = validationDisplayer(PopUpManager.createPopUp(component.parent, validationDisplayer, false));
-		        if (customErrorMsg == "") {
-		        	winValidation.validationText = ResourceManager.getInstance().getString(model.resources.bundleName, component.id+"_validator");
-		        } else {
-		        	winValidation.validationText = customErrorMsg;
-		        }
-		        winValidation.nextFocusComponent = component;
-		        winValidation.callFromContainer = this;
-		        
-		        // close any other validation windows
-		        undisplayAllValidators();
-		        
-		        // register validation object in list
-		        validationObj.component = component;
-		        validationObj.window = winValidation;
-		        winValidationList.addItem(validationObj);
-		        trace("showValidationError("+component+", "+customErrorMsg+")");
-		        
-		        // set window position
-		        var pt:Point = new Point(component.x, component.y);
-            	pt = component.parent.localToGlobal(pt);
-            	
-		        winValidation.x = pt.x + component.width + 10;
-		        winValidation.y = pt.y + (component.height/2) - (winValidation.height/2);
+				var winValidation : validationDisplayer = validationDisplayer(PopUpManager.createPopUp(component.parent, validationDisplayer, false));
+				if (customErrorMsg == "") {
+					winValidation.validationText = ResourceManager.getInstance().getString(model.resources.bundleName, component.id+"_validator");
+				} else {
+					winValidation.validationText = customErrorMsg;
+				}
+				winValidation.nextFocusComponent = component;
+				winValidation.callFromContainer = this;
+
+				// close any other validation windows
+				undisplayAllValidators();
+
+				// register validation object in list
+				validationObj.component = component;
+				validationObj.window = winValidation;
+				winValidationList.addItem(validationObj);
+				trace("showValidationError("+component+", "+customErrorMsg+")");
+
+				// set window position
+				var pt:Point = new Point(component.x, component.y);
+				pt = component.parent.localToGlobal(pt);
+
+				winValidation.x = pt.x + component.width + 10;
+				winValidation.y = pt.y + (component.height/2) - (winValidation.height/2);
 
 			}
 		}
-		
+
 		public function undisplayValidation(e:ValidationResultEvent):void {
 			var component:UIComponent = UIComponent(e.currentTarget.source);
 			for (var i:Number = 0; i < winValidationList.length; i++) {
@@ -474,36 +474,36 @@ package no.makingwaves.cust.dss.code
 				}
 			}
 			//validateCustomField(component);
-   		}
-   		
-   		public function undisplayAllValidators():void {
-   			for (var i:Number = 0; i < winValidationList.length; i++) {
-   				winValidationList.getItemAt(i).window.close(); //hide();
+		}
+
+		public function undisplayAllValidators():void {
+			for (var i:Number = 0; i < winValidationList.length; i++) {
+				winValidationList.getItemAt(i).window.close(); //hide();
 			}
 			winValidationList.removeAll();
-   		}		
-   		
-   		public function getValidationWindow(component:UIComponent):validationDisplayer {
-   			for (var i:Number = 0; i < winValidationList.length; i++) {
+		}		
+
+		public function getValidationWindow(component:UIComponent):validationDisplayer {
+			for (var i:Number = 0; i < winValidationList.length; i++) {
 				if (component == winValidationList.getItemAt(i).component) {
 					return validationDisplayer(winValidationList.getItemAt(i).window);
 				}
 			}
 			return null;
-   		}
-   		
-   		public function disableValidation():void {
-   			this.undisplayAllValidators();
-   			
-   			validationCustomSourceList.removeAll();
-   			for (var i:Number = 0; i < this.validationSourceList.length; i++) {
-   				this.validationSourceList.getItemAt(i).enabled = false;
-   				this.validationSourceList.getItemAt(i).removeEventListener(ValidationResultEvent.INVALID, this.displayValidation);
-   				this.validationSourceList.getItemAt(i).removeEventListener(ValidationResultEvent.VALID, this.undisplayAllValidators);
-   			}
-   			this.validationSourceList.removeAll();
-   		}
-			
+		}
+
+		public function disableValidation():void {
+			this.undisplayAllValidators();
+
+			validationCustomSourceList.removeAll();
+			for (var i:Number = 0; i < this.validationSourceList.length; i++) {
+				this.validationSourceList.getItemAt(i).enabled = false;
+				this.validationSourceList.getItemAt(i).removeEventListener(ValidationResultEvent.INVALID, this.displayValidation);
+				this.validationSourceList.getItemAt(i).removeEventListener(ValidationResultEvent.VALID, this.undisplayAllValidators);
+			}
+			this.validationSourceList.removeAll();
+		}
+
 		public function continueClicked():void {
 			if (this.validateDetailsForm()) {
 				if (this.validateCustomFields()) {
@@ -511,10 +511,11 @@ package no.makingwaves.cust.dss.code
 				}
 			}
 		}
-			
+
 		public function getFormattedDate(date:Date):String {
 			var dateFormat:String = resourceManager.getString(model.resources.bundleName, "DATE_FORMAT");
 			return Util.formatDate(date, dateFormat);
 		}
 	}
 }
+

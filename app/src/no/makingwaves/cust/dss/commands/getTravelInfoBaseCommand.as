@@ -2,42 +2,42 @@ package no.makingwaves.cust.dss.commands
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	
+
 	import mx.collections.ArrayCollection;
 	import mx.resources.ResourceManager;
 	import mx.rpc.IResponder;
-	
+
 	import no.makingwaves.cust.dss.business.*;
 	import no.makingwaves.cust.dss.code.util.Util;
 	import no.makingwaves.cust.dss.model.ModelLocator;
 	import no.makingwaves.cust.dss.vo.*;
 	import no.makingwaves.util.date.DateRanger;
-	
+
 	import webservices.travelexpense.pdf.*;
 
 	public class getTravelInfoBaseCommand implements ICommand, IResponder
 	{
 		// attributes ============================
 		private var model : ModelLocator = ModelLocator.getInstance();
-		
+
 		private var outputType:String;
-		
+
 		private var extraCommentsList:ArrayCollection = new ArrayCollection();
 
 
 		// functions ============================
 		public function execute( event:CairngormEvent ) : void {}
-		
+
 		//----------------------------------------------------------------------------
 		public function result( data:Object ) : void {}
-		
+
 		//----------------------------------------------------------------------------
 		public function fault( info : Object ) : void {}
-		
+
 		public function getTravelExpenseData(format:String="xml"):webservices.travelexpense.pdf.TravelExpenseVO {
 			outputType = format;
 			extraCommentsList = new ArrayCollection();
-			
+
 			ModelLocator.getInstance().calculator.calculate();
 			var travelExpenseInfo:webservices.travelexpense.pdf.TravelExpenseVO = new webservices.travelexpense.pdf.TravelExpenseVO();
 			travelExpenseInfo.personalinfo = this.convertPersonalInfo();
@@ -49,13 +49,13 @@ package no.makingwaves.cust.dss.commands
 			travelExpenseInfo.travelOutlayList = this.convertTravelOutlays();
 			travelExpenseInfo.travelAdvanceList = this.convertTravelAdvances();
 			travelExpenseInfo.travelCommentList = this.convertTravelComments();
-			
+
 			return travelExpenseInfo;
 		}
-		
+
 		public function convertPersonalInfo():webservices.travelexpense.pdf.PersonalInfoVO {
 			var includeData:Boolean = ModelLocator.getInstance().saveWithPersonalInfo;
-			
+
 			var personalInfo:webservices.travelexpense.pdf.PersonalInfoVO = new webservices.travelexpense.pdf.PersonalInfoVO();
 			var modelInfo:no.makingwaves.cust.dss.vo.PersonalInfoVO = ModelLocator.getInstance().activePerson;
 			personalInfo.socialsecuritynumber = (includeData) ? modelInfo.socialsecuritynumber : "";
@@ -72,10 +72,10 @@ package no.makingwaves.cust.dss.commands
 			personalInfo.domicialname = (includeData) ? modelInfo.domicialname : "";
 			// reset parameter, default should be to include data
 			ModelLocator.getInstance().saveWithPersonalInfo = true;
-			
+
 			return personalInfo;
 		}
-		
+
 		public function convertTravelInfo():webservices.travelexpense.pdf.TravelVO {
 			var travelinfo:webservices.travelexpense.pdf.TravelVO = new webservices.travelexpense.pdf.TravelVO();
 			var modelinfo:no.makingwaves.cust.dss.vo.TravelVO = ModelLocator.getInstance().activeTravel;
@@ -88,10 +88,10 @@ package no.makingwaves.cust.dss.commands
 			travelinfo.travel_date_in = modelinfo.travel_date_in;
 			travelinfo.travel_time_in = modelinfo.travel_time_in;
 			travelinfo.travelNumber = modelinfo.travel_number;
-			
+
 			return travelinfo;
 		}
-		
+
 		public function convertTravelAllowances():webservices.travelexpense.pdf.TravelAllowanceVO {
 			var allowances:webservices.travelexpense.pdf.TravelAllowanceVO = new webservices.travelexpense.pdf.TravelAllowanceVO();
 			var modelAllowance:no.makingwaves.cust.dss.vo.TravelAllowanceVO = ModelLocator.getInstance().travelAllowance;
@@ -111,7 +111,7 @@ package no.makingwaves.cust.dss.commands
 			allowances.nighttariff_domestic = convertRate(modelAllowance.nighttariff_domestic);
 			allowances.nighttariff_domestic_hotel = convertRate(modelAllowance.nighttariff_domestic_hotel);
 			allowances.nighttariff_international = convertRateArray(modelAllowance.nighttariff_international); //convertRate(modelAllowance.nighttariff_international);
-			
+
 			// check wether there is need for additional comments on the print-out
 			if (this.outputType == "pdf") {
 				var travelDateInfo:DateRanger = ModelLocator.getInstance().travelLength;
@@ -126,29 +126,29 @@ package no.makingwaves.cust.dss.commands
 					} else if (travelDateInfo.total_24hours == 0) {
 						days = 1;
 					}					
-					
+
 					var commentStr:String = ResourceManager.getInstance().getString(model.resources.bundleName, 'info_international_compensation');
-					commentStr = Util.searchAndReplace(commentStr, "%1", days.toString());
+					commentStr = Util.searchAndReplace(commentStr, "%1", modelAllowance.allowance_other.getItemAt(0).num.toString());
 					commentStr = Util.searchAndReplace(commentStr, "%2", modelAllowance.allowance_other.getItemAt(0).rate);
-					
+
 					var modelComment:no.makingwaves.cust.dss.vo.TravelCommentVO = new no.makingwaves.cust.dss.vo.TravelCommentVO();
 					modelComment.comment = commentStr;
 					this.extraCommentsList.addItem(modelComment);
 				}
 			}
-			
+
 			return allowances;
 		}
-		
+
 		private function convertRate(rate:no.makingwaves.cust.dss.vo.RateVO):webservices.travelexpense.pdf.RateVO {
 			var returnRate:webservices.travelexpense.pdf.RateVO = new webservices.travelexpense.pdf.RateVO();
 			returnRate.amount = rate.amount;
 			returnRate.num = rate.num;
 			returnRate.rate = rate.rate;
-			
+
 			return returnRate;
 		}
-		
+
 		private function convertRateArray(rateArray:ArrayCollection):ArrayOfRateVO {
 			var returnArray:ArrayOfRateVO = new ArrayOfRateVO();
 			for (var i:Number = 0; i < rateArray.length; i++) {
@@ -157,7 +157,7 @@ package no.makingwaves.cust.dss.commands
 			}
 			return returnArray;
 		}
-		
+
 		public function convertTravelSpecifications():webservices.travelexpense.pdf.ArrayOfTravelSpecificationVO {
 			var specificationList:ArrayOfTravelSpecificationVO = new ArrayOfTravelSpecificationVO();
 			var modelList:ArrayCollection = ModelLocator.getInstance().travelSpecsList;
@@ -173,7 +173,7 @@ package no.makingwaves.cust.dss.commands
 					newSpecification.from_timezone = Number(modelSpecification.from_timezone);
 					newSpecification.from_date.setHours(Number(modelSpecification.from_time.substr(0,2)), Number(modelSpecification.from_time.substr(2,2)));
 				}
-					
+
 				newSpecification.to_destination = modelSpecification.to_destination;
 				newSpecification.to_country = (this.outputType == "pdf") ? modelSpecification.to_country.split("#")[0] : modelSpecification.to_country;
 				newSpecification.to_city = modelSpecification.to_city;
@@ -182,11 +182,11 @@ package no.makingwaves.cust.dss.commands
 					newSpecification.to_timezone = Number(modelSpecification.to_timezone);
 					newSpecification.to_date.setHours(Number(modelSpecification.to_time.substr(0,2)), Number(modelSpecification.to_time.substr(2,2)));
 				}
-					
+
 				newSpecification.is_travel_continious = modelSpecification.is_travel_continious;
 				newSpecification.is_travel_start = modelSpecification.is_travel_start;
 				newSpecification.is_travel_end = modelSpecification.is_travel_end;
-				
+
 				newSpecification.intermediate_landing = modelSpecification.intermediate_landing;
 				// update cost vo
 				newSpecification.cost = new webservices.travelexpense.pdf.CostVO();
@@ -210,11 +210,11 @@ package no.makingwaves.cust.dss.commands
 						carNewSpecification.cost.cost = carModelSpecification.cost.cost; 
 						carNewSpecification.cost.cost_currency = carModelSpecification.cost.cost_currency;
 						carNewSpecification.cost.cost_currency_rate = carModelSpecification.cost.cost_currency_rate;
-						
+
 						newSpecification.specification_aggregate = new webservices.travelexpense.pdf.AnySpecificationAggregateVO();
 						newSpecification.specification_aggregate.which_specification_used = 2;
 						newSpecification.specification_aggregate.car_specification = carNewSpecification;
-						
+
 					} else if (modelSpecification.specification.type == "motorboat") {
 						var boatModelSpecification:no.makingwaves.cust.dss.vo.MotorboatSpecificationVO = no.makingwaves.cust.dss.vo.MotorboatSpecificationVO(modelSpecification.specification);
 						var boatNewSpecification:webservices.travelexpense.pdf.MotorboatSpecificationVO = new webservices.travelexpense.pdf.MotorboatSpecificationVO();
@@ -227,11 +227,11 @@ package no.makingwaves.cust.dss.commands
 						boatNewSpecification.cost.cost = boatModelSpecification.cost.cost; 
 						boatNewSpecification.cost.cost_currency = boatModelSpecification.cost.cost_currency;
 						boatNewSpecification.cost.cost_currency_rate = boatModelSpecification.cost.cost_currency_rate;
-						
+
 						newSpecification.specification_aggregate = new webservices.travelexpense.pdf.AnySpecificationAggregateVO();
 						newSpecification.specification_aggregate.which_specification_used = 3;
 						newSpecification.specification_aggregate.motorboat_specification = boatNewSpecification;
-						
+
 					} else if (modelSpecification.specification.type == "motorcycle") {
 						var cycleModelSpecification:no.makingwaves.cust.dss.vo.MotorcycleSpecificationVO = no.makingwaves.cust.dss.vo.MotorcycleSpecificationVO(modelSpecification.specification);
 						var cycleNewSpecification:webservices.travelexpense.pdf.MotorcycleSpecificationVO = new webservices.travelexpense.pdf.MotorcycleSpecificationVO();
@@ -244,11 +244,11 @@ package no.makingwaves.cust.dss.commands
 						cycleNewSpecification.cost.cost = cycleModelSpecification.cost.cost; 
 						cycleNewSpecification.cost.cost_currency = cycleModelSpecification.cost.cost_currency;
 						cycleNewSpecification.cost.cost_currency_rate = cycleModelSpecification.cost.cost_currency_rate;
-						
+
 						newSpecification.specification_aggregate = new webservices.travelexpense.pdf.AnySpecificationAggregateVO();
 						newSpecification.specification_aggregate.which_specification_used = 4;
 						newSpecification.specification_aggregate.motorcycle_specification = cycleNewSpecification;
-						
+
 					} else if (modelSpecification.specification.type == "other") {
 						var otherModelSpecification:no.makingwaves.cust.dss.vo.OtherSpecificationVO = no.makingwaves.cust.dss.vo.OtherSpecificationVO(modelSpecification.specification);
 						var otherNewSpecification:webservices.travelexpense.pdf.OtherSpecificationVO = new webservices.travelexpense.pdf.OtherSpecificationVO();
@@ -258,10 +258,10 @@ package no.makingwaves.cust.dss.commands
 						otherNewSpecification.passengers = otherModelSpecification.passengers;
 						otherNewSpecification.rate = otherModelSpecification.rate;
 						otherNewSpecification.cost = newSpecification.cost; /*new webservices.travelexpense.pdf.CostVO();
-						otherNewSpecification.cost.cost = otherModelSpecification.cost.cost; 
-						otherNewSpecification.cost.cost_currency = otherModelSpecification.cost.cost_currency;
-						otherNewSpecification.cost.cost_currency_rate = otherModelSpecification.cost.cost_currency_rate;*/
-						
+						   otherNewSpecification.cost.cost = otherModelSpecification.cost.cost;
+						   otherNewSpecification.cost.cost_currency = otherModelSpecification.cost.cost_currency;
+						 otherNewSpecification.cost.cost_currency_rate = otherModelSpecification.cost.cost_currency_rate;*/
+
 						newSpecification.specification_aggregate = new webservices.travelexpense.pdf.AnySpecificationAggregateVO();
 						newSpecification.specification_aggregate.which_specification_used = 5;
 						newSpecification.specification_aggregate.other_specification = otherNewSpecification;
@@ -270,21 +270,21 @@ package no.makingwaves.cust.dss.commands
 					//var ticketModelSpecification:no.makingwaves.cust.dss.vo.TicketSpecificationVO = no.makingwaves.cust.dss.vo.TicketSpecificationVO(modelSpecification.specification);
 					//var ticketNewSpecification:webservices.travelexpense.pdf.TicketSpecificationVO = new webservices.travelexpense.pdf.TicketSpecificationVO();
 					/*ticketNewSpecification.type = ticketModelSpecification.type;
-					ticketNewSpecification.cost = new webservices.travelexpense.pdf.CostVO();
-					ticketNewSpecification.cost.cost = ticketModelSpecification.cost.cost; 
-					ticketNewSpecification.cost.cost_currency = ticketModelSpecification.cost.cost_currency;
-					ticketNewSpecification.cost.cost_currency_rate = ticketModelSpecification.cost.cost_currency_rate;
-					*/
-					//newSpecification.specification_aggregate.ticket_specification = ticketNewSpecification;
-					
+					   ticketNewSpecification.cost = new webservices.travelexpense.pdf.CostVO();
+					   ticketNewSpecification.cost.cost = ticketModelSpecification.cost.cost;
+					   ticketNewSpecification.cost.cost_currency = ticketModelSpecification.cost.cost_currency;
+					   ticketNewSpecification.cost.cost_currency_rate = ticketModelSpecification.cost.cost_currency_rate;
+					 */
+						 //newSpecification.specification_aggregate.ticket_specification = ticketNewSpecification;
+
 				}
 				// add to list
 				specificationList.addTravelSpecificationVO(newSpecification);
 			}
 			return specificationList;
-			
+
 		}
-		
+
 		public function convertTravelAccomodations():ArrayOfTravelAccomodationVO {
 			var accomodationList:ArrayOfTravelAccomodationVO = new ArrayOfTravelAccomodationVO();
 			var modelList:ArrayCollection = ModelLocator.getInstance().travelAccomodationList;
@@ -316,25 +316,25 @@ package no.makingwaves.cust.dss.commands
 					newAccomodation.actual_cost.cost = modelAccomodation.actual_cost.cost;
 					newAccomodation.actual_cost.cost_currency = modelAccomodation.actual_cost.cost_currency;
 					newAccomodation.actual_cost.cost_currency_rate = modelAccomodation.actual_cost.cost_currency_rate;
-					
+
 					accomodationList.addTravelAccomodationVO(newAccomodation);
-					
+
 				} else {
 					// actual cost is not included in calculations, but must be specified in the comments field
 					var commentStr:String = ResourceManager.getInstance().getString(model.resources.bundleName, 'accomodation_unauthorized_pdfalert');
 					commentStr = Util.searchAndReplace(commentStr, "%1", Util.formatDate(modelAccomodation.fromdate));
 					commentStr = Util.searchAndReplace(commentStr, "%2", Util.formatDate(modelAccomodation.todate));
 					commentStr = Util.searchAndReplace(commentStr, "%3", modelAccomodation.actual_cost.cost.toString());
-					
+
 					var modelComment:no.makingwaves.cust.dss.vo.TravelCommentVO = new no.makingwaves.cust.dss.vo.TravelCommentVO();
 					modelComment.comment = commentStr;
 					this.extraCommentsList.addItem(modelComment);
 				}
 			}
-			
+
 			return accomodationList;
 		}
-		
+
 		public function convertTravelDeductions():ArrayOfTravelDeductionVO {
 			var deductionList:ArrayOfTravelDeductionVO = new ArrayOfTravelDeductionVO();
 			var modelList:ArrayCollection = ModelLocator.getInstance().travelDeductionList;
@@ -349,12 +349,12 @@ package no.makingwaves.cust.dss.commands
 				newDeduction.cost.cost = Math.abs(modelDeduction.cost.cost); 
 				newDeduction.cost.cost_currency = modelDeduction.cost.cost_currency;
 				newDeduction.cost.cost_currency_rate = modelDeduction.cost.cost_currency_rate;
-				
+
 				deductionList.addTravelDeductionVO(newDeduction);
 			}
 			return deductionList;
 		}
-		
+
 		public function convertTravelOutlays():ArrayOfTravelOutlayVO {
 			var outlayList:ArrayOfTravelOutlayVO = new ArrayOfTravelOutlayVO();
 			var modelList:ArrayCollection = ModelLocator.getInstance().travelOutlayList;
@@ -368,12 +368,12 @@ package no.makingwaves.cust.dss.commands
 				newOutlay.cost.cost = modelOutlay.cost.cost; 
 				newOutlay.cost.cost_currency = modelOutlay.cost.cost_currency;
 				newOutlay.cost.cost_currency_rate = modelOutlay.cost.cost_currency_rate;
-				
+
 				outlayList.addTravelOutlayVO(newOutlay);
 			}
 			return outlayList;
 		}
-		
+
 		public function convertTravelAdvances():ArrayOfTravelAdvanceVO {
 			var advanceList:ArrayOfTravelAdvanceVO = new ArrayOfTravelAdvanceVO();
 			var modelList:ArrayCollection = ModelLocator.getInstance().travelAdvanceList;
@@ -383,12 +383,12 @@ package no.makingwaves.cust.dss.commands
 				newAdvance.location = modelAdvance.location;
 				newAdvance.date = modelAdvance.date;
 				newAdvance.cost = modelAdvance.cost;
-				
+
 				advanceList.addTravelAdvanceVO(newAdvance);
 			}
 			return advanceList;
 		}
-		
+
 		public function convertTravelComments():ArrayOfTravelCommentVO {
 			var commentList:ArrayOfTravelCommentVO = new ArrayOfTravelCommentVO();
 			var modelList:ArrayCollection = ModelLocator.getInstance().travelCommentList;
@@ -396,20 +396,20 @@ package no.makingwaves.cust.dss.commands
 				var newComment:webservices.travelexpense.pdf.TravelCommentVO = new webservices.travelexpense.pdf.TravelCommentVO();
 				var modelComment:no.makingwaves.cust.dss.vo.TravelCommentVO = no.makingwaves.cust.dss.vo.TravelCommentVO(modelList.getItemAt(i));
 				newComment.comment = modelComment.comment;
-				
+
 				commentList.addTravelCommentVO(newComment);
 			}
 			for (var e:Number = 0; e < extraCommentsList.length; e++) {
 				var newComment:webservices.travelexpense.pdf.TravelCommentVO = new webservices.travelexpense.pdf.TravelCommentVO();
 				var modelComment:no.makingwaves.cust.dss.vo.TravelCommentVO = no.makingwaves.cust.dss.vo.TravelCommentVO(extraCommentsList.getItemAt(e));
 				newComment.comment = modelComment.comment;
-				
+
 				commentList.addTravelCommentVO(newComment);
 			}
 			return commentList;
 		}
-		
-		
+
+
 		// resource url collector
 		public function getResourceUrl(id:String):String {
 			var resourceList:ArrayCollection = ModelLocator.getInstance().resourceList;
@@ -423,3 +423,4 @@ package no.makingwaves.cust.dss.commands
 
 	}
 }
+
