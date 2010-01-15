@@ -104,7 +104,6 @@
 	<rate code="CHN" night="1700" allowance="850" timezone="8" daylightsaving="false" textid="CHN_hong kong" desc="Kina; Hong Kong" />
 	<rate code="CHN" night="2600" allowance="750" timezone="8" daylightsaving="false" textid="CHN_shanghai" desc="Kina; Shanghai" />
 	<rate code="KOS" night="750" allowance="300" timezone="1" daylightsaving="true" textid="KOS" desc="Kosovo" />
-	<rate code="KOS" night="800" allowance="320" timezone="1" daylightsaving="true" textid="KOS" desc="Kosovo" />
 	<rate code="HRV" night="1500" allowance="850" timezone="1" daylightsaving="true" textid="HRV" desc="Kroatia" />
 	<rate code="KWT" night="1700" allowance="500" timezone="3" daylightsaving="false" textid="KWT" desc="Kuwait" />
 	<rate code="CYP" night="2400" allowance="780" timezone="2" daylightsaving="true" textid="CYP" desc="Kypros" />
@@ -118,7 +117,7 @@
 	<rate code="LTU" night="1500" allowance="570" timezone="2" daylightsaving="true" textid="LTU" desc="Litauen" />
 	<rate code="LUX" night="2150" allowance="800" timezone="1" daylightsaving="true" textid="LUX" desc="Luxembourg" />
 	<rate code="MDG" night="1300" allowance="450" timezone="3" daylightsaving="false" textid="MDG" desc="Madagaskar" />
-	<rate code="PRT" night="2100" allowance="870San Marino" timezone="0" daylightsaving="true" textid="PRT#Madeira" desc="Madeira" />
+	<rate code="PRT" night="2100" allowance="870" timezone="0" daylightsaving="true" textid="PRT#Madeira" desc="Madeira" />
 	<rate code="MKD" night="1250" allowance="500" timezone="1" daylightsaving="true" textid="MKD" desc="Makedonia" />
 	<rate code="MWI" night="1000" allowance="400" timezone="2" daylightsaving="false" textid="MWI" desc="Malawi" />
 	<rate code="MYS" night="2400" allowance="750" timezone="8" daylightsaving="false" textid="MYS" desc="Malaysia" />
