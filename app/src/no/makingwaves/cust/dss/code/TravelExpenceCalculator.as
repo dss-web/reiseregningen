@@ -1506,6 +1506,7 @@ package no.makingwaves.cust.dss.code
 
 		public function getInternationalRate(countryCode:String, city:String=""):TravelRateInternationalVO {
 			if (countryCode.indexOf("#") != -1) { countryCode = countryCode.split("#")[0]; }
+			if (city == "-") city = "";
 			var rateList:ArrayCollection = ModelLocator.getInstance().travelRatesInternationalList;
 			for (var i:Number = 0; i < rateList.length; i++) {
 				if (TravelRateInternationalVO(rateList.getItemAt(i)).code == countryCode &&
