@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	08.05.2009
+	@updated:	04.02.2010
 	@by:		Sven Aanesen, Making Waves
-	@comment:	08.05.2009: La til tekst rundt mellomlandinger
+	@comment:	04.02.2010: Tok bort tekst som har ligget på forsiden
+				08.05.2009: La til tekst rundt mellomlandinger
 				06.05.2009: Oppdaterte "site_intro" teksten.
 				23.04.2009: La til manglende kode for Spania
 				31.03.09:	Endret landskode fro Nord-Irland
@@ -19,8 +20,8 @@
 		<texts>
 			<text id="truncationIndicator" value="..." />
 			<!-- HEADERS AND COMMON TEXTS -->
-			<text id="site_header" value="Viktig informasjon om reiseregningen" />
-			<text id="site_intro" value="Ved reiser som inneholder et stort antall poster anbefaler vi å bruke den Windows-baserte reiseregningen, eller dele opp reiseregningen i flere deler." />
+			<text id="site_header" value="" />
+			<text id="site_intro" value="" />
 			<text id="header_personal" value="Personlig informasjon og jobbdetaljer"/>
 			<text id="header_travel" value="Reisen" />
 			<text id="header_settlement" value="Oppgjør" />

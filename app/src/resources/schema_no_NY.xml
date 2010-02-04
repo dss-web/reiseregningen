@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	08.05.2009
+	@updated:	04.02.2010
 	@by:		Sven Aanesen, Making Waves
-	@comment:	08.05.2009: La til tekst rundt mellomlandinger
+	@comment:	04.02.2010: Tok bort tekst som har ligget på forsiden
+				08.05.2009: La til tekst rundt mellomlandinger
 				06.05.2009: Oppdaterte "site_intro" teksten.
 				30.04.2009: Endret formattering på 'outlay_intro_help'
 				23.04.2009: La til manglende kode for Spania
@@ -19,8 +20,8 @@
 	<media>
 		<texts>
 			<text id="truncationIndicator" value="..." />
-			<text id="site_header" value="Viktig informasjon om reiseregningen" />
-			<text id="site_intro" value="Ved reiser som innehelder eit stort antall postar anbefaler vi å bruke den Windows-baserte reiseregninga, eller dele opp reiseregninga i fleire delar." />
+			<text id="site_header" value="" />
+			<text id="site_intro" value="" />
 			<text id="header_personal" value="Personleg informasjon og jobbdetaljar"/>
 			<text id="header_travel" value="Reisa"/>
 			<text id="header_settlement" value="Oppgjer"/>
