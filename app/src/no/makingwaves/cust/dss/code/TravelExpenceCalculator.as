@@ -272,8 +272,10 @@ package no.makingwaves.cust.dss.code
 
 					// check for last periode, may not be included in location-loop due to not a full 24 hour periode
 					if ((i+1) == locationInPeriodes.length && periodes.length > locationInPeriodes.length) {
-						if (travelPeriode.total_24hours == locationInPeriodes.length && travelPeriode.hours >= 12) {
-							allowanceToAdd.addItem(allowanceToday);
+						if (travelPeriode.total_24hours == locationInPeriodes.length && travelPeriode.hours >= 6) {
+							if (date == null) {
+								allowanceToAdd.addItem(allowanceToday);
+							}
 						}
 					}
 
@@ -285,14 +287,15 @@ package no.makingwaves.cust.dss.code
 							// calculation for over 28 days - reduce allowance with 25%
 							dailyAllowance = Number((dailyAllowance*0.75).toFixed(2));
 						}
+						trace("-------------------");
 						trace("Allowance for day " + daysCalculated + ": " + Util.formatDate(dateStart) + "-" + Util.formatDate(dateStop) + ": " + dailyAllowance + ",- (" + useForRates.country + ", " + useForRates.city + ")");
 
 						if (date != null) {
-							date = getUTCTime(date, timezoneDefault);
+							var testDate:Date = new Date(getUTCTime(date, timezoneDefault));
+							testDate.setHours(periode.start.hours, periode.start.minutes, periode.start.seconds);
 							// if date is specified in method - return only value for this date
-							//if (Util.formatDate(date) == Util.formatDate(periode.start)) {
-							if (date.getTime() > periode.start.getTime() && date.getTime() < periode.end.getTime()) {
-								trace("Allowance for " + Util.formatDate(date) + " is " + dailyAllowance);
+							if (testDate.getTime() >= periode.start.getTime() && testDate.getTime() <= periode.end.getTime()) {
+								trace("Single allowance for " + Util.formatDate(testDate) + " is " + dailyAllowance);
 								return dailyAllowance;
 							}
 						}
@@ -469,7 +472,7 @@ package no.makingwaves.cust.dss.code
 							periodeLocation.country = regPeriode.country;
 							periodeLocation.city = regPeriode.city;
 							timeSpent = nextPerTime;
-							totalTripTime += timeToAdd;
+							totalTripTime += nextPerTime;
 
 							rememberLocation.time -= nextPerTime;
 
@@ -481,7 +484,10 @@ package no.makingwaves.cust.dss.code
 						break;
 
 					} else if (travelInfo.total_min == totalTripTime) {
-						locations.addItem(periode);
+						if (periode.locations.length > 0)
+							locations.addItem(periode);
+
+						break;
 					}
 				}
 			}
@@ -490,12 +496,12 @@ package no.makingwaves.cust.dss.code
 		}
 
 		private function getTravelTimeAtLocations():ArrayCollection {
-			var specificationList:ArrayCollection
-				= ModelLocator.getInstance().travelSpecsList;
+			var specificationList:ArrayCollection = ModelLocator.getInstance().travelSpecsList;
 			var timeTable:ArrayCollection = new ArrayCollection();
 			var location:Object = new Object();
 			var currentLocation:Object = new Object();
 			var intermediate_landing:Boolean = false;
+			var notRegTime:Number = 0;
 			for (var i:int = 0; i < specificationList.length; i++) {
 				// get specification
 				var spec:TravelSpecificationVO = specificationList.getItemAt(i) as TravelSpecificationVO;
@@ -552,8 +558,20 @@ package no.makingwaves.cust.dss.code
 
 					// reset intermediate landing checker
 					intermediate_landing = false;
+					notRegTime = 0;
+
+				} else {
+					var leftOverStart:Number = startDate.getTime();
+					if (currentLocation) {
+						if (currentLocation.startTime)
+							leftOverStart = currentLocation.startTime;
+					}
+					notRegTime += (stopDate.getTime() - leftOverStart) / 1000 / 60;
 				}
 			}
+			if (notRegTime > 0)
+				timeTable.getItemAt(timeTable.length-1).time += notRegTime;
+
 			return timeTable;
 		}
 
