@@ -65,7 +65,7 @@ package no.makingwaves.cust.dss.code
 			if (travelInfo.travel_type == travelInfo.DOMESTIC) {
 				// DOMESTIC TRAVEL
 				// only travels over 5 hours will get a calculated allowance - any travel below 5 hours must specify manually
-				if (travelDateInfo.total_hours > 5) {
+				if (travelDateInfo.total_hours > 5 || (travelDateInfo.total_hours == 5 && travelDateInfo.minutes > 0)) {
 					rateRule = this.getAllowanceRate(travelInfo, travelDateInfo);
 					dailyAllowance = Number(rateRule.cost.toFixed(2));
 					// if travel is over more than a day
@@ -452,8 +452,14 @@ package no.makingwaves.cust.dss.code
 
 					}
 
+					var addPeriod:Boolean = false;
+					if (travelInfo.total_min == totalTripTime && totalTripTime < timePer24) {
+						// short trip (under 24 hours)
+						addPeriod = true;
+					}
+
 					// check if period is completely registered
-					if (timeSpent == timePer24) {
+					if (timeSpent == timePer24 || addPeriod) {
 						// this 24-hours periode is registered - add it to periode list
 						trace("PERIOD " + (i+1) + ": " + periodeLocation.country + "/" + periodeLocation.city + ": " + periodeLocation.time + " min - (mellomlanding: " + periodeLocation.intermediate_landing + ")");
 						var regPeriode:Object = periodeLocation;
