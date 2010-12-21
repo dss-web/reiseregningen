@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	@updated:	08.03.2010
+	@updated:	21.12.2010
 	@by:		Sven Aanesen, Making Waves
-	@comment:	08.03.10:	Lagt til oppdaterte satser gjeldende fra 01.03.2010
+	@comment:	21.12.10:   Oppdaterte satsen for kompensasjon ved utenlandsreiser
+                08.03.10:	Lagt til oppdaterte satser gjeldende fra 01.03.2010
 				23.04.09: 	Lagt til nye satser for trekk i kostgodtgjørelse ved innenlandsreise uten overnatting.
 				23.03.09:	La til ny sats - admin.tillegg ved utenlandsreiser.
 				17.03.09:	Oppdaterte satser for §9 kostgodtgjørelse dagsreiser
@@ -40,7 +41,7 @@
 	<travelraterule id="allowance_05" cost="" percent="66.66" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 6 og inntil 12 timer." />
 	<travelraterule id="allowance_06" cost="" percent="100" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 12 timer." />
 	
-	<travelraterule id="allowance_international" cost="400" percent="" rule_travel_type="international" description="Kompensasjonstillegg ved utenlandsreise pr. døgn utover 12 timer." />
+	<travelraterule id="allowance_international" cost="420" percent="" rule_travel_type="international" description="Kompensasjonstillegg ved utenlandsreise pr. døgn utover 12 timer." />
 
 	<travelraterule id="redraw_01" cost="" percent="10" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for frokost ved innenlandsreise" />
 	<travelraterule id="redraw_02" cost="" percent="40" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for lunsj ved innenlandsreise" />
