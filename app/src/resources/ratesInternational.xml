@@ -13,45 +13,45 @@
 -->
 <international_rates>
     <!-- AFRIKA -->
-    <!!rate code="---" night="1290" allowance="560" timezone="" daylightsaving="false" textid="AFRIKA - ØVRIGE OMRÅDER" desc="Afrika - øvrige områder" />
-    <!!rate code="DZA" night="1750" allowance="720" timezone="1" daylightsaving="false" textid="DZA" desc="Algerie" />
-    <!!rate code="AGO" night="2850" allowance="1000" timezone="1" daylightsaving="false" textid="AGO" desc="Angola" />
-	<!!rate code="BEN" night="1100" allowance="440" timezone="1" daylightsaving="false" textid="BEN" desc="Benin" />
-	<!!rate code="BWA" night="1250" allowance="400" timezone="2" daylightsaving="false" textid="BWA" desc="Botswana" />
-	<!!rate code="BDI" night="900" allowance="300" timezone="2" daylightsaving="false" textid="BDI" desc="Burundi" />
-	<!!rate code="EGY" night="1750" allowance="480" timezone="2" daylightsaving="true" textid="EGY" desc="Egypt" />
-	<!!rate code="CIV" night="1900" allowance="960" timezone="0" daylightsaving="false" textid="CIV" desc="Elfenbenskysten" />
-	<!!rate code="ETH" night="2200" allowance="500" timezone="3" daylightsaving="false" textid="ETH" desc="Etiopia" />
-	<!!rate code="GAB" night="1770" allowance="760" timezone="1" daylightsaving="false" textid="GAB" desc="Gabon" />
-	<!!rate code="GMB" night="1000" allowance="300" timezone="0" daylightsaving="false" textid="GMB" desc="Gambia" />
-	<!!rate code="GHA" night="1880" allowance="520" timezone="0" daylightsaving="false" textid="GHA" desc="Ghana" />
-	<!!rate code="GIN" night="1150" allowance="440" timezone="0" daylightsaving="false" textid="GIN" desc="Guinea" />
-	<!!rate code="CMR" night="1500" allowance="490" timezone="1" daylightsaving="false" textid="CMR" desc="Kamerun" />
-	<!!rate code="KEN" night="2100" allowance="580" timezone="3" daylightsaving="false" textid="KEN" desc="Kenya" />
-	<!!rate code="LSO" night="1350" allowance="300" timezone="2" daylightsaving="false" textid="LSO" desc="Lesotho" />
-	<!!rate code="LBR" night="1160" allowance="450" timezone="0" daylightsaving="false" textid="LBR" desc="Liberia" />
-	<!!rate code="LBY" night="3500" allowance="420" timezone="2" daylightsaving="false" textid="LBY" desc="Libya" />
-	<!!rate code="MDG" night="1300" allowance="350" timezone="3" daylightsaving="false" textid="MDG" desc="Madagaskar" />
-	<!!rate code="MWI" night="1000" allowance="740" timezone="2" daylightsaving="false" textid="MWI" desc="Malawi" />
-	<!!rate code="MLI" night="1200" allowance="470" timezone="0" daylightsaving="false" textid="MLI" desc="Mali" />
-	<!!rate code="MAR" night="2100" allowance="700" timezone="0" daylightsaving="false" textid="MAR" desc="Marokko" />
-	<!!rate code="MUS" night="1500" allowance="510" timezone="4" daylightsaving="false" textid="MUS" desc="Mauritius" />
-	<!!rate code="MOZ" night="1650" allowance="420" timezone="2" daylightsaving="false" textid="MOZ" desc="Mocambique" />
-	<!!rate code="NAM" night="2100" allowance="500" timezone="1" daylightsaving="false" textid="NAM" desc="Namibia" />
-	<!!rate code="NGA" night="2500" allowance="700" timezone="1" daylightsaving="false" textid="NGA" desc="Nigeria" />
-	<!!rate code="SEN" night="1900" allowance="680" timezone="0" daylightsaving="false" textid="SEN" desc="Senegal" />
-	<!!rate code="SYC" night="1200" allowance="600" timezone="4" daylightsaving="false" textid="SYC" desc="Seychellene" />
-	<!!rate code="SDN" night="1700" allowance="400" timezone="3" daylightsaving="false" textid="SDN" desc="Sudan" />
-	<!!rate code="SWZ" night="1700" allowance="300" timezone="2" daylightsaving="false" textid="SWZ" desc="Swaziland" />
-	<!!rate code="ZAF" night="2400" allowance="500" timezone="2" daylightsaving="false" textid="ZAF" desc="Sør-Afrika" />
-	<!!rate code="ZAF" night="3300" allowance="520" timezone="2" daylightsaving="false" textid="ZAF_cape town" desc="Sør-Afrika; Cape Town" />
-	<!!rate code="ZAF" night="2400" allowance="620" timezone="2" daylightsaving="false" textid="ZAF_johannesburg" desc="Sør-Afrika; Johannesburg" />
-	<!!rate code="TZA" night="2000" allowance="340" timezone="3" daylightsaving="false" textid="TZA" desc="Tanzania" />
-	<!!rate code="TGO" night="1000" allowance="430" timezone="0" daylightsaving="false" textid="TGO" desc="Togo" />
-	<!!rate code="TUN" night="2100" allowance="650" timezone="1" daylightsaving="false" textid="TUN" desc="Tunisia" />
-	<!!rate code="UGA" night="1900" allowance="550" timezone="3" daylightsaving="false" textid="UGA" desc="Uganda" />
-	<!!rate code="ZMB" night="2100" allowance="500" timezone="2" daylightsaving="false" textid="ZMB" desc="Zambia" />
-	<!!rate code="ZWE" night="1500" allowance="380" timezone="2" daylightsaving="false" textid="ZWE" desc="Zimbabwe" />
+    <rate code="---" night="1290" allowance="560" timezone="" daylightsaving="false" textid="AFRIKA - ØVRIGE OMRÅDER" desc="Afrika - øvrige områder" />
+    <rate code="DZA" night="1750" allowance="720" timezone="1" daylightsaving="false" textid="DZA" desc="Algerie" />
+    <rate code="AGO" night="2850" allowance="1000" timezone="1" daylightsaving="false" textid="AGO" desc="Angola" />
+	<rate code="BEN" night="1100" allowance="440" timezone="1" daylightsaving="false" textid="BEN" desc="Benin" />
+	<rate code="BWA" night="1250" allowance="400" timezone="2" daylightsaving="false" textid="BWA" desc="Botswana" />
+	<rate code="BDI" night="900" allowance="300" timezone="2" daylightsaving="false" textid="BDI" desc="Burundi" />
+	<rate code="EGY" night="1750" allowance="480" timezone="2" daylightsaving="true" textid="EGY" desc="Egypt" />
+	<rate code="CIV" night="1900" allowance="960" timezone="0" daylightsaving="false" textid="CIV" desc="Elfenbenskysten" />
+	<rate code="ETH" night="2200" allowance="500" timezone="3" daylightsaving="false" textid="ETH" desc="Etiopia" />
+	<rate code="GAB" night="1770" allowance="760" timezone="1" daylightsaving="false" textid="GAB" desc="Gabon" />
+	<rate code="GMB" night="1000" allowance="300" timezone="0" daylightsaving="false" textid="GMB" desc="Gambia" />
+	<rate code="GHA" night="1880" allowance="520" timezone="0" daylightsaving="false" textid="GHA" desc="Ghana" />
+	<rate code="GIN" night="1150" allowance="440" timezone="0" daylightsaving="false" textid="GIN" desc="Guinea" />
+	<rate code="CMR" night="1500" allowance="490" timezone="1" daylightsaving="false" textid="CMR" desc="Kamerun" />
+	<rate code="KEN" night="2100" allowance="580" timezone="3" daylightsaving="false" textid="KEN" desc="Kenya" />
+	<rate code="LSO" night="1350" allowance="300" timezone="2" daylightsaving="false" textid="LSO" desc="Lesotho" />
+	<rate code="LBR" night="1160" allowance="450" timezone="0" daylightsaving="false" textid="LBR" desc="Liberia" />
+	<rate code="LBY" night="3500" allowance="420" timezone="2" daylightsaving="false" textid="LBY" desc="Libya" />
+	<rate code="MDG" night="1300" allowance="350" timezone="3" daylightsaving="false" textid="MDG" desc="Madagaskar" />
+	<rate code="MWI" night="1000" allowance="740" timezone="2" daylightsaving="false" textid="MWI" desc="Malawi" />
+	<rate code="MLI" night="1200" allowance="470" timezone="0" daylightsaving="false" textid="MLI" desc="Mali" />
+	<rate code="MAR" night="2100" allowance="700" timezone="0" daylightsaving="false" textid="MAR" desc="Marokko" />
+	<rate code="MUS" night="1500" allowance="510" timezone="4" daylightsaving="false" textid="MUS" desc="Mauritius" />
+	<rate code="MOZ" night="1650" allowance="420" timezone="2" daylightsaving="false" textid="MOZ" desc="Mocambique" />
+	<rate code="NAM" night="2100" allowance="500" timezone="1" daylightsaving="false" textid="NAM" desc="Namibia" />
+	<rate code="NGA" night="2500" allowance="700" timezone="1" daylightsaving="false" textid="NGA" desc="Nigeria" />
+	<rate code="SEN" night="1900" allowance="680" timezone="0" daylightsaving="false" textid="SEN" desc="Senegal" />
+	<rate code="SYC" night="1200" allowance="600" timezone="4" daylightsaving="false" textid="SYC" desc="Seychellene" />
+	<rate code="SDN" night="1700" allowance="400" timezone="3" daylightsaving="false" textid="SDN" desc="Sudan" />
+	<rate code="SWZ" night="1700" allowance="300" timezone="2" daylightsaving="false" textid="SWZ" desc="Swaziland" />
+	<rate code="ZAF" night="2400" allowance="500" timezone="2" daylightsaving="false" textid="ZAF" desc="Sør-Afrika" />
+	<rate code="ZAF" night="3300" allowance="520" timezone="2" daylightsaving="false" textid="ZAF_cape town" desc="Sør-Afrika; Cape Town" />
+	<rate code="ZAF" night="2400" allowance="620" timezone="2" daylightsaving="false" textid="ZAF_johannesburg" desc="Sør-Afrika; Johannesburg" />
+	<rate code="TZA" night="2000" allowance="340" timezone="3" daylightsaving="false" textid="TZA" desc="Tanzania" />
+	<rate code="TGO" night="1000" allowance="430" timezone="0" daylightsaving="false" textid="TGO" desc="Togo" />
+	<rate code="TUN" night="2100" allowance="650" timezone="1" daylightsaving="false" textid="TUN" desc="Tunisia" />
+	<rate code="UGA" night="1900" allowance="550" timezone="3" daylightsaving="false" textid="UGA" desc="Uganda" />
+	<rate code="ZMB" night="2100" allowance="500" timezone="2" daylightsaving="false" textid="ZMB" desc="Zambia" />
+	<rate code="ZWE" night="1500" allowance="380" timezone="2" daylightsaving="false" textid="ZWE" desc="Zimbabwe" />
     
     <!-- AMERIKA -->
     <rate code="ATG" night="1900" allowance="850" timezone="-4" daylightsaving="false" textid="ATG" desc="Antigua og Barbuda" />
