@@ -20,8 +20,8 @@
 		<texts>
 			<text id="truncationIndicator" value="..." />
 			<!-- HEADERS AND COMMON TEXTS -->
-			<text id="site_header" value="" />
-			<text id="site_intro" value="" />
+			<text id="site_header" value="Viktig informasjon om reiseregningen" />
+			<text id="site_intro" value="Ved reiser som inneholder et stort antall poster anbefaler vi å bruke den Windows-baserte reiseregningen, eller dele opp reiseregningen i flere deler." />
 			<text id="header_personal" value="Personlig informasjon og jobbdetaljer"/>
 			<text id="header_travel" value="Reisen" />
 			<text id="header_settlement" value="Oppgjør" />
