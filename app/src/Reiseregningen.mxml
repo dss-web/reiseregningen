@@ -185,7 +185,7 @@
 				model.summaryTextSettlements = resourceManager.getString(model.resources.bundleName, "summary_settlement_default");
 				
 				// add listener to save locally on state change
-				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, stateChanged);
+				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE, stateChangedHandler);
 				
 				// register travel expense form as open, for navigation purposes
 				model.travelExpenseOpen = true;
@@ -602,7 +602,7 @@
 				//model.accessibility.showAccessibilityHelp(btn_accessbility_help, helpText);
 			}
 			
-			public function stateChanged(e:StateChangeEvent):void {
+			public function stateChangedHandler(e:StateChangeEvent):void {
 				// check wether to save locally
 				/*
 				if (model.localSaveName != "") {

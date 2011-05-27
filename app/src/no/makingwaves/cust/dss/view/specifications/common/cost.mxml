@@ -11,6 +11,8 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.core.Container;
+			
 			import no.makingwaves.cust.dss.vo.CostVO;			
 			
 			[Bindable]
@@ -42,7 +44,7 @@
 					}
 				}
 				*/	
-				if (costchoice.selectedChild.id != "cost_local") {
+				if (Container(costchoice.selectedChild).id != "cost_local") {
 					cost_currency.autoFillInMode = this.autoFillInMode;
 					cost_currency.init(this.costVO);
 				}
@@ -56,7 +58,7 @@
 			
 			override public function clearFields():void {
 				super.clearFields();
-				if (costchoice.selectedChild.id == "cost_local") {
+				if (Container(costchoice.selectedChild).id == "cost_local") {
 					travelcost.text = "";
 				} else {
 					cost_currency.clearFields();
@@ -65,7 +67,7 @@
 			}
 			
 			override public function autoFillIn(editMode:Boolean=false):void {
-				if (costchoice.selectedChild.id == "cost_local") {
+				if (Container(costchoice.selectedChild).id == "cost_local") {
 					this.autoFillInMode = true;
 					
 				} else {
@@ -74,7 +76,7 @@
 			}
 			
 			private function reinit():void {
-				if (costchoice.selectedChild.id == "cost_local") {
+				if (Container(costchoice.selectedChild).id == "cost_local") {
 					// add accessibility props
 					model.accessibility.addAccessibility(travelcost, resourceManager.getString(model.resources.bundleName, travelcost+'_label'));
 					// add accessibility props
@@ -87,7 +89,7 @@
 			
 			public function getCost():CostVO {
 				if (validateAll()) {
-					if (costchoice.selectedChild.id == "cost_local") {
+					if (Container(costchoice.selectedChild).id == "cost_local") {
 						this.costVO.cost = Number(travelcost.text);
 						return this.costVO;
 					} else {
@@ -99,7 +101,7 @@
 			
 			override public function validateAll():Boolean {
 				var valid:Boolean = super.validateAll();
-				if (costchoice.selectedChild.id != "cost_local") {
+				if (Container(costchoice.selectedChild).id != "cost_local") {
 					valid = valid && cost_currency.validateAll();
 				}
 				return valid;

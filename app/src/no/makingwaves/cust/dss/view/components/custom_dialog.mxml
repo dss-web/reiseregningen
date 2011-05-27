@@ -94,7 +94,7 @@
 		]]>
 	</mx:Script>
 	
-	<mx:Canvas width="100%" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" backgroundColor="#FFFFFF">
+	<mx:Canvas width="100%" backgroundColor="#FFFFFF">
 		<mx:TextInput id="intro" width="0" height="0" alpha="0" focusIn="introIn(event)" focusOut="introOut(event)" />
 		<mx:Text id="alerttext" text="{alertText}" width="300" horizontalCenter="0"
 					 paddingTop="20" paddingBottom="20" paddingLeft="20" paddingRight="20"/>

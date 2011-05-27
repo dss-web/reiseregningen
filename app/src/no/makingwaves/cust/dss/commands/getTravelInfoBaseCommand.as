@@ -126,10 +126,12 @@ package no.makingwaves.cust.dss.commands
 					} else if (travelDateInfo.total_24hours == 0) {
 						days = 1;
 					}					
-
-					var commentStr:String = ResourceManager.getInstance().getString(model.resources.bundleName, 'info_international_compensation');
-					commentStr = Util.searchAndReplace(commentStr, "%1", modelAllowance.allowance_other.getItemAt(0).num.toString());
-					commentStr = Util.searchAndReplace(commentStr, "%2", modelAllowance.allowance_other.getItemAt(0).rate);
+					
+					if (modelAllowance.allowance_other.length > 0) {
+						var commentStr:String = ResourceManager.getInstance().getString(model.resources.bundleName, 'info_international_compensation');
+						commentStr = Util.searchAndReplace(commentStr, "%1", modelAllowance.allowance_other.getItemAt(0).num.toString());
+						commentStr = Util.searchAndReplace(commentStr, "%2", modelAllowance.allowance_other.getItemAt(0).rate);
+					}
 
 					var modelComment:no.makingwaves.cust.dss.vo.TravelCommentVO = new no.makingwaves.cust.dss.vo.TravelCommentVO();
 					modelComment.comment = commentStr;
