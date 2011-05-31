@@ -123,12 +123,12 @@
 				if (this.travelspecifications.from_country != "") {
 					setInitialCountryCombo(this.travelspecifications.from_country, this.cmb_countryfrom);
 				} else {
-					setInitialCountryCombo(defaultMsg, this.cmb_countryfrom);
+					setInitialCountryCombo("#"+defaultMsg, this.cmb_countryfrom);
 				} 
 				if (this.travelspecifications.to_country != "") {
 					setInitialCountryCombo(this.travelspecifications.to_country, this.cmb_countryto);
 				} else {
-					setInitialCountryCombo(defaultMsg, this.cmb_countryto);
+					setInitialCountryCombo("#"+defaultMsg, this.cmb_countryto);
 				}
 
 				buildInternationalCitySources(this.cmb_countryfrom.selectedItem.data, this.cmb_cityfrom);
