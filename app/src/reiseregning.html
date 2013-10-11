@@ -6,17 +6,6 @@
 <META NAME="description" CONTENT="reiseregningen.no - en tjeneste fra Fornyings- og administrasjonsdepartementet for utfylling av reiseregninger for statlige ansatte og andre interesserte. Se reiseregningen.no og sph.dep.no for nærmere informasjon">
 <META NAME="keywords" CONTENT="reiseregning, elektronisk reiseregning, statens reiseregulativ, utenlandsregulativet, innenlandsregulativet">
 <META NAME="author" CONTENT="Fornyings- og administrasjonsdepartementet">
-
-<script type="text/javascript">
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	ga('create','UA-6906099-1');
-	ga('set', 'anonymizeIp', true);
-	ga('send','pageview');
-</script>
-
 <script type="text/javascript" src="swfobject.js"></script>
 <TITLE>reiseregningen.no</TITLE>
 	<style type="text/css">
@@ -26,7 +15,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		font-size: 11px;
 		color: #000000;
 		background-color: #ffffff;
-		margin: 0px;
+		margin: 0;
 		text-align:center;
 		width: 100%;
 		height: 100%;
@@ -37,6 +26,49 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		margin: 30% auto;
 		vertical-align: middle;
 		text-align: center;
+	}
+
+	#cookieDialog {
+		z-index: 500;
+		bottom: 0;
+		left: 0;
+		position: absolute;
+		width: 100%;
+		height: auto;
+		background-color: #333333;
+		opacity: 0.8;
+		filter: alpha(opacity=80);
+		text-align: left;
+		display: none;
+	}
+
+	#cookieDialog.visible {
+		display: block;
+	}
+
+	.cookie-dialog-content {
+		padding: 10px;
+		margin-left: auto;
+		margin-right: auto;
+		width: 960px;
+		color: #FFFFFF;
+		font-family: Verdana, Arial, sans-serif;
+		font-size: 12px;
+		line-height: 16px;
+	}
+
+	.cookie-dialog-content a {
+		color: #fff;
+	}
+
+	#cookie-dialog-close {
+		text-decoration: none;
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+	.floatRight {
+		float: right;
 	}
 
 	-->
@@ -50,6 +82,16 @@ Du må oppgradere Flash Playeren din<p><a href="http://www.adobe.com/shockwave/d
 </div>
 
 <script type="text/javascript">
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create','UA-6906099-1');
+	ga('set', 'anonymizeIp', true);
+	ga('send','pageview');
+</script>
+
+<script type="text/javascript">
 	var random = Math.round(Math.random() * 999999);
 	var url = "Reiseregningen.swf?rand="+random;
 	var so = new SWFObject(url, "reiseregning", "100%", "100%", "9", "#000000");
@@ -58,11 +100,25 @@ Du må oppgradere Flash Playeren din<p><a href="http://www.adobe.com/shockwave/d
 	so.addParam("salign", "tl");
 	so.addParam("allowFullScreen","true");
 	so.addParam("allowScriptAccess", "always");
+	so.addParam("wmode", "transparent");
 
     so.write('flashcontent');
 
 </script>
 
+<div id="cookieDialog" class="visible">
+	<div class="cookie-dialog-content">
+		<div class="floatRight">
+			<a href="#" id="cookie-dialog-close" title="Lukk">Lukk X</a>
+		</div>
+		<p class="info">Reiseregningen.no benytter informasjonskapsler (cookies) slik at vi kan yte deg bedre service. Du kan lese mer om <a href="personvern.html">vår bruk av informasjonskapsler</a> eller fortsette å bruke reiseregningen.no som vanlig hvis du godtar dette.</p>
+	</div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="assets/js/jquery-1.10.2.min.js"><\/script>')</script>
+<script src="assets/js/jquery.cookie.min.js"></script>
+<script src="assets/js/script.js"></script>
 
 </body>
 </HTML>
