@@ -1,29 +1,125 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <TITLE>Reiseregningen på web</TITLE>
-  
-  <style type="text/css">
-<!--
-.style1 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-}
--->
-  </style>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></HEAD>
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
 
- <BODY>
-	<h1 class="style1"><img src="assets/media/images/logo.jpg" alt="Fornyings- og administrasjonsdepartementet" width="445" height="64"></h1>
- <p class="style1"><strong>Reiseregningen på web, version 1.0</strong></p>
- <p class="style1"><a href="javascript:openApplication()">Start applikasjonen</a> (&aring;pnes i eget vindu)</p>
-    
-    <script language="javascript">
-		function openApplication() {
-			var sizeStr = "left=0,top=0,width=" + self.screen.width + ",height=" + self.screen.height;
-			window.open ("reiseregning.html", "Reiseregningen", sizeStr+",location=0,menubar=0,directories=0,resizable=yes,scrollbars=0,status=0,toolbar=0"); 
-		}
-	</script>
-</BODY>
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<META NAME="description" CONTENT="reiseregningen.no - en tjeneste fra Fornyings- og administrasjonsdepartementet for utfylling av reiseregninger for statlige ansatte og andre interesserte. Se reiseregningen.no og sph.dep.no for nærmere informasjon">
+<META NAME="keywords" CONTENT="reiseregning, elektronisk reiseregning, statens reiseregulativ, utenlandsregulativet, innenlandsregulativet">
+<META NAME="author" CONTENT="Fornyings- og administrasjonsdepartementet">
+<script type="text/javascript" src="swfobject.js"></script>
+<TITLE>reiseregningen.no</TITLE>
+	<style type="text/css">
+	<!--
+	body {
+		font-family: Arial;
+		font-size: 11px;
+		color: #000000;
+		background-color: #ffffff;
+		margin: 0;
+		text-align:center;
+		width: 100%;
+		height: 100%;
+
+	}
+
+	.content {
+		margin: 30% auto;
+		vertical-align: middle;
+		text-align: center;
+	}
+
+	#cookieDialog {
+		z-index: 500;
+		bottom: 0;
+		left: 0;
+		position: absolute;
+		width: 100%;
+		height: auto;
+		background-color: #333333;
+		opacity: 0.8;
+		filter: alpha(opacity=80);
+		text-align: left;
+		display: none;
+	}
+
+	#cookieDialog.visible {
+		display: block;
+	}
+
+	.cookie-dialog-content {
+		padding: 10px;
+		margin-left: auto;
+		margin-right: auto;
+		width: 960px;
+		color: #FFFFFF;
+		font-family: Verdana, Arial, sans-serif;
+		font-size: 12px;
+		line-height: 16px;
+	}
+
+	.cookie-dialog-content a {
+		color: #fff;
+	}
+
+	#cookie-dialog-close {
+		text-decoration: none;
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+	.floatRight {
+		float: right;
+	}
+
+	-->
+	</style>
+</head>
+<body>
+
+<div id="flashcontent">
+  	<div class="content">
+Du må oppgradere Flash Playeren din<p><a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash&amp;promoid=BIOW"><img src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" border=0 alt="Get Flash Player"></a></p><p>(klikk på bildet)</p></div>
+</div>
+
+<script type="text/javascript">
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create','UA-6906099-1');
+	ga('set', 'anonymizeIp', true);
+	ga('send','pageview');
+</script>
+
+<script type="text/javascript">
+	var random = Math.round(Math.random() * 999999);
+	var url = "Reiseregningen.swf?rand="+random;
+	var so = new SWFObject(url, "reiseregning", "100%", "100%", "9", "#000000");
+    so.useExpressInstall('expressinstall.swf')
+	so.addParam("scale", "noscale");
+	so.addParam("salign", "tl");
+	so.addParam("allowFullScreen","true");
+	so.addParam("allowScriptAccess", "always");
+	so.addParam("wmode", "transparent");
+
+    so.write('flashcontent');
+
+</script>
+
+<div id="cookieDialog">
+	<div class="cookie-dialog-content">
+		<div class="floatRight">
+			<a href="#" id="cookie-dialog-close" title="Lukk">Lukk X</a>
+		</div>
+		<p class="info">Reiseregningen.no benytter informasjonskapsler (cookies) slik at vi kan yte deg bedre service. Du kan lese mer om <a href="personvern.html">vår bruk av informasjonskapsler</a> eller fortsette å bruke reiseregningen.no som vanlig hvis du godtar dette.</p>
+	</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="assets/js/jquery-1.10.2.min.js"><\/script>')</script>
+<script src="assets/js/jquery.cookie.min.js"></script>
+<script src="assets/js/script.js"></script>
+
+</body>
 </HTML>
+
