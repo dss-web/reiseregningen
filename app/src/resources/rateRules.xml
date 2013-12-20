@@ -11,53 +11,54 @@
 							la til ny sats; 'allowance_international'
 -->
 <travelraterules>
-	<travelraterule id="transport_car_01" cost="3.65" description="Sats for egen bil, kjørt inntil 9000 km i kalenderåret" />
-	<travelraterule id="transport_car_02" cost="3.00" description="Sats for egen bil, kjørt over 9000 km i kalenderåret" />
-	<travelraterule id="transport_car_extra_01" cost="0.05" description="Tilleggssats pr km for arbeidstaker med arbeidssted i Tromsø" />
-	<travelraterule id="transport_car_extra_02" cost="0.90" description="Tilleggssats pr km pr passasjer i egen bil" />
-	<travelraterule id="transport_car_extra_03" cost="0.60" description="Tilleggssats pr km nødvendig bruk av tilhenger" />
-	<travelraterule id="transport_car_extra_04" cost="0.90" description="Tilleggssats pr km for kjøring på skogs- og anleggsvei" />
+	<travelraterule id="transport_car_01" cost="4.05" description="Sats for egen bil, kjørt inntil 10000 km i kalenderåret" />
+	<travelraterule id="transport_car_02" cost="3.45" description="Sats for egen bil, kjørt over 10000 km i kalenderåret" />
 
-	<travelraterule id="transport_motorcycle_01" cost="2.80" description="Sats for egen motorsykkel over 125 ccm" />
-	<travelraterule id="transport_motorcycle_02" cost="1.55" description="Sats for egen motorsykkel/model inntil 125 ccm" />
+	<travelraterule id="transport_car_extra_01" cost="0.10" description="Tilleggssats pr km for arbeidstaker med arbeidssted i Tromsø" />
+	<travelraterule id="transport_car_extra_02" cost="1.00" description="Tilleggssats pr km pr passasjer i egen bil" />
+	<travelraterule id="transport_car_extra_03" cost="1.00" description="Tilleggssats pr km nødvendig bruk av tilhenger" />
+	<travelraterule id="transport_car_extra_04" cost="1.00" description="Tilleggssats pr km for kjøring på skogs- og anleggsvei" />
 
-	<travelraterule id="transport_snowmobile_01" cost="6.60" description="Sats for kjøring med egen snøscooter" />
+	<travelraterule id="transport_motorcycle_01" cost="2.90" description="Sats for egen motorsykkel over 125 ccm" />
+	<travelraterule id="transport_motorcycle_02" cost="1.60" description="Sats for egen motorsykkel/model inntil 125 ccm" />
 
-	<travelraterule id="transport_motorboat_01" cost="6.50" description="Sats for egen båt med motor fra og med 50 hk" />
-	<travelraterule id="transport_motorboat_02" cost="3.50" description="Sats for egen båt med motor inntil 50 hk" />
+	<travelraterule id="transport_snowmobile_01" cost="7.50" description="Sats for kjøring med egen snøscooter" />
+
+	<travelraterule id="transport_motorboat_01" cost="7.50" description="Sats for egen båt med motor fra og med 50 hk" />
+	<travelraterule id="transport_motorboat_02" cost="4.00" description="Sats for egen båt med motor inntil 50 hk" />
 	
-	<travelraterule id="transport_el-car_01" cost="4.00" description="Sats for kjøring med EL-bil" />
+	<travelraterule id="transport_el-car_01" cost="4.20" description="Sats for kjøring med EL-bil" />
 
-	<travelraterule id="transport_other_01" cost="1.50" description="Sats for bruk av andre fremkomstmidler" />
+	<travelraterule id="transport_other_01" cost="2.00" description="Sats for bruk av andre fremkomstmidler" />
 	
-	<travelraterule id="transport_passenger_extra_01" cost="0.75" description="Tilleggssats pr km pr passasjer i eget kjøretøy" />
+	<travelraterule id="transport_passenger_extra_01" cost="1.00" description="Tilleggssats pr km pr passasjer i eget kjøretøy" />
 
-	<travelraterule id="allowance_01" cost="155.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på inntil 5 timer. Legitimert sats" />
-	<travelraterule id="allowance_02" cost="175.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 5 timer inntil 9 timer." />
-	<travelraterule id="allowance_03" cost="270.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 9 timer inntil 12 timer." />
-	<travelraterule id="allowance_04a" cost="445.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved over 15 km på fra og med 12 timer." />
-	<travelraterule id="allowance_04b" cost="580.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise med overnatting, med reiselengde over 15 km på fra og med 12 timer." />
+	<travelraterule id="allowance_01" cost="180.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på inntil 5 timer. Legitimert sats" />
+	<travelraterule id="allowance_02" cost="200.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 5 timer inntil 9 timer." />
+	<travelraterule id="allowance_03" cost="310.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise over 15 km på fra og med 9 timer inntil 12 timer." />
+	<travelraterule id="allowance_04a" cost="510.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved over 15 km på fra og med 12 timer." />
+	<travelraterule id="allowance_04b" cost="690.00" rule_travel_type="domestic" description="Kostgodtgjørelse ved reise med overnatting, med reiselengde over 15 km på fra og med 12 timer." />
 
 	<travelraterule id="allowance_05" cost="" percent="66.66" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 6 og inntil 12 timer." />
 	<travelraterule id="allowance_06" cost="" percent="100" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 12 timer." />
 	
-	<travelraterule id="allowance_international" cost="420" percent="" rule_travel_type="international" description="Kompensasjonstillegg ved utenlandsreise pr. døgn utover 12 timer." />
+	<travelraterule id="allowance_international" cost="455" percent="" rule_travel_type="international" description="Kompensasjonstillegg ved utenlandsreise pr. døgn utover 12 timer." />
 
 	<travelraterule id="redraw_01" cost="" percent="10" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for frokost ved innenlandsreise" />
 	<travelraterule id="redraw_02" cost="" percent="40" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for lunsj ved innenlandsreise" />
 	<travelraterule id="redraw_03" cost="" percent="50" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for middag ved innenlandsreise" />
 	
 	<travelraterule id="redraw_01_day" cost="0" percent="" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for frokost ved dagsreise u/overnatting innenlands" />
-	<travelraterule id="redraw_02_day" cost="175" percent="" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for lunsj ved dagsreise u/overnatting innenlands" />
-	<travelraterule id="redraw_03_day" cost="222.50" percent="" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for middag ved dagsreise u/overnatting innenlands" />
+	<travelraterule id="redraw_02_day" cost="200" percent="" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for lunsj ved dagsreise u/overnatting innenlands" />
+	<travelraterule id="redraw_03_day" cost="250" percent="" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for middag ved dagsreise u/overnatting innenlands" />
 	
 	<travelraterule id="redraw_04" cost="" percent="10" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for frokost ved utenlandsreise" />
 	<travelraterule id="redraw_05" cost="" percent="40" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for lunsj ved utenlandsreise" />
 	<travelraterule id="redraw_06" cost="" percent="50" rule_travel_type="international" description="Trekk i kostgodtgjørelsen for middag ved utenlandsreise" />
 	
-	<travelraterule id="redraw_extra_01" cost="60" rule_travel_type="domestic" description="Særskilt godtgjørelse for hver 24. time for mindre uleg. utgifter ved innenlandsreise" />
-	<travelraterule id="redraw_extra_02" cost="80" rule_travel_type="international" description="Særskilt godtgjørelse for hver 24. time for mindre uleg. utgifter ved utenlandsreise" />
+	<travelraterule id="redraw_extra_01" cost="80" rule_travel_type="domestic" description="Særskilt godtgjørelse for hver 24. time for mindre uleg. utgifter ved innenlandsreise" />
+	<travelraterule id="redraw_extra_02" cost="90" rule_travel_type="international" description="Særskilt godtgjørelse for hver 24. time for mindre uleg. utgifter ved utenlandsreise" />
 
-	<travelraterule id="accomodation_unauthorized" cost="400" description="Ulegitimert nattillegg, innenlandsreiser" />
-	<travelraterule id="accomodation_maxcover" cost="1400" description="Maxbeløp for legitimerte utgifter på hotell eller lignende" />
+	<travelraterule id="accomodation_unauthorized" cost="420" description="Ulegitimert nattillegg, innenlandsreiser" />
+	<travelraterule id="accomodation_maxcover" cost="1650" description="Maxbeløp for legitimerte utgifter på hotell eller lignende" />
 </travelraterules>

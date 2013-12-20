@@ -13,218 +13,186 @@
 -->
 <international_rates>
     <!-- AFRIKA -->
-    <rate code="---" night="1290" allowance="560" timezone="" daylightsaving="false" textid="AFRIKA - ØVRIGE OMRÅDER" desc="Afrika - øvrige områder" />
-    <rate code="DZA" night="1750" allowance="720" timezone="1" daylightsaving="false" textid="DZA" desc="Algerie" />
-    <rate code="AGO" night="2850" allowance="1000" timezone="1" daylightsaving="false" textid="AGO" desc="Angola" />
-	<rate code="BEN" night="1100" allowance="440" timezone="1" daylightsaving="false" textid="BEN" desc="Benin" />
-	<rate code="BWA" night="1250" allowance="400" timezone="2" daylightsaving="false" textid="BWA" desc="Botswana" />
-	<rate code="BDI" night="900" allowance="300" timezone="2" daylightsaving="false" textid="BDI" desc="Burundi" />
-	<rate code="EGY" night="1750" allowance="480" timezone="2" daylightsaving="true" textid="EGY" desc="Egypt" />
-	<rate code="CIV" night="1900" allowance="960" timezone="0" daylightsaving="false" textid="CIV" desc="Elfenbenskysten" />
-	<rate code="ETH" night="2200" allowance="500" timezone="3" daylightsaving="false" textid="ETH" desc="Etiopia" />
-	<rate code="GAB" night="1770" allowance="760" timezone="1" daylightsaving="false" textid="GAB" desc="Gabon" />
-	<rate code="GMB" night="1000" allowance="300" timezone="0" daylightsaving="false" textid="GMB" desc="Gambia" />
-	<rate code="GHA" night="1880" allowance="520" timezone="0" daylightsaving="false" textid="GHA" desc="Ghana" />
-	<rate code="GIN" night="1150" allowance="440" timezone="0" daylightsaving="false" textid="GIN" desc="Guinea" />
-	<rate code="CMR" night="1500" allowance="490" timezone="1" daylightsaving="false" textid="CMR" desc="Kamerun" />
-	<rate code="KEN" night="2100" allowance="580" timezone="3" daylightsaving="false" textid="KEN" desc="Kenya" />
-	<rate code="LSO" night="1350" allowance="300" timezone="2" daylightsaving="false" textid="LSO" desc="Lesotho" />
-	<rate code="LBR" night="1160" allowance="450" timezone="0" daylightsaving="false" textid="LBR" desc="Liberia" />
-	<rate code="LBY" night="3500" allowance="420" timezone="2" daylightsaving="false" textid="LBY" desc="Libya" />
-	<rate code="MDG" night="1300" allowance="350" timezone="3" daylightsaving="false" textid="MDG" desc="Madagaskar" />
-	<rate code="MWI" night="1000" allowance="740" timezone="2" daylightsaving="false" textid="MWI" desc="Malawi" />
-	<rate code="MLI" night="1200" allowance="470" timezone="0" daylightsaving="false" textid="MLI" desc="Mali" />
-	<rate code="MAR" night="2100" allowance="700" timezone="0" daylightsaving="false" textid="MAR" desc="Marokko" />
-	<rate code="MUS" night="1500" allowance="510" timezone="4" daylightsaving="false" textid="MUS" desc="Mauritius" />
-	<rate code="MOZ" night="1650" allowance="420" timezone="2" daylightsaving="false" textid="MOZ" desc="Mocambique" />
-	<rate code="NAM" night="2100" allowance="500" timezone="1" daylightsaving="false" textid="NAM" desc="Namibia" />
-	<rate code="NGA" night="2500" allowance="700" timezone="1" daylightsaving="false" textid="NGA" desc="Nigeria" />
-	<rate code="SEN" night="1900" allowance="680" timezone="0" daylightsaving="false" textid="SEN" desc="Senegal" />
-	<rate code="SYC" night="1200" allowance="600" timezone="4" daylightsaving="false" textid="SYC" desc="Seychellene" />
-	<rate code="SDN" night="1700" allowance="400" timezone="3" daylightsaving="false" textid="SDN" desc="Sudan" />
-	<rate code="SWZ" night="1700" allowance="300" timezone="2" daylightsaving="false" textid="SWZ" desc="Swaziland" />
-	<rate code="ZAF" night="2400" allowance="500" timezone="2" daylightsaving="false" textid="ZAF" desc="Sør-Afrika" />
-	<rate code="ZAF" night="3300" allowance="520" timezone="2" daylightsaving="false" textid="ZAF_cape town" desc="Sør-Afrika; Cape Town" />
-	<rate code="ZAF" night="2400" allowance="620" timezone="2" daylightsaving="false" textid="ZAF_johannesburg" desc="Sør-Afrika; Johannesburg" />
-	<rate code="TZA" night="2000" allowance="340" timezone="3" daylightsaving="false" textid="TZA" desc="Tanzania" />
+    <rate code="DZA" night="1900" allowance="780" timezone="1" daylightsaving="false" textid="DZA" desc="Algerie" />
+    <rate code="AGO" night="2650" allowance="810" timezone="1" daylightsaving="false" textid="AGO" desc="Angola" />
+	<rate code="BEN" night="1550" allowance="400" timezone="1" daylightsaving="false" textid="BEN" desc="Benin" />
+	<rate code="BWA" night="1500" allowance="450" timezone="2" daylightsaving="false" textid="BWA" desc="Botswana" />
+	<rate code="BDI" night="1000" allowance="460" timezone="2" daylightsaving="false" textid="BDI" desc="Burundi" />
+	<rate code="EGY" night="2400" allowance="680" timezone="2" daylightsaving="true"  textid="EGY" desc="Egypt" />
+	<rate code="CIV" night="1620" allowance="630" timezone="0" daylightsaving="false" textid="CIV" desc="Elfenbenskysten" />
+	<rate code="ERI" night="1050" allowance="700" timezone="3" daylightsaving="false" textid="ERI" desc="Eritrea" />
+	<rate code="ETH" night="2000" allowance="450" timezone="3" daylightsaving="false" textid="ETH" desc="Etiopia" />
+	<rate code="GHA" night="2300" allowance="500" timezone="0" daylightsaving="false" textid="GHA" desc="Ghana" />
+	<rate code="CMR" night="1800" allowance="560" timezone="1" daylightsaving="false" textid="CMR" desc="Kamerun" />
+	<rate code="KEN" night="1600" allowance="500" timezone="3" daylightsaving="false" textid="KEN" desc="Kenya" />
+	<rate code="LSO" night="1000" allowance="350" timezone="2" daylightsaving="false" textid="LSO" desc="Lesotho" />
+	<rate code="MDG" night="900"  allowance="300" timezone="3" daylightsaving="false" textid="MDG" desc="Madagaskar" />
+	<rate code="MWI" night="1100" allowance="300" timezone="2" daylightsaving="false" textid="MWI" desc="Malawi" />
+	<rate code="MAR" night="1800" allowance="800" timezone="0" daylightsaving="false" textid="MAR" desc="Marokko" />
+	<rate code="MUS" night="1150" allowance="450" timezone="4" daylightsaving="false" textid="MUS" desc="Mauritius" />
+	<rate code="MOZ" night="2100" allowance="640" timezone="2" daylightsaving="false" textid="MOZ" desc="Mocambique" />
+	<rate code="NAM" night="1350" allowance="360" timezone="1" daylightsaving="false" textid="NAM" desc="Namibia" />
+	<rate code="NGA" night="3200" allowance="980" timezone="1" daylightsaving="false" textid="NGA" desc="Nigeria" />
+	<rate code="SYC" night="2500" allowance="1000" timezone="4" daylightsaving="false" textid="SYC" desc="Seychellene" />
+	<rate code="SDN" night="1750" allowance="800" timezone="3" daylightsaving="false" textid="SDN" desc="Sudan" />
+	<rate code="SWZ" night="1100" allowance="350" timezone="2" daylightsaving="false" textid="SWZ" desc="Swaziland" />
+	<rate code="ZAF" night="2500" allowance="550" timezone="2" daylightsaving="false" textid="ZAF" desc="Sør-Afrika" />
+	<rate code="SSD" night="1930" allowance="440" timezone="3" daylightsaving="false" textid="SSD" desc="Sør-Sudan" />
+	<rate code="TZA" night="1950" allowance="650" timezone="3" daylightsaving="false" textid="TZA" desc="Tanzania" />
 	<rate code="TGO" night="1000" allowance="430" timezone="0" daylightsaving="false" textid="TGO" desc="Togo" />
-	<rate code="TUN" night="2100" allowance="650" timezone="1" daylightsaving="false" textid="TUN" desc="Tunisia" />
-	<rate code="UGA" night="1900" allowance="550" timezone="3" daylightsaving="false" textid="UGA" desc="Uganda" />
-	<rate code="ZMB" night="2100" allowance="500" timezone="2" daylightsaving="false" textid="ZMB" desc="Zambia" />
-	<rate code="ZWE" night="1500" allowance="380" timezone="2" daylightsaving="false" textid="ZWE" desc="Zimbabwe" />
+	<rate code="ZMB" night="1350" allowance="600" timezone="2" daylightsaving="false" textid="ZMB" desc="Zambia" />
+	<rate code="ZWE" night="1300" allowance="500" timezone="2" daylightsaving="false" textid="ZWE" desc="Zimbabwe" />
+    <rate code="---" night="1700" allowance="570" timezone=""  daylightsaving="false" textid="AFRIKA - ØVRIGE OMRÅDER" desc="Afrika - øvrige områder" />
     
     <!-- AMERIKA -->
-    <rate code="ATG" night="1900" allowance="850" timezone="-4" daylightsaving="false" textid="ATG" desc="Antigua og Barbuda" />
-    <rate code="ARG" night="3200" allowance="840" timezone="-3" daylightsaving="false" textid="ARG" desc="Argentina" />
-	<rate code="BHS" night="2500" allowance="740" timezone="-5" daylightsaving="true" textid="BHS" desc="Bahamas" />
-	<rate code="BRB" night="1600" allowance="720" timezone="-4" daylightsaving="false" textid="BRB" desc="Barbados" />
-	<rate code="BMU" night="2800" allowance="600" timezone="-4" daylightsaving="true" textid="BMU" desc="Bermuda (Br)" />
-	<rate code="BOL" night="700" allowance="250" timezone="-4" daylightsaving="false" textid="BOL" desc="Bolivia" />
-	<rate code="BRA" night="2000" allowance="700" timezone="-1" daylightsaving="false" textid="BRA" desc="Brasil" />
-	<rate code="BRA" night="3000" allowance="1000" timezone="-1" daylightsaving="false" textid="BRA_rio" desc="Brasil; Rio" />
-	<rate code="CAN" night="2500" allowance="790" timezone="-1" daylightsaving="true" textid="CAN" desc="Canada" />
-	<rate code="CHL" night="1600" allowance="780" timezone="-4" daylightsaving="false" textid="CHL" desc="Chile" />
-	<rate code="COL" night="2200" allowance="600" timezone="-5" daylightsaving="false" textid="COL" desc="Colombia" />
-	<rate code="CRI" night="1000" allowance="550" timezone="-6" daylightsaving="false" textid="CRI" desc="Costa Rica" />
-	<rate code="CUB" night="1000" allowance="500" timezone="-5" daylightsaving="true" textid="CUB" desc="Cuba" />
-	<rate code="DOM" night="1200" allowance="450" timezone="-4" daylightsaving="false" textid="DOM" desc="Den dominikanske rep." />
-	<rate code="DMA" night="1050" allowance="450" timezone="-4" daylightsaving="false" textid="DMA" desc="Dominica" />
-	<rate code="ECU" night="1200" allowance="450" timezone="-5" daylightsaving="false" textid="ECU" desc="Equador" />
-	<rate code="GRD" night="2300" allowance="600" timezone="-4" daylightsaving="false" textid="GRD" desc="Grenada" />
-	<rate code="GTM" night="1200" allowance="550" timezone="-6" daylightsaving="false" textid="GTM" desc="Guatemala" />
-	<rate code="GUY" night="1100" allowance="250" timezone="-4" daylightsaving="false" textid="GUY" desc="Guyana" />
-	<rate code="HTI" night="1000" allowance="500" timezone="-5" daylightsaving="false" textid="HTI" desc="Haiti" />
-	<rate code="JAM" night="1500" allowance="450" timezone="-5" daylightsaving="false" textid="JAM" desc="Jamaica" />
-	<rate code="MEX" night="1600" allowance="650" timezone="-6" daylightsaving="true" textid="MEX" desc="Mexico" />
-	<rate code="ANT" night="1200" allowance="460" timezone="-4" daylightsaving="false" textid="ANT" desc="Nederlandske Antiller" />
-	<rate code="NIC" night="1100" allowance="420" timezone="-6" daylightsaving="false" textid="NIC" desc="Nicaragua" />
-	<rate code="PAN" night="1100" allowance="350" timezone="-5" daylightsaving="false" textid="PAN" desc="Panama" />
-	<rate code="PRY" night="1000" allowance="250" timezone="-4" daylightsaving="false" textid="PRY" desc="Paraguay" />
-	<rate code="PER" night="1600" allowance="600" timezone="-5" daylightsaving="false" textid="PER" desc="Peru" />
-	<rate code="PRI" night="1500" allowance="410" timezone="-4" daylightsaving="false" textid="PRI" desc="Puerto Rico" />
-	<rate code="KNA" night="2000" allowance="810" timezone="-4" daylightsaving="false" textid="KNA" desc="St. Kitts-Nevis" />
-	<rate code="LCA" night="1700" allowance="750" timezone="-4" daylightsaving="false" textid="LCA" desc="St. Lucia" />
-	<rate code="VCT" night="1700" allowance="770" timezone="-4" daylightsaving="false" textid="VCT" desc="St. Vincent og Grenadinene" />
-	<rate code="SUR" night="1100" allowance="350" timezone="-3" daylightsaving="false" textid="SUR" desc="Surinam" />
-	<rate code="TTO" night="2000" allowance="740" timezone="-4" daylightsaving="false" textid="TTO" desc="Trinidad og Tobago" />
-	<rate code="URY" night="1300" allowance="520" timezone="-3" daylightsaving="false" textid="URY" desc="Uruguay" />
-	<rate code="USA" night="2000" allowance="730" timezone="-5" daylightsaving="true" textid="USA" desc="USA" />
-	<rate code="USA" night="3500" allowance="950" timezone="-5" daylightsaving="true" textid="USA_new york" desc="USA; New York" />
-	<rate code="USA" night="3550" allowance="1350" timezone="-5" daylightsaving="true" textid="USA_washington d.c" desc="USA; Washington D.C" />
-	<rate code="VEN" night="2000" allowance="1000" timezone="-4.5" daylightsaving="false" textid="VEN" desc="Venezuela" />
-	<rate code="---" night="1650" allowance="600" timezone="" daylightsaving="false" textid="AMERIKA - ØVRIGE OMRÅDER" desc="Amerika - øvrige områder" />
-    
+    <rate code="ARG" night="1600" allowance="500"  timezone="-3"   daylightsaving="false" textid="ARG" desc="Argentina" />
+	<rate code="BHS" night="2000" allowance="800"  timezone="-5"   daylightsaving="true"  textid="BHS" desc="Bahamas" />
+	<rate code="BRB" night="1450" allowance="450"  timezone="-4"   daylightsaving="false" textid="BRB" desc="Barbados" />
+	<rate code="BOL" night="650" allowance="300"   timezone="-4"   daylightsaving="false" textid="BOL" desc="Bolivia" />
+	<rate code="BRA" night="2200" allowance="650"  timezone="-1"   daylightsaving="false" textid="BRA" desc="Brasil" />
+	<rate code="BRA" night="3000" allowance="1050" timezone="-1"   daylightsaving="false" textid="BRA_rio" desc="Brasil; Rio" />
+	<rate code="CAN" night="2300" allowance="930"  timezone="-1"   daylightsaving="true"  textid="CAN" desc="Canada" />
+	<rate code="CHL" night="1500" allowance="750"  timezone="-4"   daylightsaving="false" textid="CHL" desc="Chile" />
+	<rate code="COL" night="2000" allowance="500"  timezone="-5"   daylightsaving="false" textid="COL" desc="Colombia" />
+	<rate code="CRI" night="1000" allowance="550"  timezone="-6"   daylightsaving="false" textid="CRI" desc="Costa Rica" />
+	<rate code="CUB" night="1100" allowance="540"  timezone="-5"   daylightsaving="true"  textid="CUB" desc="Cuba" />
+	<rate code="SLV" night="1000" allowance="440"  timezone="-6"   daylightsaving="false" textid="SLV" desc="El Salvador" />
+	<rate code="GTM" night="1100" allowance="850"  timezone="-6"   daylightsaving="false" textid="GTM" desc="Guatemala" />
+	<rate code="GUY" night="1200" allowance="400"  timezone="-4"   daylightsaving="false" textid="GUY" desc="Guyana" />
+	<rate code="HND" night="1200" allowance="400"  timezone="-6"   daylightsaving="false" textid="HND" desc="Honduras" />
+	<rate code="JAM" night="1200" allowance="400"  timezone="-5"   daylightsaving="false" textid="JAM" desc="Jamaica" />
+	<rate code="MEX" night="2200" allowance="950"  timezone="-6"   daylightsaving="true"  textid="MEX" desc="Mexico" />
+	<rate code="NIC" night="1200" allowance="460"  timezone="-6"   daylightsaving="false" textid="NIC" desc="Nicaragua" />
+	<rate code="PAN" night="1400" allowance="500"  timezone="-5"   daylightsaving="false" textid="PAN" desc="Panama" />
+	<rate code="PRY" night="1200" allowance="500"  timezone="-4"   daylightsaving="false" textid="PRY" desc="Paraguay" />
+	<rate code="PER" night="1500" allowance="750"  timezone="-5"   daylightsaving="false" textid="PER" desc="Peru" />
+	<rate code="PRI" night="1200" allowance="420"  timezone="-4"   daylightsaving="false" textid="PRI" desc="Puerto Rico" />
+	<rate code="SUR" night="1000" allowance="350"  timezone="-3"   daylightsaving="false" textid="SUR" desc="Surinam" />
+	<rate code="URY" night="1350" allowance="600"  timezone="-3"   daylightsaving="false" textid="URY" desc="Uruguay" />
+	<rate code="USA" night="1750" allowance="700"  timezone="-5"   daylightsaving="true" textid="USA" desc="USA" />
+	<rate code="USA" night="3000" allowance="950"  timezone="-5"   daylightsaving="true" textid="USA_new york" desc="USA; New York" />
+	<rate code="USA" night="2000" allowance="1000"  timezone="-8"  daylightsaving="true" textid="USA_san francisco" desc="USA; San Francisco" />
+	<rate code="USA" night="3100" allowance="1000" timezone="-5"   daylightsaving="true" textid="USA_washington d.c" desc="USA; Washington D.C" />
+	<rate code="VEN" night="2400" allowance="900"  timezone="-4.5" daylightsaving="false" textid="VEN" desc="Venezuela" />
+	<rate code="---" night="1700" allowance="650"  timezone=""     daylightsaving="false" textid="AMERIKA - ØVRIGE OMRÅDER" desc="Amerika - øvrige områder" />
+   
 	<!-- ASIA -->
-    <rate code="AFG" night="2100" allowance="600" timezone="4.5" daylightsaving="false" textid="AFG" desc="Afganistan" />
-	<rate code="ARM" night="1600" allowance="500" timezone="4" daylightsaving="true" textid="ARM" desc="Armenia" />
-	<rate code="AZE" night="2400" allowance="700" timezone="4" daylightsaving="true" textid="AZE" desc="Azerbaijan" />
-	<rate code="BHR" night="2300" allowance="950" timezone="3" daylightsaving="false" textid="BHR" desc="Bahrain" />
-	<rate code="BGD" night="1500" allowance="400" timezone="6" daylightsaving="false" textid="BGD" desc="Bangladesh" />
-	<rate code="BRN" night="1000" allowance="350" timezone="8" daylightsaving="false" textid="BRN" desc="Brunei" />
-	<rate code="BUR" night="1700" allowance="950" timezone="6.5" daylightsaving="false" textid="BUR" desc="Burma (Myanmar)" />
-	<rate code="PHL" night="1900" allowance="590" timezone="8" daylightsaving="false" textid="PHL" desc="Fillipinene" />
-	<rate code="ARE" night="1500" allowance="700" timezone="4" daylightsaving="false" textid="ARE" desc="Forente Arabiske Emirater" />
-	<rate code="GEO" night="2300" allowance="500" timezone="4" daylightsaving="false" textid="GEO" desc="Georgia" />
-	<rate code="IND" night="1900" allowance="500" timezone="5.5" daylightsaving="false" textid="IND" desc="India" />
-	<rate code="IDN" night="1650" allowance="760" timezone="7" daylightsaving="false" textid="IDN" desc="Indonesia" />
-	<rate code="IRN" night="1350" allowance="600" timezone="3.5" daylightsaving="true" textid="IRN" desc="Iran" />
-	<rate code="ISR" night="2500" allowance="890" timezone="2" daylightsaving="true" textid="ISR" desc="Israel" />
-	<rate code="PSE" night="1200" allowance="640" timezone="3" daylightsaving="true" textid="PSE" desc="De palestinske områder" />
-	<rate code="JPN" night="2350" allowance="900" timezone="9" daylightsaving="false" textid="JPN" desc="Japan" />
-	<rate code="JPN" night="2350" allowance="1140" timezone="9" daylightsaving="false" textid="JPN_osaka" desc="Japan; Osaka" />
-	<rate code="JPN" night="2650" allowance="1350" timezone="9" daylightsaving="false" textid="JPN_tokyo" desc="Japan; Tokyo" />
-	<rate code="JOR" night="2200" allowance="850" timezone="2" daylightsaving="true" textid="JOR" desc="Jordan" />
-	<rate code="KHM" night="1700" allowance="850" timezone="7" daylightsaving="false" textid="KHM" desc="Kambodia" />
-	<rate code="KAZ" night="3000" allowance="800" timezone="6" daylightsaving="false" textid="KAZ" desc="Kasakhstan" />
-	<rate code="CHN" night="1850" allowance="670" timezone="8" daylightsaving="false" textid="CHN" desc="Kina" />
-	<rate code="CHN" night="3100" allowance="1000" timezone="8" daylightsaving="false" textid="CHN_hong kong" desc="Kina; Hong Kong" />
-	<rate code="CHN" night="3050" allowance="850" timezone="8" daylightsaving="false" textid="CHN_shanghai" desc="Kina; Shanghai" />
-	<rate code="KWT" night="1800" allowance="600" timezone="3" daylightsaving="false" textid="KWT" desc="Kuwait" />
-	<rate code="CYP" night="1800" allowance="680" timezone="2" daylightsaving="true" textid="CYP" desc="Kypros" />
-	<rate code="LAO" night="1200" allowance="450" timezone="7" daylightsaving="false" textid="LAO" desc="Laos" />
-	<rate code="LBN" night="3000" allowance="1000" timezone="2" daylightsaving="true" textid="LBN" desc="Libanon" />
-	<rate code="MYS" night="2400" allowance="880" timezone="8" daylightsaving="false" textid="MYS" desc="Malaysia" />
-	<rate code="MDV" night="1800" allowance="580" timezone="5" daylightsaving="false" textid="MDV" desc="Maldivene" />
-	<rate code="MNG" night="1050" allowance="660" timezone="8" daylightsaving="false" textid="MNG" desc="Mongolia" />
-	<rate code="NPL" night="1200" allowance="370" timezone="6" daylightsaving="false" textid="NPL" desc="Nepal" />
-	<rate code="OMN" night="2750" allowance="600" timezone="4" daylightsaving="false" textid="OMN" desc="Oman" />
-	<rate code="PAK" night="1800" allowance="400" timezone="5" daylightsaving="true" textid="PAK" desc="Pakistan" />
-	<rate code="QAT" night="2050" allowance="800" timezone="3" daylightsaving="false" textid="QAT" desc="Qatar" />
-	<rate code="SAU" night="1800" allowance="780" timezone="3" daylightsaving="false" textid="SAU" desc="Saudi-Arabia" />
-	<rate code="SGP" night="3600" allowance="1000" timezone="8" daylightsaving="false" textid="SGP" desc="Singapore" />
-	<rate code="LKA" night="1000" allowance="350" timezone="5.5" daylightsaving="false" textid="LKA" desc="Sri Lanka" />
-	<rate code="SYR" night="2000" allowance="600" timezone="2" daylightsaving="true" textid="SYR" desc="Syria" />
-	<rate code="KOR" night="1400" allowance="650" timezone="9" daylightsaving="false" textid="KOR" desc="Sør-Korea" />
-	<rate code="KOR" night="1800" allowance="980" timezone="9" daylightsaving="false" textid="KOR_seoul" desc="Sør-Korea; Seoul" />
-	<rate code="TWN" night="2500" allowance="570" timezone="8" daylightsaving="false" textid="TWN" desc="Taiwan" />
-	<rate code="THA" night="1500" allowance="1000" timezone="7" daylightsaving="false" textid="THA" desc="Thailand" />
-	<rate code="TUR" night="2400" allowance="690" timezone="2" daylightsaving="true" textid="TUR" desc="Tyrkia" />
-	<rate code="TUR" night="2600" allowance="930" timezone="2" daylightsaving="true" textid="TUR_istanbul" desc="Tyrkia; Istanbul" />
-	<rate code="VNM" night="1700" allowance="620" timezone="7" daylightsaving="false" textid="VNM" desc="Vietnam" />
-	<rate code="YEM" night="950" allowance="490" timezone="3" daylightsaving="false" textid="YEM" desc="Yemen" />
-	<rate code="TLS" night="900" allowance="400" timezone="9" daylightsaving="true" textid="TLS" desc="Øst-Timor" />
-	<rate code="---" night="1460" allowance="680" timezone="" daylightsaving="false" textid="ASIA - ØVRIGE OMRÅDER" desc="Asia - øvrige områder" />
-    
+    <rate code="AFG" night="2300" allowance="500"  timezone="4.5" daylightsaving="false" textid="AFG" desc="Afganistan" />
+	<rate code="ARM" night="1400" allowance="460"  timezone="4"   daylightsaving="true"  textid="ARM" desc="Armenia" />
+	<rate code="AZE" night="2650" allowance="750"  timezone="4"   daylightsaving="true"  textid="AZE" desc="Azerbaijan" />
+	<rate code="BHR" night="1650" allowance="800"  timezone="3"   daylightsaving="false" textid="BHR" desc="Bahrain" />
+	<rate code="BGD" night="3000" allowance="520"  timezone="6"   daylightsaving="false" textid="BGD" desc="Bangladesh" />
+	<rate code="BRN" night="1000" allowance="350"  timezone="8"   daylightsaving="false" textid="BRN" desc="Brunei" />
+	<rate code="PHL" night="2100" allowance="700"  timezone="8"   daylightsaving="false" textid="PHL" desc="Fillipinene" />
+	<rate code="ARE" night="1700" allowance="700"  timezone="4"   daylightsaving="false" textid="ARE" desc="Forente Arabiske Emirater" />
+	<rate code="GEO" night="2200" allowance="650"  timezone="4"   daylightsaving="false" textid="GEO" desc="Georgia" />
+	<rate code="IND" night="1700" allowance="500"  timezone="5.5" daylightsaving="false" textid="IND" desc="India" />
+	<rate code="IDN" night="2600" allowance="550"  timezone="7"   daylightsaving="false" textid="IDN" desc="Indonesia" />
+	<rate code="IRN" night="1600" allowance="750"  timezone="3.5" daylightsaving="true"  textid="IRN" desc="Iran" />
+	<rate code="ISR" night="2900" allowance="900"  timezone="2"   daylightsaving="true"  textid="ISR" desc="Israel" />
+	<rate code="JPN" night="2200" allowance="700"  timezone="9"   daylightsaving="false" textid="JPN" desc="Japan" />
+	<rate code="YEM" night="1200" allowance="470"  timezone="3"   daylightsaving="false" textid="YEM" desc="Yemen" />
+	<rate code="JOR" night="2800" allowance="1300" timezone="2"   daylightsaving="true"  textid="JOR" desc="Jordan" />
+	<rate code="KHM" night="1650" allowance="800"  timezone="7"   daylightsaving="false" textid="KHM" desc="Kambodia" />
+	<rate code="KAZ" night="1750" allowance="700"  timezone="6"   daylightsaving="false" textid="KAZ" desc="Kasakhstan" />
+	<rate code="CHN" night="2000" allowance="730"  timezone="8"   daylightsaving="false" textid="CHN" desc="Kina" />
+	<rate code="CHN" night="3100" allowance="1000" timezone="8"   daylightsaving="false" textid="CHN_hong kong" desc="Kina; Hong Kong" />
+	<rate code="CHN" night="2400" allowance="870"  timezone="8"   daylightsaving="false" textid="CHN_shanghai" desc="Kina; Shanghai" />
+	<rate code="KWT" night="1700" allowance="600"  timezone="3"   daylightsaving="false" textid="KWT" desc="Kuwait" />
+	<rate code="LAO" night="1500" allowance="500"  timezone="7"   daylightsaving="false" textid="LAO" desc="Laos" />
+	<rate code="LBN" night="2200" allowance="890"  timezone="2"   daylightsaving="true"  textid="LBN" desc="Libanon" />
+	<rate code="MYS" night="1400" allowance="770"  timezone="8"   daylightsaving="false" textid="MYS" desc="Malaysia" />
+	<rate code="MDV" night="3000" allowance="800"  timezone="5"   daylightsaving="false" textid="MDV" desc="Maldivene" />
+	<rate code="BUR" night="1700" allowance="750"  timezone="6.5" daylightsaving="false" textid="BUR" desc="Myanmar (Burma)" />
+	<rate code="PRK" night="1000" allowance="450"  timezone="9"   daylightsaving="false" textid="PRK" desc="Nord-Korea" />
+	<rate code="OMN" night="2700" allowance="700"  timezone="4"   daylightsaving="false" textid="OMN" desc="Oman" />
+	<rate code="PAK" night="1400" allowance="800"  timezone="5"   daylightsaving="true"  textid="PAK" desc="Pakistan" />
+	<rate code="PSE" night="1400" allowance="800"  timezone="3"   daylightsaving="true"  textid="PSE" desc="Palestina" />
+	<rate code="QAT" night="1600" allowance="650"  timezone="3"   daylightsaving="false" textid="QAT" desc="Qatar" />
+	<rate code="SAU" night="2700" allowance="900"  timezone="3"   daylightsaving="false" textid="SAU" desc="Saudi-Arabia" />
+	<rate code="SGP" night="3250" allowance="750"  timezone="8"   daylightsaving="false" textid="SGP" desc="Singapore" />
+	<rate code="LKA" night="1200" allowance="400"  timezone="5.5" daylightsaving="false" textid="LKA" desc="Sri Lanka" />
+	<rate code="KOR" night="2000" allowance="900"  timezone="9"   daylightsaving="false" textid="KOR" desc="Sør-Korea" />
+	<rate code="TWN" night="2700" allowance="560"  timezone="8"   daylightsaving="false" textid="TWN" desc="Taiwan" />
+	<rate code="THA" night="1400" allowance="700"  timezone="7"   daylightsaving="false" textid="THA" desc="Thailand" />
+	<rate code="TUR" night="2000" allowance="520"  timezone="2"   daylightsaving="true"  textid="TUR" desc="Tyrkia" />
+	<rate code="TUR" night="2000" allowance="650"  timezone="2"   daylightsaving="true"  textid="TUR_istanbul" desc="Tyrkia; Istanbul" />
+	<rate code="UZB" night="1000" allowance="400"  timezone="5"   daylightsaving="false" textid="UZB" desc="Uzbekistan" />
+	<rate code="VNM" night="1300" allowance="600"  timezone="7"   daylightsaving="false" textid="VNM" desc="Vietnam" />
+	<rate code="TLS" night="850"  allowance="450"  timezone="9"   daylightsaving="true"  textid="TLS" desc="Øst-Timor" />
+	<rate code="---" night="2000" allowance="700"  timezone=""    daylightsaving="false" textid="ASIA - ØVRIGE OMRÅDER" desc="Asia - øvrige områder" />
+	
     <!-- AUSTRALIA/OCEANIA -->
-	<rate code="AUS" night="1900" allowance="750" timezone="10" daylightsaving="false" textid="AUS" desc="Australia" />
-	<rate code="COK" night="1800" allowance="600" timezone="-10" daylightsaving="false" textid="COK" desc="Cook Islands" />
-	<rate code="FJI" night="1400" allowance="440" timezone="12" daylightsaving="false" textid="FJI" desc="Fiji" />
-	<rate code="NZL" night="950" allowance="640" timezone="12" daylightsaving="false" textid="NZL" desc="New Zealand" />
-	<rate code="PNG" night="1800" allowance="370" timezone="10" daylightsaving="false" textid="PNG" desc="Papua - New Guinea" />
-	<rate code="---" night="1600" allowance="530" timezone="10" daylightsaving="false" textid="AUSTRALIA/OCEANIA - ØVRIGE OMRÅDER" desc="Australia/Oceania - øvrige områder" />
+	<rate code="AUS" night="2000" allowance="800" timezone="10" daylightsaving="false" textid="AUS" desc="Australia" />
+	<rate code="NZL" night="1250" allowance="700" timezone="12" daylightsaving="false" textid="NZL" desc="New Zealand" />
+	<rate code="PNG" night="2500" allowance="570" timezone="10" daylightsaving="false" textid="PNG" desc="Papua - New Guinea" />
+	<rate code="---" night="1900" allowance="700" timezone="10" daylightsaving="false" textid="AUSTRALIA/OCEANIA - ØVRIGE OMRÅDER" desc="Australia/Oceania - øvrige områder" />
     
     <!-- EUROPA -->
-    <rate code="ALB" night="2000" allowance="560" timezone="1" daylightsaving="true"  textid="ALB" desc="Albania" />
-	<rate code="BEL" night="1500" allowance="880" timezone="1" daylightsaving="true" textid="BEL" desc="Belgia" />
-	<rate code="BEL" night="1900" allowance="900" timezone="1" daylightsaving="true" textid="BEL_brussel" desc="Belgia; Brussel" />
-	<rate code="BIH" night="1000" allowance="500" timezone="1" daylightsaving="true" textid="BIH" desc="Bosnia-Hercegovina" />
-	<rate code="BGR" night="1500" allowance="410" timezone="2" daylightsaving="true" textid="BGR" desc="Bulgaria" />
-	<rate code="DNK" night="1500" allowance="750" timezone="1" daylightsaving="true" textid="DNK" desc="Danmark" />
-	<rate code="FRO" night="1500" allowance="750" timezone="0" daylightsaving="true" textid="FRO" desc="Færøyene" />
-	<rate code="GRL" night="1500" allowance="750" timezone="0" daylightsaving="false" textid="GRL" desc="Grønland" />
-	<rate code="DNK" night="1950" allowance="850" timezone="1" daylightsaving="true" textid="DNK_københavn" desc="Danmark; København" />
-	<rate code="EST" night="1000" allowance="500" timezone="2" daylightsaving="true" textid="EST" desc="Estland" />
-	<rate code="FIN" night="1600" allowance="650" timezone="2" daylightsaving="true" textid="FIN" desc="Finland" />
-	<rate code="FIN" night="1600" allowance="650" timezone="3" daylightsaving="true" textid="FIN#Aaland" desc="Åland" />
-	<rate code="FRA" night="2000" allowance="850" timezone="1" daylightsaving="true" textid="FRA" desc="Frankrike" />
-	<rate code="FRA" night="2600" allowance="900" timezone="1" daylightsaving="true" textid="FRA_paris" desc="Frankrike; Paris" />
-	<rate code="GRC" night="1650" allowance="750" timezone="2" daylightsaving="true" textid="GRC" desc="Hellas" />
-	<rate code="BLR" night="1800" allowance="450" timezone="2" daylightsaving="true" textid="BLR" desc="Hviterussland" />
-	<rate code="IRL" night="1750" allowance="700" timezone="0" daylightsaving="true" textid="IRL" desc="Irland" />
-	<rate code="ISL" night="1570" allowance="650" timezone="0" daylightsaving="false" textid="ISL" desc="Island" />
-	<rate code="ITA" night="1200" allowance="760" timezone="1" daylightsaving="true" textid="ITA" desc="Italia" />
-	<rate code="SMR" night="1200" allowance="760" timezone="1" daylightsaving="true" textid="SMR" desc="San Marino" />
-	<rate code="VAT" night="1200" allowance="760" timezone="1" daylightsaving="true" textid="VAT" desc="Vatikanstaten" />
-	<rate code="ITA" night="2000" allowance="900" timezone="1" daylightsaving="true" textid="ITA_firenze" desc="Italia; Firenze" />
-	<rate code="ITA" night="2200" allowance="900" timezone="1" daylightsaving="true" textid="ITA_milano" desc="Italia; Milano" />
-	<rate code="ITA" night="2000" allowance="900" timezone="1" daylightsaving="true" textid="ITA_roma" desc="Italia; Roma" />
-	<rate code="ITA" night="2000" allowance="1100" timezone="1" daylightsaving="true" textid="ITA_venezia" desc="Italia; Venezia" />
-	<rate code="HRV" night="2000" allowance="800" timezone="1" daylightsaving="true" textid="HRV" desc="Kroatia" />
-	<rate code="LVA" night="850" allowance="490" timezone="2" daylightsaving="true" textid="LVA" desc="Latvia" />
-	<rate code="LIE" night="1800" allowance="1000" timezone="1" daylightsaving="true" textid="LIE" desc="Liechtenstein" />
-	<rate code="LTU" night="1050" allowance="400" timezone="2" daylightsaving="true" textid="LTU" desc="Litauen" />
-	<rate code="LUX" night="2000" allowance="850" timezone="1" daylightsaving="true" textid="LUX" desc="Luxembourg" />
-	<rate code="MKD" night="1300" allowance="600" timezone="1" daylightsaving="true" textid="MKD" desc="Makedonia" />
-	<rate code="MLT" night="1150" allowance="550" timezone="1" daylightsaving="true" textid="MLT" desc="Malta" />
-	<rate code="MDA" night="1400" allowance="700" timezone="2" daylightsaving="true" textid="MDA" desc="Moldova" />
-	<rate code="MCO" night="3200" allowance="900" timezone="1" daylightsaving="true" textid="MCO" desc="Monaco" />
-	<rate code="MNE" night="1300" allowance="520" timezone="1" daylightsaving="true" textid="MNE" desc="Montenegro" />
-	<rate code="NLD" night="1650" allowance="700" timezone="1" daylightsaving="true" textid="NLD" desc="Nederland" />
-	<rate code="NLD" night="2250" allowance="800" timezone="1" daylightsaving="true" textid="NLD_amsterdam" desc="Nederland; Amsterdam" />
-	<rate code="NLD" night="2100" allowance="730" timezone="1" daylightsaving="true" textid="NLD_den haag" desc="Nederland; den Haag" />
-	<rate code="POL" night="1250" allowance="550" timezone="1" daylightsaving="true" textid="POL" desc="Polen" />
-	<rate code="PRT" night="2400" allowance="900" timezone="0" daylightsaving="true" textid="PRT" desc="Portugal" />
-	<rate code="PRT" night="2400" allowance="900" timezone="0" daylightsaving="true" textid="PRT#Azores" desc="Azorene" />
-	<rate code="PRT" night="2400" allowance="900" timezone="0" daylightsaving="true" textid="PRT#Madeira" desc="Madeira" />
-	<rate code="ROU" night="1400" allowance="680" timezone="2" daylightsaving="true" textid="ROU" desc="Romania" />
-	<rate code="RUS" night="1000" allowance="400" timezone="3" daylightsaving="true" textid="RUS" desc="Russland" />
-	<rate code="RUS" night="2400" allowance="1150" timezone="3" daylightsaving="true" textid="RUS_moskva" desc="Russland; Moskva" />
-	<rate code="RUS" night="2200" allowance="820" timezone="3" daylightsaving="true" textid="RUS_st.petersburg" desc="Russland; St.Petersburg" />
-	<rate code="SRB" night="1250" allowance="650" timezone="1" daylightsaving="true" textid="SRB" desc="Serbia" />
-	<rate code="KOS" night="700" allowance="350" timezone="1" daylightsaving="true" textid="KOS" desc="Kosovo" />
-	<rate code="SVK" night="1700" allowance="750" timezone="1" daylightsaving="true" textid="SVK" desc="Slovakia" />
-	<rate code="SVN" night="1500" allowance="850" timezone="1" daylightsaving="true" textid="SVN" desc="Slovenia" />
-	<rate code="ESP" night="1400" allowance="800" timezone="1" daylightsaving="true" textid="ESP" desc="Spania" />
-	<rate code="AND" night="1400" allowance="800" timezone="1" daylightsaving="true" textid="AND" desc="Andorra" />
-	<rate code="ESP" night="1400" allowance="800" timezone="0" daylightsaving="true" textid="ESP#canary" desc="Spania; Kanariøyene" />
-	<rate code="ESP" night="1950" allowance="880" timezone="1" daylightsaving="true" textid="ESP_barcelona" desc="Spania; Barcelona" />
-	<rate code="ESP" night="1500" allowance="880" timezone="1" daylightsaving="true" textid="ESP_madrid" desc="Spania; Madrid" />
-	<rate code="GBR" night="1250" allowance="660" timezone="0" daylightsaving="true" textid="GBR" desc="Storbritannia" />
-	<rate code="GIB" night="1250" allowance="660" timezone="1" daylightsaving="true" textid="GIB" desc="Gibraltar" />
-	<rate code="JEY" night="1250" allowance="660" timezone="0" daylightsaving="true" textid="JEY" desc="Jersey" />
-	<rate code="GGY" night="1250" allowance="660" timezone="0" daylightsaving="true" textid="GGY" desc="Guernsey (inkl Alderney og Sark)" />
-	<rate code="IMN" night="1250" allowance="660" timezone="0" daylightsaving="true" textid="IMN" desc="Isle of Man" />
-	<rate code="NIR" night="1250" allowance="660" timezone="1" daylightsaving="true" textid="NIR" desc="Nord-Irland" />
-	<rate code="GBR" night="1900" allowance="800" timezone="0" daylightsaving="true" textid="GBR_london" desc="Storbritannia; London" />
-	<rate code="CHE" night="1750" allowance="890" timezone="1" daylightsaving="true" textid="CHE" desc="Sveits" />
-	<rate code="CHE" night="3000" allowance="800" timezone="1" daylightsaving="true" textid="CHE_genève" desc="Sveits; Genève" />
-	<rate code="CHE" night="2800" allowance="1050" timezone="1" daylightsaving="true" textid="CHE_zürich" desc="Sveits; Zürich" />
-	<rate code="SWE" night="2150" allowance="900" timezone="1" daylightsaving="true" textid="SWE" desc="Sverige" />
-	<rate code="CZE" night="1750" allowance="700" timezone="1" daylightsaving="true" textid="CZE" desc="Tsjekkiske republikk" />
-	<rate code="DEU" night="1600" allowance="650" timezone="1" daylightsaving="true" textid="DEU" desc="Tyskland" />
-	<rate code="DEU" night="1600" allowance="900" timezone="1" daylightsaving="true" textid="DEU_berlin" desc="Tyskland; Berlin" />
-	<rate code="UKR" night="2400" allowance="680" timezone="2" daylightsaving="true" textid="UKR" desc="Ukraina" />
-	<rate code="HUN" night="1500" allowance="500" timezone="1" daylightsaving="true" textid="HUN" desc="Ungarn" />
-	<rate code="AUT" night="1200" allowance="800" timezone="1" daylightsaving="true" textid="AUT" desc="Østerrike" />
-	<rate code="AUT" night="1800" allowance="1000" timezone="1" daylightsaving="true" textid="AUT_wien" desc="Østerrike; Wien" />
+    <rate code="ALB" night="1520" allowance="500" timezone="1" daylightsaving="true" textid="ALB" desc="Albania" />
+	<rate code="BEL" night="2100" allowance="900" timezone="1" daylightsaving="true" textid="BEL" desc="Belgia" />
+	<rate code="BIH" night="800" allowance="430" timezone="1" daylightsaving="true" textid="BIH" desc="Bosnia-Hercegovina" />
+	<rate code="BGR" night="900" allowance="400" timezone="2" daylightsaving="true" textid="BGR" desc="Bulgaria" />
+	<rate code="DNK" night="1700" allowance="800" timezone="1" daylightsaving="true" textid="DNK" desc="Danmark" />
+	<rate code="DNK" night="1750" allowance="870" timezone="1" daylightsaving="true" textid="DNK_københavn" desc="Danmark; København" />
+	<rate code="EST" night="1000" allowance="550" timezone="2" daylightsaving="true" textid="EST" desc="Estland" />
+	<rate code="FIN" night="1500" allowance="750" timezone="2" daylightsaving="true" textid="FIN" desc="Finland" />
+	<rate code="FRA" night="1600" allowance="780" timezone="1" daylightsaving="true" textid="FRA" desc="Frankrike" />
+	<rate code="FRA" night="2800" allowance="900" timezone="1" daylightsaving="true" textid="FRA_paris" desc="Frankrike; Paris" />
+	<rate code="GRC" night="1100" allowance="400" timezone="2" daylightsaving="true" textid="GRC" desc="Hellas" />
+	<rate code="BLR" night="1200" allowance="400" timezone="2" daylightsaving="true" textid="BLR" desc="Hviterussland" />
+	<rate code="IRL" night="1700" allowance="850" timezone="0" daylightsaving="true" textid="IRL" desc="Irland" />
+	<rate code="ISL" night="2100" allowance="850" timezone="0" daylightsaving="false" textid="ISL" desc="Island" />
+	<rate code="ITA" night="2100" allowance="900" timezone="1" daylightsaving="true" textid="ITA" desc="Italia" />
+	<rate code="KOS" night="700"  allowance="360" timezone="1" daylightsaving="true" textid="KOS" desc="Kosovo" />
+	<rate code="HRV" night="1750" allowance="840" timezone="1" daylightsaving="true" textid="HRV" desc="Kroatia" />
+	<rate code="CYP" night="1800" allowance="700" timezone="2" daylightsaving="true" textid="CYP" desc="Kypros" />
+	<rate code="LVA" night="1000" allowance="650" timezone="2" daylightsaving="true" textid="LVA" desc="Latvia" />
+	<rate code="LIE" night="1900" allowance="1200" timezone="1" daylightsaving="true" textid="LIE" desc="Liechtenstein" />
+	<rate code="LTU" night="1000" allowance="490" timezone="2" daylightsaving="true" textid="LTU" desc="Litauen" />
+	<rate code="LUX" night="1600" allowance="750" timezone="1" daylightsaving="true" textid="LUX" desc="Luxembourg" />
+	<rate code="MKD" night="1100" allowance="610" timezone="1" daylightsaving="true" textid="MKD" desc="Makedonia" />
+	<rate code="MLT" night="1650" allowance="620" timezone="1" daylightsaving="true" textid="MLT" desc="Malta" />
+	<rate code="MDA" night="1400" allowance="550" timezone="2" daylightsaving="true" textid="MDA" desc="Moldova" />
+	<rate code="MCO" night="2800" allowance="1100" timezone="1" daylightsaving="true" textid="MCO" desc="Monaco" />
+	<rate code="MNE" night="1300" allowance="500" timezone="1" daylightsaving="true" textid="MNE" desc="Montenegro" />
+	<rate code="NLD" night="1500" allowance="650" timezone="1" daylightsaving="true" textid="NLD" desc="Nederland" />
+	<rate code="POL" night="1900" allowance="600" timezone="1" daylightsaving="true" textid="POL" desc="Polen" />
+	<rate code="PRT" night="2500" allowance="880" timezone="0" daylightsaving="true" textid="PRT" desc="Portugal" />
+	<rate code="ROU" night="1500" allowance="820" timezone="2" daylightsaving="true" textid="ROU" desc="Romania" />
+	<rate code="RUS" night="1600" allowance="710" timezone="3" daylightsaving="true" textid="RUS" desc="Russland" />
+	<rate code="RUS" night="3200" allowance="1400" timezone="3" daylightsaving="true" textid="RUS_moskva" desc="Russland; Moskva" />
+	<rate code="RUS" night="1600" allowance="950" timezone="3" daylightsaving="true" textid="RUS_st.petersburg" desc="Russland; St.Petersburg" />
+	<rate code="SRB" night="1500" allowance="650" timezone="1" daylightsaving="true" textid="SRB" desc="Serbia" />
+	<rate code="SVK" night="1000" allowance="600" timezone="1" daylightsaving="true" textid="SVK" desc="Slovakia" />
+	<rate code="SVN" night="1900" allowance="500" timezone="1" daylightsaving="true" textid="SVN" desc="Slovenia" />
+	<rate code="ESP" night="1700" allowance="850" timezone="1" daylightsaving="true" textid="ESP" desc="Spania" />
+	<rate code="GBR" night="1400" allowance="650" timezone="0" daylightsaving="true" textid="GBR" desc="Storbritannia" />
+	<rate code="GBR" night="2400" allowance="950" timezone="0" daylightsaving="true" textid="GBR_london" desc="Storbritannia; London" />
+	<rate code="CHE" night="1450" allowance="1050" timezone="1" daylightsaving="true" textid="CHE" desc="Sveits" />
+	<rate code="CHE" night="4000" allowance="800" timezone="1" daylightsaving="true" textid="CHE_genève" desc="Sveits; Genève" />
+	<rate code="CHE" night="3000" allowance="1200" timezone="1" daylightsaving="true" textid="CHE_zürich" desc="Sveits; Zürich" />
+	<rate code="SWE" night="1900" allowance="720" timezone="1" daylightsaving="true" textid="SWE" desc="Sverige" />
+	<rate code="CZE" night="1800" allowance="550" timezone="1" daylightsaving="true" textid="CZE" desc="Tsjekkiske republikk" />
+	<rate code="DEU" night="1900" allowance="610" timezone="1" daylightsaving="true" textid="DEU" desc="Tyskland" />
+	<rate code="DEU" night="2250" allowance="800" timezone="1" daylightsaving="true" textid="DEU_berlin" desc="Tyskland; Berlin" />
+	<rate code="UKR" night="1400" allowance="530" timezone="2" daylightsaving="true" textid="UKR" desc="Ukraina" />
+	<rate code="HUN" night="2000" allowance="650" timezone="1" daylightsaving="true" textid="HUN" desc="Ungarn" />
+	<rate code="AUT" night="1400" allowance="760" timezone="1" daylightsaving="true" textid="AUT" desc="Østerrike" />
+	<rate code="AUT" night="1900" allowance="900" timezone="1" daylightsaving="true" textid="AUT_wien" desc="Østerrike; Wien" />
+	
+	<rate code="AND" night="1700" allowance="800" timezone="1" daylightsaving="true" textid="AND" desc="Andorra" />
+	<rate code="PRT" night="2250" allowance="850" timezone="0" daylightsaving="true" textid="PRT#Azores" desc="Azorene" />
+	<rate code="FRO" night="1500" allowance="700" timezone="0" daylightsaving="true" textid="FRO" desc="Færøyene" />
+	<rate code="GIB" night="1400" allowance="650" timezone="1" daylightsaving="true" textid="GIB" desc="Gibraltar" />
+	<rate code="GRL" night="1500" allowance="700" timezone="0" daylightsaving="false" textid="GRL" desc="Grønland" />
+	<rate code="GGY" night="1400" allowance="650" timezone="0" daylightsaving="true" textid="GGY" desc="Guernsey (inkl Alderney og Sark)" />
+	<rate code="JEY" night="1400" allowance="650" timezone="0" daylightsaving="true" textid="JEY" desc="Jersey" />
+	<rate code="ESP" night="1700" allowance="800" timezone="0" daylightsaving="true" textid="ESP#canary" desc="Spania; Kanariøyene" />
+	<rate code="PRT" night="2250" allowance="850" timezone="0" daylightsaving="true" textid="PRT#Madeira" desc="Madeira" />
+	<rate code="IMN" night="1400" allowance="650" timezone="0" daylightsaving="true" textid="IMN" desc="Isle of Man" />
+	<rate code="NIR" night="1400" allowance="650" timezone="1" daylightsaving="true" textid="NIR" desc="Nord-Irland" />
+	<rate code="SMR" night="2000" allowance="900" timezone="1" daylightsaving="true" textid="SMR" desc="San Marino" />
+	<rate code="VAT" night="2000" allowance="900" timezone="1" daylightsaving="true" textid="VAT" desc="Vatikanstaten" />
+	<rate code="FIN" night="1500" allowance="700" timezone="3" daylightsaving="true" textid="FIN#Aaland" desc="Åland" />
 </international_rates>
