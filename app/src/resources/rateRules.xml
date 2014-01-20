@@ -42,7 +42,7 @@
 	<travelraterule id="allowance_05" cost="" percent="66.66" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 6 og inntil 12 timer." />
 	<travelraterule id="allowance_06" cost="" percent="100" rule_travel_type="international" description="Kostgodtgjørelse ved utenlandsreise med reiselengde fra og med 12 timer." />
 	
-	<travelraterule id="allowance_international" cost="455" percent="" rule_travel_type="international" description="Kompensasjonstillegg ved utenlandsreise pr. døgn utover 12 timer." />
+	<travelraterule id="allowance_international" cost="460" percent="" rule_travel_type="international" description="Kompensasjonstillegg ved utenlandsreise pr. døgn utover 12 timer." />
 
 	<travelraterule id="redraw_01" cost="" percent="10" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for frokost ved innenlandsreise" />
 	<travelraterule id="redraw_02" cost="" percent="40" rule_travel_type="domestic" description="Trekk i kostgodtgjørelsen for lunsj ved innenlandsreise" />
