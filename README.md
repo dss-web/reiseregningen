@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-reiseregningen
-==============
-
-Reiseregning på Web
-=======
 # Reiseregning på Web
 
 Velkommen til utviklingsprosjektet for ​http://reiseregningen.no. Applikasjonen er utviklet for Fornyings- og administrasjonsdepartementet (FAD), og gjort tilgjengelig som åpen kildekode for bruk og gjenbruk av andre (​BSD lisens).
