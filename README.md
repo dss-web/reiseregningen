@@ -10,7 +10,7 @@ tilgjengeliggjøre løsningen på tvers av plattformer.
 Løsningen er nettbasert og plattformuavhengig. Det kreves ikke installasjon på lokal maskin for å kjøre applikasjonen.
 
 ## Løsningskonsept
-Screenshot av forside applikasjon.
+![Screenshot av forside applikasjon.](screenshot_01.jpg)
 
 Løsningen baserer seg på Adobe Flex teknologi. Denne teknologien ble valgt for å gi løsningen større grad av interaktivitet og fleksibilitet med bruk av en mer dynamisk teknologi enn tradisjonelle web applikasjoner. Lagring og print av reiseregninger gjøre mulig gjennom enkle WebServices som er basert på .Net teknologi.
 
