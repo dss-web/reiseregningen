@@ -70,49 +70,47 @@ Her ligger kildekoden til hele Flex-løsningen, samt ressursfiler, grafiske elem
 ## Kildekode
 Arkitekturen bak denne løsningen baserer seg på Cairngorm 2.2.1 arkitekturen. Inndeling og struktur av ActionScript kildekoden er dermed basert på dette. Kildekoden finnes under source:/trunk/app/src/no/makingwaves/cust/dss.
 
-Hovedfilen som binder løsningen sammen ligger på rotnivået i {{{src}}} katalogen. Her finnes også de html-filene som er basis for visning av Flash-løsningen. Resterende inndeling av kode baseres på Cairngorm arkitekturen og denne beskrivelsen vil ikke gå i dybden på dette, men en kort beskrivelse følger.
+Hovedfilen som binder løsningen sammen ligger på rotnivået i `src` katalogen. Her finnes også de html-filene som er basis for visning av Flash-løsningen. Resterende inndeling av kode baseres på Cairngorm arkitekturen og denne beskrivelsen vil ikke gå i dybden på dette, men en kort beskrivelse følger.
 
-**[source:/trunk/app/src/no/makingwaves/cust/dss/business business]**
+**[business](app/src/no/makingwaves/cust/dss/business)**
 
-Her ligger kildekoden som styrer selve kommunikasjonen mellom WebServices og kall mot innlastning av xml-filer som er nødvendige for løsningen. Katalogen består stort sett av såkalte Delegates som kalles fra {{{commands}}} i løsningen.
+Her ligger kildekoden som styrer selve kommunikasjonen mellom WebServices og kall mot innlastning av xml-filer som er nødvendige for løsningen. Katalogen består stort sett av såkalte Delegates som kalles fra `commands` i løsningen.
 
-**[source:/trunk/app/src/no/makingwaves/cust/dss/commands commands]**
+**[commands](app/src/no/makingwaves/cust/dss/commands)**
 
-Alle kall mot WebServices og xml-filer starter med disse definerte {{{commands}}}. Det er en egen klasse for hver {{{command}}}. Disse klassene er koblet opp mot {{{Delegates}}} som ligger i {{{buiness}}} katalogen og {{{Events}}} som ligger i {{{events}}} katalogen.
+Alle kall mot WebServices og xml-filer starter med disse definerte `commands`. Det er en egen klasse for hver `command`. Disse klassene er koblet opp mot `Delegates` som ligger i `buiness` katalogen og `Events` som ligger i `events` katalogen.
 
-**[source:/trunk/app/src/no/makingwaves/cust/dss/events events]**
+**[events](app/src/no/makingwaves/cust/dss/events)**
 
-Eventene er knyttet opp mot {{{commands}}} og er alle definert her. Events er selve triggerne mot kommunikasjon mot WebServices og xml-filer i løsningen.
+Eventene er knyttet opp mot `commands` og er alle definert her. Events er selve triggerne mot kommunikasjon mot WebServices og xml-filer i løsningen.
 
-**[source:/trunk/app/src/no/makingwaves/cust/dss/control control]**
+**[control](app/src/no/makingwaves/cust/dss/control)**
 
-Controller klassen knytter sammen og definerer alle {{{commands}}} og {{{events}}}.
+Controller klassen knytter sammen og definerer alle `commands` og `events`.
 
-**[source:/trunk/app/src/no/makingwaves/cust/dss/model model]**
+**[model](app/src/no/makingwaves/cust/dss/model)**
 
 ModelLocator holder alle globale verdier i løsningen.
 
-**[source:/trunk/app/src/no/makingwaves/cust/dss/view view]**
+**[view](app/src/no/makingwaves/cust/dss/view)**
 
 Alle grensesnitt og komponenter som benyttes i løsningen er definert her.
 
-**[source:/trunk/app/src/no/makingwaves/cust/dss/vo vo]**
+**[vo](app/src/no/makingwaves/cust/dss/vo)**
 
 Her er alle Value Objects som brukes i løsningen definert.
 
-**[source:/trunk/app/src/no/makingwaves/cust/dss/code code]**
+**[code](app/src/no/makingwaves/cust/dss/code)**
 
 Her finnes applikasjonskode som ikke kan defineres under de foregående kategoriene. Her finnes bl.a. kalkuleringsrutinene og initieringen av hele applikasjonen.
 
 ## WebService kode
 
-Koden som definerer kommunikasjon og Value Objects fra WebServices ligger i mappen source:/trunk/app/src/webservices/travelexpense/pdf. All kode som ligger her er autogenerert av Flex 3 Builder via {{{Data - Import Web Services (WSDL)}}}.
+Koden som definerer kommunikasjon og Value Objects fra WebServices ligger i mappen `app/src/webservices/travelexpense/pdf`. All kode som ligger her er autogenerert av Flex 3 Builder via `Data - Import Web Services (WSDL)`.
 
 
 
 
 
 ## Lisens 
-All kildekode og dokumentasjon er gjort tilgjengelig som åpen kildekode. Den kan fritt endres og gjenbrukes til egne behov (​BSD lisens), men vi ønsker svært gjerne at du også engasjerer deg i vår videre utvikling av programmet slik at det kommer alle til gode.
-
->>>>>>> Oppdatert
+All kildekode og dokumentasjon er gjort tilgjengelig som åpen kildekode. Den kan fritt endres og gjenbrukes til egne behov (​[BSD lisens](README-LICENSE.txt)), men vi ønsker svært gjerne at du også engasjerer deg i vår videre utvikling av programmet slik at det kommer alle til gode.
